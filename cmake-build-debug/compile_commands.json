@@ -1,0 +1,77 @@
+[
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/src/main.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/src/main.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/src/main.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/croutine.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/croutine.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/croutine.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/list.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/list.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/list.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/queue.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/queue.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/queue.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/tasks.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/tasks.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/tasks.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/timers.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/timers.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/timers.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Ball.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Ball.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Ball.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Draw.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Draw.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Draw.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Event.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Event.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Event.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Font.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Font.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Font.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Sound.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Sound.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Sound.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Utils.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Utils.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/TUM_Utils.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug",
+  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/AsyncIO/AsyncIO.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/AsyncIO.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/lib/AsyncIO/AsyncIO.c"
+}
+]

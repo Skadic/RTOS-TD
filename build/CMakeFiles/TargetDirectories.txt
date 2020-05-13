@@ -1,0 +1,4 @@
+/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build/CMakeFiles/rebuild_cache.dir
+/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build/CMakeFiles/edit_cache.dir
+/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build/CMakeFiles/commit.dir
+/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build/CMakeFiles/FreeRTOS_Emulator.dir
