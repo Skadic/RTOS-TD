@@ -50,7 +50,7 @@ else()
 
     SET(PROJECT_SOURCES
             ${SIMULATOR_SOURCES} ${FREERTOS_SOURCES} ${GFX_SOURCES} ${ASYNC_SOURCES}
-            )
+            src/Main.cpp)
 
     set(PROJECT_LIBRARIES
             ${SDL2_LIBRARIES}

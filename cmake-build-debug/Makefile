@@ -48,10 +48,10 @@ RM = /home/skadic/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/192.6817.18/bin
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests
+CMAKE_SOURCE_DIR = /home/skadic/Dokumente/Uni/FP/RTOS-TD
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug
+CMAKE_BINARY_DIR = /home/skadic/Dokumente/Uni/FP/RTOS-TD/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug/CMakeFiles /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/skadic/Dokumente/Uni/FP/RTOS-TD/cmake-build-debug/CMakeFiles /home/skadic/Dokumente/Uni/FP/RTOS-TD/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-tests/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/skadic/Dokumente/Uni/FP/RTOS-TD/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -514,6 +514,33 @@ lib/Gfx/TUM_Utils.c.s:
 	$(MAKE) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Utils.c.s
 .PHONY : lib/Gfx/TUM_Utils.c.s
 
+src/Main.o: src/Main.cpp.o
+
+.PHONY : src/Main.o
+
+# target to build an object file
+src/Main.cpp.o:
+	$(MAKE) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/src/Main.cpp.o
+.PHONY : src/Main.cpp.o
+
+src/Main.i: src/Main.cpp.i
+
+.PHONY : src/Main.i
+
+# target to preprocess a source file
+src/Main.cpp.i:
+	$(MAKE) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/src/Main.cpp.i
+.PHONY : src/Main.cpp.i
+
+src/Main.s: src/Main.cpp.s
+
+.PHONY : src/Main.s
+
+# target to generate assembly for a file
+src/Main.cpp.s:
+	$(MAKE) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/src/Main.cpp.s
+.PHONY : src/Main.cpp.s
+
 src/main.o: src/main.c.o
 
 .PHONY : src/main.o
@@ -593,6 +620,9 @@ help:
 	@echo "... lib/Gfx/TUM_Utils.o"
 	@echo "... lib/Gfx/TUM_Utils.i"
 	@echo "... lib/Gfx/TUM_Utils.s"
+	@echo "... src/Main.o"
+	@echo "... src/Main.i"
+	@echo "... src/Main.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
