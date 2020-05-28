@@ -1,6 +1,10 @@
-project(FreeRTOS_Emulator)
+project(RTOS_TD)
 
 cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 set(CMAKE_CONFIG_DIR ${PROJECT_SOURCE_DIR}/config)
@@ -36,6 +40,9 @@ else()
             ${PROJECT_SOURCE_DIR}/lib/Gfx/include
             ${PROJECT_SOURCE_DIR}/lib/AsyncIO/include
             ${PROJECT_SOURCE_DIR}/lib/tracer/include
+            ${PROJECT_SOURCE_DIR}/lib/entt
+            ${PROJECT_SOURCE_DIR}/lib/glm
+            ${PROJECT_SOURCE_DIR}/lib/glm/ext
             )
 
     include_directories(${PROJECT_INCLUDES})
@@ -47,10 +54,11 @@ else()
     file(GLOB GFX_SOURCES "${PROJECT_SOURCE_DIR}/lib/Gfx/*.c")
     file(GLOB ASYNC_SOURCES "${PROJECT_SOURCE_DIR}/lib/AsyncIO/*.c")
     file(GLOB SIMULATOR_SOURCES "${PROJECT_SOURCE_DIR}/src/*.c")
+    file(GLOB COMPONENT_SOURCES "${PROJECT_SOURCE_DIR}/src/components/*.cpp")
 
     SET(PROJECT_SOURCES
-            ${SIMULATOR_SOURCES} ${FREERTOS_SOURCES} ${GFX_SOURCES} ${ASYNC_SOURCES}
-            src/Main.cpp)
+            ${SIMULATOR_SOURCES} ${FREERTOS_SOURCES} ${GFX_SOURCES} ${ASYNC_SOURCES} ${COMPONENT_SOURCES}
+            src/Main.cpp )
 
     set(PROJECT_LIBRARIES
             ${SDL2_LIBRARIES}
