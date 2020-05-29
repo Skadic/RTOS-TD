@@ -1,24 +1,24 @@
 //
 // Created by skadic on 21.05.20.
 //
+extern "C" {
+#include "TUM_Draw.h"
+#include "TUM_Utils.h"
+#include "TUM_Event.h"
+#include "task.h"
+#include "semphr.h"
+}
 
 #include "iostream"
 #include <entt.hpp>
-#include <chrono>
-#include <SDL2/SDL_scancode.h>
 #include <cmath>
-#include "components/Components.h"
+#include <memory>
+#include <thread>
 
-extern "C" {
-    #include "TUM_Draw.h"
-    #include "TUM_Utils.h"
-    #include "TUM_Event.h"
-    #include "task.h"
-    #include "semphr.h"
-}
+#include "components/Components.h"
+#include "util/Lock.h"
 
 using namespace std;
-using namespace chrono;
 
 inline const unsigned int TARGET_FPS = 144;
 inline const unsigned int FRAME_TIME_MS = 1000 / TARGET_FPS;
@@ -29,7 +29,7 @@ inline SemaphoreHandle_t DRAW_SIGNAL = nullptr;
 inline SemaphoreHandle_t SCREEN_LOCK = nullptr;
 
 
-unsigned int get_color(unsigned int i) {
+unsigned int getColor(unsigned int i) {
     i = i % 0x600;
     if (i < 0x100) {
         return 0xFF0000 + ((i % 0x100) << 8); // Red to yellow
@@ -46,7 +46,7 @@ unsigned int get_color(unsigned int i) {
     }
 }
 
-void swap_buffer_task(void *registryPointer) {
+void swapBufferTask(void *registryPointer) {
     auto lastWake = xTaskGetTickCount();
 
     // Get Draw access for this thread
@@ -54,7 +54,6 @@ void swap_buffer_task(void *registryPointer) {
     while (true) {
         // Take exclusive access to the screen
         if (xSemaphoreTake(SCREEN_LOCK, portMAX_DELAY) == pdTRUE) {
-            cout << "swap buffer" << endl;
 
             // Update the Screen
             tumDrawUpdateScreen();
@@ -73,7 +72,7 @@ void swap_buffer_task(void *registryPointer) {
 }
 
 // The task that should render the Rectangles to the screen
-void render_rect_task(void *registryPointer) {
+void renderTask(void *registryPointer) {
     // Cast the void pointer that was supplied when spawning the task
     // The argument given there is just a pointer to the registry
     auto &registry = *static_cast<entt::registry*>(registryPointer);
@@ -82,44 +81,41 @@ void render_rect_task(void *registryPointer) {
     auto lastWake = xTaskGetTickCount();
 
     while (true) {
-        // If the Semaphore has been set (= if it's not a null pointer)
-        if(DRAW_SIGNAL) {
-            // Try taking the Draw Signal semaphore. The task should only draw if a draw signal is given by the swap_buffer task
-            if(xSemaphoreTake(DRAW_SIGNAL, portMAX_DELAY) == pdTRUE) {
-                // Get all entities with a Position and a Rectangle Sprite component
-                auto view = registry.view<Position, RectangleSprite>();
-                cout << "draw rect" << endl;
+        // Try taking the Draw Signal semaphore. The task should only draw if a draw signal is given by the swap_buffer task
+        if(xSemaphoreTake(DRAW_SIGNAL, portMAX_DELAY) == pdTRUE) {
+            // Get all entities with a Position and a Rectangle Sprite component
+            auto view = registry.view<Position, SpriteComponent>();
 
-                // Takes the SCREEN_LOCK Semaphore to have exclusive access to drawing
-                xSemaphoreTake(SCREEN_LOCK, portMAX_DELAY);
-                // Clears the screen to black
-                tumDrawClear(0x000000);
+            // Takes the SCREEN_LOCK Semaphore to have exclusive access to drawing
+            xSemaphoreTake(SCREEN_LOCK, portMAX_DELAY);
+            // Clears the screen to black
+            tumDrawClear(0x000000);
 
-                // For every entity, gets the Position and the RectangleSprite and draws it to the screen
-                for (auto entity : view) {
-                    Position pos = view.get<Position>(entity);
-                    RectangleSprite sprite = view.get<RectangleSprite>(entity);
+            registry.
 
-                    sprite.draw(pos.x, pos.y);
-                }
+            // For every entity, gets the Position and the RectangleSprite and draws it to the screen
+            for (auto entity : view) {
+                Position pos = view.get<Position>(entity);
+                SpriteComponent *sprite = &view.get<SpriteComponent>(entity);
 
-                // Releases the semaphore after drawing is done
-                xSemaphoreGive(SCREEN_LOCK);
-
-                // The Task is delayed until the set time between frames has passed (1/fps seconds)
-                vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+                sprite->getSprite()->draw(pos.x, pos.y);
             }
+
+            // Releases the semaphore after drawing is done
+            xSemaphoreGive(SCREEN_LOCK);
+
+            // The Task is delayed until the set time between frames has passed (1/fps seconds)
+            vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }
 }
 
-void movement_task(void *registryPointer) {
+void movementTask(void *registryPointer) {
     auto &registry = *static_cast<entt::registry*>(registryPointer);
     auto lastWake = xTaskGetTickCount(); // Only used to delay the task by the correct time
     auto lastRun = lastWake; // Used to calculate the time difference between now and the last time the function was run
 
     while (true) {
-        cout << "movement" << endl;
         double dt = (xTaskGetTickCount() - lastRun) / 1000.0; // The time between now and the last run of this task in seconds
 
         registry.view<Position, Velocity>().each([dt](Position &pos, Velocity &vel) {
@@ -132,41 +128,47 @@ void movement_task(void *registryPointer) {
     }
 }
 
-void bounce_task(void *registryPointer) {
+void bounceTask(void *registryPointer) {
     auto &registry = *static_cast<entt::registry*>(registryPointer);
     auto lastWake = xTaskGetTickCount();
 
     while (true) {
-        cout << "bounce" << endl;
         registry.view<Position, Velocity, Hitbox>().each([](Position &pos, Velocity &vel, Hitbox &hitbox) {
             if (pos.x < 0 || pos.x + hitbox.width > SCREEN_WIDTH) {
                  vel.dx = -vel.dx;
-             } else if (pos.y < 0 || pos.y + hitbox.height > SCREEN_HEIGHT) {
+            }
+            if (pos.y < 0 || pos.y + hitbox.height > SCREEN_HEIGHT) {
                  vel.dy = -vel.dy;
-             }
+            }
         });
 
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
     }
 }
 
-void spawn_task(void *registryPointer) {
+void spawnTask(void *registryPointer) {
     auto &registry = *static_cast<entt::registry*>(registryPointer);
     auto lastWake = xTaskGetTickCount(); // Only used to delay the task by the correct time
 
     static auto i = 0;
-    static const short square_size = 20;
+    static const short squareSize = 20;
 
     while (true) {
-        cout << "spawn" << endl;
+        //cout << "spawn" << endl;
 
         // Creates a square with the corresponding components
         auto entity = registry.create();
-        auto angle = 2 * 3.1415 * i / 10 + 1;
+        auto angle = 2 * M_PI * i / 10 + 1;
+        std::unique_ptr<Sprite> rectSprite = std::make_unique<RectangleSprite>(squareSize, squareSize, getColor(i * 20), i % 2);
+        std::unique_ptr<Sprite> texSprite = std::make_unique<TextureSprite>("freertos.jpg");
+
+        auto width = texSprite->width;
+        auto height = texSprite->height;
+
         registry.emplace<Position>(entity, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
         registry.emplace<Velocity>(entity, MOVE_SPEED * sin(angle), MOVE_SPEED * cos(angle));
-        registry.emplace<RectangleSprite>(entity, square_size, square_size, get_color(i * 20), i % 2);
-        registry.emplace<Hitbox>(entity, square_size, square_size);
+        registry.emplace<SpriteComponent>(entity, rectSprite);
+        registry.emplace<Hitbox>(entity, squareSize, squareSize);
 
         i++;
 
@@ -175,13 +177,12 @@ void spawn_task(void *registryPointer) {
     }
 }
 
-int main(int argc, char* argv[]) {
-
+void start(char* binPath) {
     // The registry containing all entities of our game
     entt::registry registry;
 
     // Get the path of the folder which contains the binary running the program
-    auto path = tumUtilGetBinFolderPath(argv[0]);
+    auto path = tumUtilGetBinFolderPath(binPath);
 
     // Init event handling and drawing
     tumEventInit();
@@ -191,26 +192,27 @@ int main(int argc, char* argv[]) {
     DRAW_SIGNAL = xSemaphoreCreateBinary();
     SCREEN_LOCK = xSemaphoreCreateMutex();
 
+    const auto stackSize = 200;
 
     // Spawn the task that will update the screen each frame
     TaskHandle_t swap_buffer = nullptr;
-    xTaskCreate(swap_buffer_task, "swap_buffer", 200, &registry, 2, &swap_buffer);
+    xTaskCreate(swapBufferTask, "swap_buffer", stackSize, &registry, 2, &swap_buffer);
 
     // Spawn the task that will render the rectangles
     TaskHandle_t rect_task = nullptr;
-    xTaskCreate(render_rect_task, "render_rect", 200, &registry, 1, &rect_task);
+    xTaskCreate(renderTask, "render_rect", stackSize, &registry, 1, &rect_task);
 
     // Spawn the task that will move all entities with a Position and Velocity
     TaskHandle_t movement = nullptr;
-    xTaskCreate(movement_task, "movement", 200, &registry, 1, &movement);
+    xTaskCreate(movementTask, "movement", stackSize, &registry, 1, &movement);
 
     // Spawn the task that will cause entities with a Position, Velocity, and hitbox to bounce off the edges of the screen
     TaskHandle_t bounce = nullptr;
-    xTaskCreate(bounce_task, "bounce", 200, &registry, 1, &bounce);
+    xTaskCreate(bounceTask, "bounce", stackSize, &registry, 1, &bounce);
 
     // Spawns the task that will spawn squares
     TaskHandle_t spawn = nullptr;
-    xTaskCreate(spawn_task, "spawn", 200, &registry, 1, &spawn);
+    xTaskCreate(spawnTask, "spawn", stackSize, &registry, 1, &spawn);
 
     // Starts the task scheduler to start running the tasks
     vTaskStartScheduler();
@@ -226,5 +228,12 @@ int main(int argc, char* argv[]) {
     vTaskDelete(bounce);
     vTaskDelete(spawn);
 }
+
+int main(int argc, char* argv[]) {
+
+    start(argv[0]);
+}
+
+
 
 
