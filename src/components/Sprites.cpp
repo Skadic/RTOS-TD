@@ -1,14 +1,11 @@
 #include "Sprites.h"
 #include <iostream>
 
-SpriteComponent::SpriteComponent(std::unique_ptr<Sprite> &sprite) {
-    this->sprite = std::move(sprite);
-}
+SpriteComponent::SpriteComponent(const Sprite *sprite) : sprite{sprite} {}
 
-std::unique_ptr<Sprite>::pointer SpriteComponent::getSprite() {
-    return this->sprite.get();
+const Sprite *SpriteComponent::getSprite() const {
+    return sprite;
 }
-
 
 RectangleSprite::RectangleSprite(int width, int height, unsigned int color, bool filled) {
     this->width = width;
@@ -17,7 +14,7 @@ RectangleSprite::RectangleSprite(int width, int height, unsigned int color, bool
     this->filled = filled;
 }
 
-void RectangleSprite::draw(short x, short y) {
+void RectangleSprite::draw(short x, short y) const {
     if(filled) {
         tumDrawFilledBox(x, y, width, height, color);
     } else {
@@ -38,7 +35,7 @@ TextureSprite::TextureSprite(std::string path) {
     tumDrawGetLoadedImageSize(this->spriteHandle, &this->width, &this->height);
 }
 
-void TextureSprite::draw(short x, short y) {
+void TextureSprite::draw(short x, short y) const {
     if(tumDrawLoadedImage(this->spriteHandle, x, y)) {
         std::cout << "Failed to draw" << std::endl;
     };
@@ -46,5 +43,7 @@ void TextureSprite::draw(short x, short y) {
 
 // Unload the Image upon Destruction
 TextureSprite::~TextureSprite() {
+    std::cout << "Unloading image " << path << std::endl;
+    std::cout.flush();
     tumDrawFreeLoadedImage(&this->spriteHandle);
 }

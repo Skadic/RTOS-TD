@@ -1,6 +1,4 @@
-#include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 
 int maina(int argc, char *argv[])

@@ -12,15 +12,17 @@ struct Sprite {
     int width;
     int height;
 
-    virtual void draw(short x, short y) = 0;
+    virtual void draw(short x, short y) const = 0;
+
+    virtual ~Sprite() = default;
 };
 
 struct SpriteComponent {
-    std::unique_ptr<Sprite> sprite;
+    const Sprite *sprite;
 
-    explicit SpriteComponent(std::unique_ptr<Sprite> &sprite);
+    explicit SpriteComponent(const Sprite *sprite);
 
-    std::unique_ptr<Sprite>::pointer getSprite();
+    const Sprite *getSprite() const;
 };
 
 
@@ -30,7 +32,7 @@ struct RectangleSprite : Sprite {
 
     explicit RectangleSprite(int width, int height, unsigned int color, bool filled);
 
-    void draw(short x, short y) override;
+    void draw(short x, short y) const override;
 };
 
 struct TextureSprite : Sprite {
@@ -41,5 +43,5 @@ struct TextureSprite : Sprite {
 
     ~TextureSprite();
 
-    void draw(short x, short y) override;
+    void draw(short x, short y) const override;
 };

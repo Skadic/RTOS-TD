@@ -1,6 +1,6 @@
 project(RTOS_TD)
 
-cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,58 +22,30 @@ else()
 
     find_package(Threads)
     find_package(SDL2 REQUIRED)
-    include_directories(${SDL2_INCLUDE_DIRS})
+    add_library(sdl2 INTERFACE)
+    target_link_libraries(sdl2 INTERFACE ${SDL2_LIBRARIES})
+    target_include_directories(sdl2 INTERFACE ${SDL2_INCLUDE_DIRS})
+
     find_package(SDL2_gfx REQUIRED)
-    include_directories(${SDL2_GFX_INCLUDE_DIRS})
+    add_library(sdl2_gfx INTERFACE)
+    target_link_libraries(sdl2_gfx INTERFACE ${SDL2_GFX_LIBRARIES})
+    target_include_directories(sdl2_gfx INTERFACE ${SDL2_GFX_INCLUDE_DIRS})
+
     find_package(SDL2_image REQUIRED)
-    include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
+    add_library(sdl2_image INTERFACE)
+    target_link_libraries(sdl2_image INTERFACE ${SDL2_IMAGE_LIBRARIES})
+    target_include_directories(sdl2_image INTERFACE ${SDL2_IMAGE_INCLUDE_DIRS})
+
     find_package(SDL2_mixer REQUIRED)
-    include_directories(${SDL2_MIXER_INCLUDE_DIRS})
+    add_library(sdl2_mixer INTERFACE)
+    target_link_libraries(sdl2_mixer INTERFACE ${SDL2_MIXER_LIBRARIES})
+    target_include_directories(sdl2_mixer INTERFACE ${SDL2_MIXER_INCLUDE_DIRS})
+
     find_package(SDL2_ttf REQUIRED)
-    include_directories(${SDL2_TTF_INCLUDE_DIRS})
+    add_library(sdl2_ttf INTERFACE)
+    target_link_libraries(sdl2_ttf INTERFACE ${SDL2_TTF_LIBRARIES})
+    target_include_directories(sdl2_ttf INTERFACE ${SDL2_TTF_INCLUDE_DIRS})
 
-
-    SET(PROJECT_INCLUDES
-            ${PROJECT_SOURCE_DIR}/lib/FreeRTOS_Kernel/include
-            ${PROJECT_SOURCE_DIR}/lib/FreeRTOS_Kernel/portable/GCC/Posix
-            ${PROJECT_SOURCE_DIR}/include
-            ${PROJECT_SOURCE_DIR}/lib/Gfx/include
-            ${PROJECT_SOURCE_DIR}/lib/AsyncIO/include
-            ${PROJECT_SOURCE_DIR}/lib/tracer/include
-            ${PROJECT_SOURCE_DIR}/lib/entt
-            ${PROJECT_SOURCE_DIR}/lib/glm
-            ${PROJECT_SOURCE_DIR}/lib/glm/ext
-            )
-
-    include_directories(${PROJECT_INCLUDES})
-
-    file(GLOB FREERTOS_SOURCES
-            "${PROJECT_SOURCE_DIR}/lib/FreeRTOS_Kernel/*.c"
-            "${PROJECT_SOURCE_DIR}/lib/FreeRTOS_Kernel/portable/GCC/Posix/*.c"
-            "${PROJECT_SOURCE_DIR}/lib/FreeRTOS_Kernel/portable/MemMang/*.c")
-    file(GLOB GFX_SOURCES "${PROJECT_SOURCE_DIR}/lib/Gfx/*.c")
-    file(GLOB ASYNC_SOURCES "${PROJECT_SOURCE_DIR}/lib/AsyncIO/*.c")
-    file(GLOB SIMULATOR_SOURCES "${PROJECT_SOURCE_DIR}/src/*.c")
-    file(GLOB COMPONENT_SOURCES "${PROJECT_SOURCE_DIR}/src/components/*.cpp")
-
-    SET(PROJECT_SOURCES
-            ${SIMULATOR_SOURCES} ${FREERTOS_SOURCES} ${GFX_SOURCES} ${ASYNC_SOURCES} ${COMPONENT_SOURCES}
-            src/Main.cpp )
-
-    set(PROJECT_LIBRARIES
-            ${SDL2_LIBRARIES}
-            ${SDL2_GFX_LIBRARIES}
-            ${SDL2_IMAGE_LIBRARIES}
-            ${SDL2_MIXER_LIBRARIES}
-            ${SDL2_TTF_LIBRARIES}
-            m
-            ${CMAKE_THREAD_LIBS_INIT}
-            rt
-            )
-
-    include(${CMAKE_MODULE_PATH}/tests.cmake)
-
-    add_executable(${CMAKE_PROJECT_NAME} ${PROJECT_SOURCES})
 
     if(TRACE_FUNCTIONS)
         add_definitions(-DTRACE_FUNCTIONS)
@@ -81,7 +53,12 @@ else()
         target_compile_options(FreeRTOS_Emulator PUBLIC ${GCC_COVERAGE_COMPILE_FLAGS})
     endif(TRACE_FUNCTIONS)
 
-    target_link_libraries(${CMAKE_PROJECT_NAME} ${PROJECT_LIBRARIES})
+    add_subdirectory(lib)
+    add_subdirectory(src)
+
+    set(ENABLE_ASAN OFF)
+
+    include(${CMAKE_MODULE_PATH}/tests.cmake)
 
     if(DOCS)
         find_package(Doxygen REQUIRED)
