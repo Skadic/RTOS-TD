@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <entity/registry.hpp>
+#include "../util/Mutex.h"
 
 extern "C" {
 #include <FreeRTOS.h>
@@ -10,11 +12,14 @@ extern "C" {
 class State {
 
 protected:
+    Mutex<entt::registry> registry;
     std::vector<TaskHandle_t> tasks;
 
-public:
+    State() : registry{entt::registry(), xSemaphoreCreateMutex()}, tasks{std::vector<TaskHandle_t>()} {}
 
+public:
     ~State();
     void resumeTasks();
     void suspendTasks();
+    Mutex<entt::registry> &getRegistry();
 };

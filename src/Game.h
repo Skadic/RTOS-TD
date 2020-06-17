@@ -22,8 +22,6 @@ private:
     SemaphoreHandle_t drawSignal;
     SemaphoreHandle_t drawHitboxSignal;
 
-    Mutex<entt::registry> registry;
-
     StateMachine stateMachine;
 
     Game();
@@ -39,7 +37,7 @@ public:
     SemaphoreHandle_t getDrawSignal();
     SemaphoreHandle_t getDrawHitboxSignal();
 
-    Mutex<entt::registry> &getRegistry();
+    Mutex<entt::registry> &getActiveStateRegistry();
     StateMachine &getStateMachine();
 
     Game(Game const&)               = delete;
@@ -47,5 +45,5 @@ public:
 };
 
 void swapBufferTask(void *ptr);
-
-void stateMachineTask(void *stateMachinePointer);
+void stateMachineTask(void *ptr);
+void inputTask(void *ptr);

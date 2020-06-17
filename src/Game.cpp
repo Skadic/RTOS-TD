@@ -7,20 +7,19 @@
 
 #include "Game.h"
 #include "states/TestState.h"
-
-extern "C" {
 #include <FreeRTOS.h>
 #include <semphr.h>
 #include <task.h>
 #include <TUM_Event.h>
 #include <TUM_Draw.h>
 #include <TUM_Utils.h>
-}
+#include <SDL2/SDL_scancode.h>
+
 
 #include <iostream>
 #include <entity/registry.hpp>
 
-Game::Game() : registry{Mutex(entt::registry(), xSemaphoreCreateMutex())} {
+Game::Game() {
     // Create semaphores to synchronize access to the draw commands and for the swap_buffer task to give a draw signal
     screenLock = xSemaphoreCreateMutex();
     swapBufferSignal = xSemaphoreCreateBinary();
@@ -51,7 +50,13 @@ void Game::start(char *binPath) {
     // Spawn the task that will be responsible for switching states
     TaskHandle_t state_machine = nullptr;
     xTaskCreate(stateMachineTask, "state_machine", 0, nullptr, 2, &state_machine);
+
+    TaskHandle_t input = nullptr;
+    xTaskCreate(inputTask, "input", 0, nullptr, 2, &input);
+
     TestState testState;
+
+    Game::getStateMachine().enqueuePush(&testState);
 
     // Starts the task scheduler to start running the tasks
     vTaskStartScheduler();
@@ -83,8 +88,8 @@ SemaphoreHandle_t Game::getSwapBufferSignal() {
     return swapBufferSignal;
 }
 
-Mutex<entt::registry> &Game::getRegistry() {
-    return registry;
+Mutex<entt::registry> &Game::getActiveStateRegistry() {
+    return stateMachine.activeState().getRegistry();
 }
 
 StateMachine &Game::getStateMachine() {
@@ -101,7 +106,8 @@ void swapBufferTask(void *ptr) {
     tumDrawBindThread();
     while (true) {
         if(xSemaphoreTake(game.getSwapBufferSignal(), 0) == pdTRUE) {
-            std::cout << "swap buffer" << std::endl;
+            std::cout << uxTaskGetNumberOfTasks() << std::endl;
+            //std::cout << "swap buffer" << std::endl;
             // Take exclusive access to the screen
             if (xSemaphoreTake(game.getScreenLock(), portMAX_DELAY) == pdTRUE) {
                 // Update the Screen
@@ -120,12 +126,30 @@ void swapBufferTask(void *ptr) {
     }
 }
 
-void stateMachineTask(void *stateMachinePointer) {
+void stateMachineTask(void *ptr) {
     StateMachine& stateMachine = Game::get().getStateMachine();
 
     auto lastWake = xTaskGetTickCount();
     while (true) {
         stateMachine.handleOperation();
+        // Delay until the next frame
+        vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+    }
+}
+
+
+void inputTask(void *ptr) {
+
+    static unsigned char buttons[SDL_NUM_SCANCODES];
+    auto &stateMachine = Game::get().getStateMachine();
+    auto lastWake = xTaskGetTickCount();
+    while (true) {
+        xQueueReceive(buttonInputQueue, &buttons, 0);
+
+        if(buttons[SDL_SCANCODE_W]) {
+            stateMachine.enqueuePush(new TestState);
+        }
+
         // Delay until the next frame
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
     }

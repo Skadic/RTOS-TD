@@ -13,8 +13,8 @@ class Guard;
 
 template<class T>
 class Mutex {
-    SemaphoreHandle_t mutex;
     T value;
+    SemaphoreHandle_t mutex;
 
 public:
     Mutex(T &&value, SemaphoreHandle_t m) : value{std::move(value)}, mutex{m} {}

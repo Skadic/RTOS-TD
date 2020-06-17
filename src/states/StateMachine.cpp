@@ -30,7 +30,7 @@ StateChange StateMachine::handleOperation() {
                 case PUSH: {
                     // If we are supposed to execute a push operation, we need to retrieve the state to push from the message queue
                     if (xQueueReceive(nextStateQueue, &nextState, 0) == pdTRUE) {
-                        stateStack.top()->suspendTasks();
+                        if(!stateStack.empty()) stateStack.top()->suspendTasks();
                         stateStack.push(std::unique_ptr<State>{nextState});
                         nextState->resumeTasks();
                     } else {

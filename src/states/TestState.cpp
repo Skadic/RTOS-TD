@@ -5,21 +5,50 @@
 #include "../Game.h"
 #include <cmath>
 #include <thread>
-
 #include <iostream>
-
-extern "C" {
 #include <TUM_Draw.h>
 #include <semphr.h>
-}
 
 inline const float MOVE_SPEED = 300;
 
+TestState::TestState() : State() {
+    // Spawn the task that will render the rectangles
+    TaskHandle_t render = nullptr;
+    xTaskCreate(renderTask, "render", DEFAULT_STACK_SIZE, this, 1, &render);
+    tasks.push_back(render);
+
+    // Spawn the task that will render the hitboxes
+    TaskHandle_t drawHitboxes = nullptr;
+    xTaskCreate(drawHitboxesTask, "hitboxes", DEFAULT_STACK_SIZE, this, 1, &drawHitboxes);
+    tasks.push_back(drawHitboxes);
+
+    // Spawn the task that will move all entities with a Position and Velocity
+    TaskHandle_t movement = nullptr;
+    xTaskCreate(movementTask, "movement", 0, this, 1, &movement);
+    tasks.push_back(movement);
+
+    // Spawn the task that will cause entities with a Position, Velocity, and hitbox to bounce off the edges of the screen
+    TaskHandle_t bounce = nullptr;
+    xTaskCreate(bounceTask, "bounce", DEFAULT_STACK_SIZE, this, 1, &bounce);
+    tasks.push_back(bounce);
+
+    // Spawns the task that will spawn squares
+    TaskHandle_t spawn = nullptr;
+    xTaskCreate(spawnTask, "spawn", DEFAULT_STACK_SIZE, this, 1, &spawn);
+    tasks.push_back(spawn);
+
+    suspendTasks();
+}
+
 // The task that should render the Rectangles to the screen
-void renderTask(void *registryPointer) {
+void renderTask(void *statePointer) {
     //std::cout << "Thread[" << std::this_thread::get_id() << "] running task: " << pcTaskGetName(xTaskGetCurrentTaskHandle()) << std::endl;
-    Game& game = Game::get();
-    auto &regMutex = game.getRegistry();
+    auto &game = Game::get();
+
+    // We receive the current state from the pointer given as the parameter to the task
+    auto &state = *static_cast<TestState*>(statePointer);
+    auto &regMutex = state.getRegistry();
+
 
     // The last time this task was waked by the scheduler
     auto lastWake = xTaskGetTickCount();
@@ -58,11 +87,13 @@ void renderTask(void *registryPointer) {
     }
 }
 
-void drawHitboxesTask(void *registryPointer) {
+void drawHitboxesTask(void *statePointer) {
     //std::cout << "Thread[" << std::this_thread::get_id() << "] running task: " << pcTaskGetName(xTaskGetCurrentTaskHandle()) << std::endl;
     Game& game = Game::get();
 
-    auto &regMutex = game.getRegistry();
+    // We receive the current state from the pointer given as the parameter to the task
+    auto &state = *static_cast<TestState*>(statePointer);
+    auto &regMutex = state.getRegistry();
 
     // The last time this task was waked by the scheduler
     auto lastWake = xTaskGetTickCount();
@@ -96,9 +127,12 @@ void drawHitboxesTask(void *registryPointer) {
     }
 }
 
-void movementTask(void *registryPointer) {
+void movementTask(void *statePointer) {
     //std::cout << "Thread[" << std::this_thread::get_id() << "] running task: " << pcTaskGetName(xTaskGetCurrentTaskHandle()) << std::endl;
-    auto &regMutex = Game::get().getRegistry();
+
+    // We receive the current state from the pointer given as the parameter to the task
+    auto &state = *static_cast<TestState*>(statePointer);
+    auto &regMutex = state.getRegistry();
     auto lastWake = xTaskGetTickCount(); // Only used to delay the task by the correct time
     auto lastRun = lastWake; // Used to calculate the time difference between now and the last time the function was run
 
@@ -121,9 +155,12 @@ void movementTask(void *registryPointer) {
     }
 }
 
-void bounceTask(void *registryPointer) {
+void bounceTask(void *statePointer) {
     //std::cout << "Thread[" << std::this_thread::get_id() << "] running task: " << pcTaskGetName(xTaskGetCurrentTaskHandle()) << std::endl;
-    auto &regMutex = Game::get().getRegistry();
+
+    // We receive the current state from the pointer given as the parameter to the task
+    auto &state = *static_cast<TestState*>(statePointer);
+    auto &regMutex = state.getRegistry();
     auto lastWake = xTaskGetTickCount();
 
     while (true) {
@@ -146,9 +183,12 @@ void bounceTask(void *registryPointer) {
     }
 }
 
-void spawnTask(void *_) {
+void spawnTask(void *statePointer) {
     //std::cout << "Thread[" << std::this_thread::get_id() << "] running task: " << pcTaskGetName(xTaskGetCurrentTaskHandle()) << std::endl;
-    auto &regMutex = Game::get().getRegistry();
+
+    // We receive the current state from the pointer given as the parameter to the task
+    auto &state = *static_cast<TestState*>(statePointer);
+    auto &regMutex = state.getRegistry();
     auto lastWake = xTaskGetTickCount(); // Only used to delay the task by the correct time
 
     static const short squareSize = 20;
@@ -180,31 +220,4 @@ void spawnTask(void *_) {
         // The task should be delayed until 1/6th second has passed
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS * TARGET_FPS / 2);
     }
-}
-
-TestState::TestState() {
-    // Spawn the task that will render the rectangles
-    TaskHandle_t render = nullptr;
-    xTaskCreate(renderTask, "render", DEFAULT_STACK_SIZE, nullptr, 1, &render);
-    tasks.push_back(render);
-
-    // Spawn the task that will render the hitboxes
-    TaskHandle_t drawHitboxes = nullptr;
-    xTaskCreate(drawHitboxesTask, "hitboxes", DEFAULT_STACK_SIZE, nullptr, 1, &drawHitboxes);
-    tasks.push_back(drawHitboxes);
-
-    // Spawn the task that will move all entities with a Position and Velocity
-    TaskHandle_t movement = nullptr;
-    xTaskCreate(movementTask, "movement", 0, nullptr, 1, &movement);
-    tasks.push_back(movement);
-
-    // Spawn the task that will cause entities with a Position, Velocity, and hitbox to bounce off the edges of the screen
-    TaskHandle_t bounce = nullptr;
-    xTaskCreate(bounceTask, "bounce", DEFAULT_STACK_SIZE, nullptr, 1, &bounce);
-    tasks.push_back(bounce);
-
-    // Spawns the task that will spawn squares
-    TaskHandle_t spawn = nullptr;
-    xTaskCreate(spawnTask, "spawn", DEFAULT_STACK_SIZE, nullptr, 1, &spawn);
-    tasks.push_back(spawn);
 }

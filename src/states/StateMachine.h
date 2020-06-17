@@ -27,6 +27,7 @@ private:
 
 public:
     StateMachine();
+    StateMachine(const StateMachine &) = delete;
 
     void enqueuePush(State *state);
     void enqueuePop();

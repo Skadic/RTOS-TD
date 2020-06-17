@@ -17,3 +17,7 @@ void State::suspendTasks() {
 State::~State() {
     deleteAll(this->tasks);
 }
+
+Mutex<entt::registry> &State::getRegistry() {
+    return this->registry;
+}
