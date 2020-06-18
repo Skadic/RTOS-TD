@@ -165,6 +165,39 @@ void gameControlPlayerTask(void *statePointer) {
     }
 }
 
+void gameMouseInputTask(void *statePointer) {
+    GameState &state = *static_cast<GameState*>(statePointer);
+    auto &regMutex = state.getRegistry();
+    Game &game = Game::get();
+
+    auto lastWake = xTaskGetTickCount();
+
+    while(true) {
+
+        if(auto regOpt = regMutex.lock()) {
+            auto &registry = *regOpt;
+
+            if(auto inputOpt = game.getInput().lock()) {
+                auto &input = *inputOpt;
+                auto &renderer = state.getRenderer();
+
+                short x = renderer.reverseTransformX(input->getMouseX()) / TILE_SIZE;
+                short y = renderer.reverseTransformY(input->getMouseY()) / TILE_SIZE;
+
+                if(x >= 0 && y >= 0 && x < state.getMapWidth() && y < state.getMapHeight() && input->leftClicked()) {
+                    std::cout << x << ", " << y << std::endl;
+                    auto view = registry->view<TilePosition, SpriteComponent>();
+                    auto entity = state.getMapTile(x, y);
+                    SpriteComponent &sprite = view.get<SpriteComponent>(entity);
+                    sprite.setSprite(TOWER);
+                }
+            }
+        }
+
+        vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+    }
+}
+
 // ^ ------------------------------------- TASKS ------------------------------------- ^
 
 GameState::GameState(int mapWidth, int mapHeight) :
@@ -180,6 +213,20 @@ GameState::GameState(int mapWidth, int mapHeight) :
     addTask(gameRenderTask, "render", DEFAULT_TASK_STACK_SIZE, this, 0);
     addTask(gameMoveTask, "move", DEFAULT_TASK_STACK_SIZE, this, 0);
     addTask(gameControlPlayerTask, "control", DEFAULT_TASK_STACK_SIZE, this, 0);
+    addTask(gameMouseInputTask, "mouse", DEFAULT_TASK_STACK_SIZE, this, 0);
+
 
     suspendTasks();
+}
+
+entt::entity &GameState::getMapTile(int x, int y) {
+    return map[y][x];
+}
+
+const int GameState::getMapWidth() const {
+    return mapWidth;
+}
+
+const int GameState::getMapHeight() const {
+    return mapHeight;
 }

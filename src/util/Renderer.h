@@ -25,8 +25,9 @@ public:
     short getYOffset();
     float getScale();
 
-
-private:
     short getTransformedX(short x);
     short getTransformedY(short y);
+
+    short reverseTransformX(short transformedX);
+    short reverseTransformY(short transformedY);
 };

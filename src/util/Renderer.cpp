@@ -39,11 +39,19 @@ void Renderer::setYOffset(short y) {
 }
 
 short Renderer::getTransformedX(short x) {
-    return (x + this->xOffset) * scale;
+    return (x + xOffset) * scale;
 }
 
 short Renderer::getTransformedY(short y) {
-    return (y + this->yOffset) * scale;
+    return (y + yOffset) * scale;
+}
+
+short Renderer::reverseTransformX(short transformedX) {
+    return (transformedX / scale) - xOffset;
+}
+
+short Renderer::reverseTransformY(short transformedY) {
+    return (transformedY / scale) - yOffset;
 }
 
 void Renderer::addOffset(short x, short y) {
