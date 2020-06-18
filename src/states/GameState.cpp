@@ -202,12 +202,12 @@ void gameMouseInputTask(void *statePointer) {
                 short x = renderer.reverseTransformX(input->getMouseX()) / TILE_SIZE;
                 short y = renderer.reverseTransformY(input->getMouseY()) / TILE_SIZE;
 
-                if(x >= 0 && y >= 0 && x < state.getMapWidth() && y < state.getMapHeight() && input->leftClicked()) {
-                    std::cout << x << ", " << y << std::endl;
-                    auto view = registry->view<TilePosition, SpriteComponent>();
-                    auto entity = state.getMapTile(x, y);
-                    SpriteComponent &sprite = view.get<SpriteComponent>(entity);
-                    sprite.setSprite(TOWER);
+                if(input->leftClicked()) {
+                    if (auto tileOpt = state.getMapTileFromScreenPos(input->getMouseX(), input->getMouseY())) {
+                        auto view = registry->view<TilePosition, SpriteComponent>();
+                        SpriteComponent &sprite = view.get<SpriteComponent>(*tileOpt);
+                        sprite.setSprite(TOWER);
+                    }
                 }
             }
         }
@@ -247,4 +247,15 @@ const int GameState::getMapWidth() const {
 
 const int GameState::getMapHeight() const {
     return mapHeight;
+}
+
+std::optional<entt::entity> GameState::getMapTileFromScreenPos(short xPos, short yPos) {
+    short x = renderer.reverseTransformX(xPos) / TILE_SIZE;
+    short y = renderer.reverseTransformY(yPos) / TILE_SIZE;
+
+    if(x >= 0 && y >= 0 && x < getMapWidth() && y < getMapHeight()) {
+        return std::make_optional<entt::entity>(getMapTile(x, y));
+    } else {
+        return std::optional<entt::entity>{};
+    }
 }
