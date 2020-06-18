@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <entity/registry.hpp>
-#include "../util/Mutex.h"
+#include "../util/LockGuard.h"
 
 extern "C" {
 #include <FreeRTOS.h>
@@ -12,7 +12,7 @@ extern "C" {
 class State {
 
 protected:
-    Mutex<entt::registry> registry;
+    LockGuard<entt::registry> registry;
     std::vector<TaskHandle_t> tasks;
 
     State() : registry{entt::registry(), xSemaphoreCreateMutex()}, tasks{std::vector<TaskHandle_t>()} {}
@@ -21,5 +21,5 @@ public:
     ~State();
     void resumeTasks();
     void suspendTasks();
-    Mutex<entt::registry> &getRegistry();
+    LockGuard<entt::registry> &getRegistry();
 };

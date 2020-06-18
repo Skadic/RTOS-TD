@@ -4,6 +4,8 @@
 
 #include "Game.h"
 #include "states/TestState.h"
+#include "states/GameState.h"
+#include "util/GlobalConsts.h"
 #include <FreeRTOS.h>
 #include <semphr.h>
 #include <task.h>
@@ -16,23 +18,18 @@
 #include <iostream>
 #include <entity/registry.hpp>
 
-Game::Game() {
+Game::Game() :
+    screenLock{xSemaphoreCreateMutex()},
+    drawSignal{xSemaphoreCreateBinary()},
+    drawHitboxSignal{xSemaphoreCreateBinary()}
+    {
     // Create semaphores to synchronize access to the draw commands and for the swap_buffer task to give a draw signal
-    screenLock = xSemaphoreCreateMutex();
-    swapBufferSignal = xSemaphoreCreateBinary();
-    drawSignal = xSemaphoreCreateBinary();
-    drawHitboxSignal = xSemaphoreCreateBinary();
-    xSemaphoreGive(swapBufferSignal);
+    drawSignal.unlock();
 }
 
-Game::~Game() {
-    vSemaphoreDelete(screenLock);
-    vSemaphoreDelete(drawSignal);
-    vSemaphoreDelete(drawHitboxSignal);
-}
+Game::~Game() = default;
 
 void Game::start(char *binPath) {
-
     // Get the path of the folder which contains the binary running the program
     auto path = tumUtilGetBinFolderPath(binPath);
 
@@ -47,7 +44,8 @@ void Game::start(char *binPath) {
     TaskHandle_t input = nullptr;
     xTaskCreate(inputTask, "input", 0, nullptr, 2, &input);
 
-    Game::getStateMachine().pushStack(new TestState(true));
+    //GameState gameState(10, 10);
+    Game::getStateMachine().pushStack(new GameState(10, 10));
 
     // Starts the task scheduler to start running the tasks
     vTaskStartScheduler();
@@ -63,23 +61,19 @@ Game& Game::get() {
     return instance;
 }
 
-SemaphoreHandle_t Game::getScreenLock() {
+Semaphore &Game::getScreenLock() {
     return screenLock;
 }
 
-SemaphoreHandle_t Game::getDrawSignal() {
+Semaphore &Game::getDrawSignal() {
     return drawSignal;
 }
 
-SemaphoreHandle_t Game::getDrawHitboxSignal() {
+Semaphore &Game::getDrawHitboxSignal() {
     return drawHitboxSignal;
 }
 
-SemaphoreHandle_t Game::getSwapBufferSignal() {
-    return swapBufferSignal;
-}
-
-Mutex<entt::registry> &Game::getActiveStateRegistry() {
+LockGuard<entt::registry> &Game::getActiveStateRegistry() {
     return stateMachine.activeState().getRegistry();
 }
 
@@ -98,7 +92,7 @@ void swapBufferTask(void *ptr) {
     while (true) {
         //if(xSemaphoreTake(game.getSwapBufferSignal(), 0) == pdTRUE) {
             // Take exclusive access to the screen
-            if (xSemaphoreTake(game.getScreenLock(), portMAX_DELAY) == pdTRUE) {
+            if (game.getScreenLock().lock(portMAX_DELAY)) {
                 // Update the Screen
                 tumDrawUpdateScreen();
 
@@ -106,8 +100,8 @@ void swapBufferTask(void *ptr) {
                 tumEventFetchEvents();
 
                 // Release the screenLock and give a draw signal
-                xSemaphoreGive(game.getScreenLock());
-                xSemaphoreGive(game.getDrawSignal());
+                game.getScreenLock().unlock();
+                game.getDrawSignal().unlock();
             }
         //}
         // Delay until the next frame

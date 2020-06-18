@@ -19,11 +19,7 @@ enum StateChange {
 class StateMachine {
 private:
 
-    Mutex<std::stack<std::unique_ptr<State>>> stateStack;
-    QueueHandle_t nextStateQueue;
-    QueueHandle_t operationQueue;
-    SemaphoreHandle_t queueLock;
-    bool changed;
+    LockGuard<std::stack<std::unique_ptr<State>>> stateStack;
 
 public:
     StateMachine();
@@ -32,6 +28,5 @@ public:
     void pushStack(State *state);
     void popStack();
 
-    bool hasChanged();
     State& activeState();
 };

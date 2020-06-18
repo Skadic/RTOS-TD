@@ -18,12 +18,12 @@ struct Sprite {
     virtual ~Sprite() = default;
 };
 
-struct SpriteComponent {
-    const Sprite *sprite;
+class SpriteComponent {
+    std::unique_ptr<Sprite> sprite;
 
-    explicit SpriteComponent(const Sprite *sprite);
-
-    const Sprite *getSprite() const;
+public:
+    explicit SpriteComponent(Sprite *sprite);
+    std::unique_ptr<Sprite> &getSprite();
 };
 
 

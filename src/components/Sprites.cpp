@@ -1,11 +1,12 @@
 #include "Sprites.h"
 #include <iostream>
 
-SpriteComponent::SpriteComponent(const Sprite *sprite) : sprite{sprite} {}
+SpriteComponent::SpriteComponent(Sprite *sprite) : sprite{std::unique_ptr<Sprite>(sprite)} {}
 
-const Sprite *SpriteComponent::getSprite() const {
+std::unique_ptr<Sprite> &SpriteComponent::getSprite() {
     return sprite;
 }
+
 
 RectangleSprite::RectangleSprite(int width, int height, unsigned int color, bool filled) {
     this->width = width;

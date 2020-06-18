@@ -9,14 +9,6 @@
 
 StateMachine::StateMachine() : stateStack{std::stack<std::unique_ptr<State>>(), xSemaphoreCreateMutex()} {
     std::cout << "Created State Machine" << std::endl;
-    queueLock = xSemaphoreCreateMutex();
-    nextStateQueue = xQueueCreate(3, sizeof(State*));
-    operationQueue = xQueueCreate(3, sizeof(StateChange));
-    changed = false;
-}
-
-bool StateMachine::hasChanged() {
-    return this->changed;
 }
 
 State &StateMachine::activeState() {

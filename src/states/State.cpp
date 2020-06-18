@@ -19,6 +19,6 @@ State::~State() {
     std::cout << "State deconstructed" << std::endl;
 }
 
-Mutex<entt::registry> &State::getRegistry() {
+LockGuard<entt::registry> &State::getRegistry() {
     return this->registry;
 }

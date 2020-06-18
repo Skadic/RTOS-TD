@@ -2,25 +2,19 @@
 
 #include <entity/registry.hpp>
 #include "states/StateMachine.h"
-#include "util/Mutex.h"
+#include "util/LockGuard.h"
 
 extern "C" {
 #include <FreeRTOS.h>
 #include <semphr.h>
 }
 
-inline const unsigned int TARGET_FPS = 144;
-inline const unsigned int FRAME_TIME_MS = 1000 / TARGET_FPS;
-
-inline const auto DEFAULT_STACK_SIZE = 100;
-
 class Game {
 
 private:
-    SemaphoreHandle_t screenLock;
-    SemaphoreHandle_t swapBufferSignal;
-    SemaphoreHandle_t drawSignal;
-    SemaphoreHandle_t drawHitboxSignal;
+    Semaphore screenLock;
+    Semaphore drawSignal;
+    Semaphore drawHitboxSignal;
 
     StateMachine stateMachine;
 
@@ -32,12 +26,11 @@ public:
 
     void start(char* binPath);
 
-    SemaphoreHandle_t getScreenLock();
-    SemaphoreHandle_t getSwapBufferSignal();
-    SemaphoreHandle_t getDrawSignal();
-    SemaphoreHandle_t getDrawHitboxSignal();
+    Semaphore &getScreenLock();
+    Semaphore &getDrawSignal();
+    Semaphore &getDrawHitboxSignal();
 
-    Mutex<entt::registry> &getActiveStateRegistry();
+    LockGuard<entt::registry> &getActiveStateRegistry();
     StateMachine &getStateMachine();
 
     Game(Game const&)               = delete;

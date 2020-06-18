@@ -3,6 +3,8 @@
 
 #include "../components/Components.h"
 #include "../Game.h"
+#include "../util/GlobalConsts.h"
+
 #include <cmath>
 #include <thread>
 #include <iostream>
@@ -12,19 +14,19 @@
 inline const float MOVE_SPEED = 300;
 
 
-void spawnSquare1(Mutex<entt::registry> &regMutex);
-void spawnSquare2(Mutex<entt::registry> &regMutex);
+void spawnSquare1(LockGuard<entt::registry> &regMutex);
+void spawnSquare2(LockGuard<entt::registry> &regMutex);
 
 TestState::TestState(bool b) : State() {
     std::cout << "State Constructed" << std::endl;
     // Spawn the task that will render the rectangles
     TaskHandle_t render = nullptr;
-    xTaskCreate(renderTask, "render", DEFAULT_STACK_SIZE, this, 1, &render);
+    xTaskCreate(renderTask, "render", DEFAULT_TASK_STACK_SIZE, this, 1, &render);
     tasks.push_back(render);
 
     // Spawn the task that will render the hitboxes
     TaskHandle_t drawHitboxes = nullptr;
-    xTaskCreate(drawHitboxesTask, "hitboxes", DEFAULT_STACK_SIZE, this, 1, &drawHitboxes);
+    xTaskCreate(drawHitboxesTask, "hitboxes", DEFAULT_TASK_STACK_SIZE, this, 1, &drawHitboxes);
     tasks.push_back(drawHitboxes);
 
     // Spawn the task that will move all entities with a Position and Velocity
@@ -34,12 +36,12 @@ TestState::TestState(bool b) : State() {
 
     // Spawn the task that will cause entities with a Position, Velocity, and hitbox to bounce off the edges of the screen
     TaskHandle_t bounce = nullptr;
-    xTaskCreate(bounceTask, "bounce", DEFAULT_STACK_SIZE, this, 1, &bounce);
+    xTaskCreate(bounceTask, "bounce", DEFAULT_TASK_STACK_SIZE, this, 1, &bounce);
     tasks.push_back(bounce);
 
     // Spawns the task that will spawn squares
     TaskHandle_t spawn = nullptr;
-    xTaskCreate(spawnTask, "spawn", DEFAULT_STACK_SIZE, this, 1, &spawn);
+    xTaskCreate(spawnTask, "spawn", DEFAULT_TASK_STACK_SIZE, this, 1, &spawn);
     tasks.push_back(spawn);
 
     suspendTasks();
@@ -60,28 +62,27 @@ void renderTask(void *statePointer) {
     while (true) {
         //std::cout << "render" << std::endl;
         // Try taking the Draw Signal semaphore. The task should only draw if a draw signal is given by the swap_buffer task
-        if(xSemaphoreTake(game.getDrawSignal(), portMAX_DELAY) == pdTRUE) {
+        if(game.getDrawSignal().lock(portMAX_DELAY)) {
             if(auto regOpt = regMutex.lock()) {
-                Guard<entt::registry> &registry = *regOpt;
+                Resource<entt::registry> &registry = *regOpt;
                 // Get all entities with a Position and a Rectangle Sprite component
                 auto view = registry->view<Position, SpriteComponent>();
 
                 // Takes the screenLock Semaphore to have exclusive access to drawing
-                xSemaphoreTake(game.getScreenLock(), portMAX_DELAY);
+                game.getScreenLock().lock(portMAX_DELAY);
                 // Clears the screen to black
                 tumDrawClear(0x000000);
 
                 // For every entity, gets the Position and the RectangleSprite and draws it to the screen
                 for (const auto &entity : view) {
                     const Position &pos = view.get<Position>(entity);
-                    const SpriteComponent &sprite = view.get<SpriteComponent>(entity);
+                    SpriteComponent &sprite = view.get<SpriteComponent>(entity);
 
                     sprite.getSprite()->draw(pos.x, pos.y);
                 }
 
                 // Releases the semaphore after drawing is done
-                xSemaphoreGive(game.getScreenLock());
-                xSemaphoreGive(game.getSwapBufferSignal());
+                game.getScreenLock().unlock();
                 //xSemaphoreGive(drawHitboxSignal);
             }
 
@@ -104,16 +105,17 @@ void drawHitboxesTask(void *statePointer) {
 
     while (true) {
         // Try taking the Draw Signal semaphore. The task should only draw if a draw signal is given by the other render tasks
-        if(xSemaphoreTake(game.getDrawHitboxSignal(), portMAX_DELAY) == pdTRUE) {
+        if(game.getDrawHitboxSignal().lock(portMAX_DELAY)) {
 
             if(auto regOpt = regMutex.lock()) {
-                Guard<entt::registry> &registry = *regOpt;
+                Resource<entt::registry> &registry = *regOpt;
 
                 // Get all entities with a Position and a Rectangle Sprite component
                 auto view = registry->view<Position, Hitbox>();
 
                 // Takes the screenLock Semaphore to have exclusive access to drawing
-                xSemaphoreTake(game.getScreenLock(), portMAX_DELAY);
+                game.getScreenLock().lock(portMAX_DELAY);
+
                 // For every entity, gets the Position and the RectangleSprite and draws it to the screen
                 for (const auto &entity : view) {
                     const Position &pos = view.get<Position>(entity);
@@ -122,7 +124,7 @@ void drawHitboxesTask(void *statePointer) {
                     tumDrawBox(pos.x - 1, pos.y - 1, hitbox.width + 2, hitbox.height + 2, 0xFF0000);
                 }
                 // Releases the semaphore after drawing is done
-                xSemaphoreGive(game.getScreenLock());
+                game.getScreenLock().unlock();
             }
 
             // The Task is delayed until the set time between frames has passed (1/fps seconds)
@@ -197,8 +199,8 @@ void spawnTask(void *statePointer) {
 
     static const short squareSize = 20;
 
-    const Sprite &rectSprite = RectangleSprite{squareSize, squareSize, 0x00ff00, false};
-    const Sprite &rectSpriteFilled = RectangleSprite{squareSize, squareSize, 0x00ff00, true};
+    Sprite *rectSprite = new RectangleSprite{squareSize, squareSize, 0x00ff00, false};
+    Sprite *rectSpriteFilled = new RectangleSprite{squareSize, squareSize, 0x00ff00, true};
     std::unique_ptr<Sprite> texSprite = std::make_unique<TextureSprite>("freertos.jpg");
 
     auto i = 0;
@@ -206,7 +208,7 @@ void spawnTask(void *statePointer) {
         //std::cout << "spawn" << std::endl;
 
         if (auto regOpt = regMutex.lock()) {
-            Guard<entt::registry> &regGuard = *regOpt;
+            Resource<entt::registry> &regGuard = *regOpt;
             entt::registry &registry = *regGuard;
 
             // Creates a square with the corresponding components
@@ -216,7 +218,7 @@ void spawnTask(void *statePointer) {
             registry.emplace<Position>(entity, SCREEN_WIDTH / 2 + 200 * std::sin(-angle),
                                        SCREEN_HEIGHT / 2 + 200 * std::cos(-angle));
             registry.emplace<Velocity>(entity, MOVE_SPEED * std::sin(angle), MOVE_SPEED * std::cos(angle));
-            registry.emplace<SpriteComponent>(entity, (i % 2) ? &rectSprite : &rectSpriteFilled);
+            registry.emplace<SpriteComponent>(entity, (i % 2) ? rectSprite : rectSpriteFilled);
             registry.emplace<Hitbox>(entity, squareSize, squareSize);
 
             i++;
