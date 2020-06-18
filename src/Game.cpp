@@ -48,7 +48,7 @@ void Game::start(char *binPath) {
     xTaskCreate(inputTask, "input", 0, nullptr, 2, &input);
 
     //GameState gameState(10, 10);
-    Game::getStateMachine().pushStack(new GameState(5, 4));
+    Game::getStateMachine().pushStack(new GameState(10, 10));
     //Game::getStateMachine().pushStack(new TestState);
 
     // Starts the task scheduler to start running the tasks

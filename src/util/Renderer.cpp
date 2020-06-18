@@ -12,16 +12,12 @@ Renderer::Renderer(short xOffset, short yOffset, float scale) : xOffset{xOffset}
 
 void Renderer::drawSprite(Sprite &sprite, short x, short y) {
     // Only draw the sprite if any part of it is visible on screen
-
-
     if(
             getTransformedX(x) < SCREEN_WIDTH &&
             getTransformedY(y) < SCREEN_HEIGHT &&
             getTransformedX(x + sprite.width) > 0 &&
             getTransformedY(y + sprite.height) > 0) {
         sprite.draw(getTransformedX(x), getTransformedY(y), this->scale);
-    } else {
-        std::cout << "Sprite not rendered!" << std::endl;
     }
 }
 

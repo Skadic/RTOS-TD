@@ -15,7 +15,7 @@
 static std::shared_ptr<Sprite> WALL = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0xFFFFFF, false);
 static std::shared_ptr<Sprite> TOWER = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FFFF, true);
 
-static std::shared_ptr<Sprite> PLAYER = std::make_shared<RectangleSprite>(PLAYER_SIZE, PLAYER_SIZE, 0x00FF00, true);
+static std::shared_ptr<Sprite> PLAYER = std::make_shared<TextureSprite>("player.png");
 
 void GameState::initMap() {
     auto registry = *this->registry.lock();
@@ -159,9 +159,6 @@ void gameControlPlayerTask(void *statePointer) {
                     renderer.setOffset((SCREEN_WIDTH / 2) / renderer.getScale() - pos.x - PLAYER_SIZE / 2, (SCREEN_HEIGHT / 2) / renderer.getScale() - pos.y - PLAYER_SIZE / 2);
                 }
             }
-
-            // Get all tile entities from the registry
-            auto tileView = registry->view<TilePosition, SpriteComponent>();
         }
 
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
@@ -175,8 +172,7 @@ GameState::GameState(int mapWidth, int mapHeight) :
         map{std::vector<std::vector<entt::entity>>()},
         mapWidth{mapWidth},
         mapHeight{mapHeight} {
-
-    renderer.setScale(1.5);
+    renderer.setScale(2);
 
     initMap();
     initPlayer();

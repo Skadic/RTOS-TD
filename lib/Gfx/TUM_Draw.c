@@ -1075,6 +1075,7 @@ image_handle_t tumDrawLoadScaledImage(char *filename, float scale)
 		goto err_surf;
 
 	ret->tex = SDL_CreateTextureFromSurface(renderer, ret->surf);
+	printf("%s\n", SDL_GetError());
 	if (ret->tex == NULL)
 		goto err_tex;
 
