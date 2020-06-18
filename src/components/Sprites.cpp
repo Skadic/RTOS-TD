@@ -1,6 +1,5 @@
 #include "Sprites.h"
 #include <iostream>
-#include <utility>
 
 SpriteComponent::SpriteComponent(Sprite *sprite) : sprite{std::shared_ptr<Sprite>(sprite)} {}
 
@@ -26,7 +25,7 @@ RectangleSprite::RectangleSprite(int width, int height, unsigned int color, bool
     this->filled = filled;
 }
 
-void RectangleSprite::draw(short x, short y, float scale) const {
+void RectangleSprite::draw(short x, short y, float scale) {
     if(filled) {
         tumDrawFilledBox(x, y, width * scale, height * scale, color);
     } else {
@@ -37,17 +36,20 @@ void RectangleSprite::draw(short x, short y, float scale) const {
 
 TextureSprite::TextureSprite(std::string path) {
     path.insert(0, "../resources/");
-    // Because we need a non-const char* and there's no better way to get that
-    auto chars = new char[path.size() + 1];
-    std::copy(path.begin(), path.end(), chars);
-    chars[path.size()] = '\0'; //0 Termination
-
+    std::cout << path << std::endl;
     this->path = path;
-    this->spriteHandle = tumDrawLoadImage(chars);
-    tumDrawGetLoadedImageSize(this->spriteHandle, &this->width, &this->height);
 }
 
-void TextureSprite::draw(short x, short y, float scale) const {
+void TextureSprite::draw(short x, short y, float scale) {
+    if(!spriteHandle) {
+        // Because we need a non-const char* and there's no better way to get that
+        // We're loading this lazily, because images cannot be loaded when the SDL Renderer is not initialized yet
+        auto chars = new char[path.size() + 1];
+        std::copy(path.begin(), path.end(), chars);
+        chars[path.size()] = '\0'; //0 Termination
+        this->spriteHandle = tumDrawLoadImage(chars);
+        tumDrawGetLoadedImageSize(this->spriteHandle, &this->width, &this->height);
+    }
     tumDrawSetLoadedImageScale(this->spriteHandle, scale);
     if(tumDrawLoadedImage(this->spriteHandle, x, y)) {
         std::cout << "Failed to draw" << std::endl;

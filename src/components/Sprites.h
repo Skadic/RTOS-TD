@@ -17,7 +17,7 @@ struct Sprite {
     virtual ~Sprite() = default;
 
 private:
-    virtual void draw(short x, short y, float scale) const = 0;
+    virtual void draw(short x, short y, float scale) = 0;
 };
 
 struct RectangleSprite : public Sprite {
@@ -26,7 +26,7 @@ struct RectangleSprite : public Sprite {
 
     explicit RectangleSprite(int width, int height, unsigned int color, bool filled);
 
-    void draw(short x, short y, float scale) const override;
+    void draw(short x, short y, float scale) override;
 };
 
 
@@ -38,7 +38,7 @@ struct TextureSprite : public Sprite {
 
     ~TextureSprite() override;
 
-    void draw(short x, short y, float scale) const override;
+    void draw(short x, short y, float scale) override;
 };
 
 class SpriteComponent {

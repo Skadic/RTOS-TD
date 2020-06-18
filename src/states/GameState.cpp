@@ -15,7 +15,7 @@
 static std::shared_ptr<Sprite> WALL = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0xFFFFFF, false);
 static std::shared_ptr<Sprite> TOWER = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FFFF, true);
 
-static std::shared_ptr<Sprite> PLAYER = std::make_shared<RectangleSprite>(PLAYER_SIZE, PLAYER_SIZE, 0x00FF00, true);
+static std::shared_ptr<Sprite> PLAYER = std::make_shared<TextureSprite>("player.png");
 
 void GameState::initMap() {
     auto registry = *this->registry.lock();
@@ -133,7 +133,7 @@ void gameControlPlayerTask(void *statePointer) {
             auto view = registry->view<Position, Velocity, Player>();
 
             if(auto inputOpt = game.getInput().lock()) {
-                auto &input = **inputOpt;
+                auto &input = *inputOpt;
 
                 for (auto &entity : view) {
                     Velocity &vel = view.get<Velocity>(entity);
@@ -177,9 +177,39 @@ void gameControlPlayerTask(void *statePointer) {
                     renderer.setOffset((SCREEN_WIDTH / 2) / renderer.getScale() - pos.x - PLAYER_SIZE / 2, (SCREEN_HEIGHT / 2) / renderer.getScale() - pos.y - PLAYER_SIZE / 2);
                 }
             }
+        }
 
-            // Get all tile entities from the registry
-            auto tileView = registry->view<TilePosition, SpriteComponent>();
+        vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+    }
+}
+
+void gameMouseInputTask(void *statePointer) {
+    GameState &state = *static_cast<GameState*>(statePointer);
+    auto &regMutex = state.getRegistry();
+    Game &game = Game::get();
+
+    auto lastWake = xTaskGetTickCount();
+
+    while(true) {
+
+        if(auto regOpt = regMutex.lock()) {
+            auto &registry = *regOpt;
+
+            if(auto inputOpt = game.getInput().lock()) {
+                auto &input = *inputOpt;
+                auto &renderer = state.getRenderer();
+
+                short x = renderer.reverseTransformX(input->getMouseX()) / TILE_SIZE;
+                short y = renderer.reverseTransformY(input->getMouseY()) / TILE_SIZE;
+
+                if(x >= 0 && y >= 0 && x < state.getMapWidth() && y < state.getMapHeight() && input->leftClicked()) {
+                    std::cout << x << ", " << y << std::endl;
+                    auto view = registry->view<TilePosition, SpriteComponent>();
+                    auto entity = state.getMapTile(x, y);
+                    SpriteComponent &sprite = view.get<SpriteComponent>(entity);
+                    sprite.setSprite(TOWER);
+                }
+            }
         }
 
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
@@ -193,8 +223,7 @@ GameState::GameState(int mapWidth, int mapHeight) :
         map{std::vector<std::vector<entt::entity>>()},
         mapWidth{mapWidth},
         mapHeight{mapHeight} {
-
-    renderer.setScale(1.5);
+    renderer.setScale(2);
 
     initMap();
     initPlayer();
@@ -202,6 +231,20 @@ GameState::GameState(int mapWidth, int mapHeight) :
     addTask(gameRenderTask, "render", DEFAULT_TASK_STACK_SIZE, this, 0);
     addTask(gameMoveTask, "move", DEFAULT_TASK_STACK_SIZE, this, 0);
     addTask(gameControlPlayerTask, "control", DEFAULT_TASK_STACK_SIZE, this, 0);
+    addTask(gameMouseInputTask, "mouse", DEFAULT_TASK_STACK_SIZE, this, 0);
+
 
     suspendTasks();
+}
+
+entt::entity &GameState::getMapTile(int x, int y) {
+    return map[y][x];
+}
+
+const int GameState::getMapWidth() const {
+    return mapWidth;
+}
+
+const int GameState::getMapHeight() const {
+    return mapHeight;
 }

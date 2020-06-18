@@ -23,10 +23,8 @@ Game::Game() :
     drawSignal{xSemaphoreCreateBinary()},
     drawHitboxSignal{xSemaphoreCreateBinary()},
     swapBufferSignal{xSemaphoreCreateBinary()},
-    buttons{std::vector<unsigned char>{}, xSemaphoreCreateMutex()}
+    buttons{InputHandler(), xSemaphoreCreateMutex()}
     {
-    // Create semaphores to synchronize access to the draw commands and for the swap_buffer task to give a draw signal
-    (*buttons.lock())->resize(SDL_NUM_SCANCODES);
     drawSignal.unlock();
 }
 
@@ -48,7 +46,7 @@ void Game::start(char *binPath) {
     xTaskCreate(inputTask, "input", 0, nullptr, 2, &input);
 
     //GameState gameState(10, 10);
-    Game::getStateMachine().pushStack(new GameState(5, 4));
+    Game::getStateMachine().pushStack(new GameState(10, 10));
     //Game::getStateMachine().pushStack(new TestState);
 
     // Starts the task scheduler to start running the tasks
@@ -56,6 +54,7 @@ void Game::start(char *binPath) {
 
     // Delete all tasks
     vTaskDelete(swap_buffer);
+    tumEventExit();
 }
 
 
@@ -88,7 +87,7 @@ Semaphore &Game::getSwapBufferSignal() {
     return swapBufferSignal;
 }
 
-LockGuard<std::vector<unsigned char>> &Game::getInput() {
+LockGuard<InputHandler> &Game::getInput() {
     return buttons;
 }
 
@@ -107,9 +106,6 @@ void swapBufferTask(void *ptr) {
                 // Update the Screen
                 tumDrawUpdateScreen();
 
-                // Update events (like keyboard and mouse input)
-                tumEventFetchEvents();
-
                 // Release the screenLock and give a draw signal
                 game.getScreenLock().unlock();
                 game.getDrawSignal().unlock();
@@ -127,10 +123,12 @@ void inputTask(void *ptr) {
 
     auto lastWake = xTaskGetTickCount();
     while (true) {
-        if(auto buttonOpt = input.lock()) {
-            xQueueReceive(buttonInputQueue, (**buttonOpt).data(), 0);
+        // Update input
+        if(auto inputOpt = input.lock()) {
+            // Update events (like keyboard and mouse input)
+            tumEventFetchEvents();
+            (*inputOpt)->update();
         }
-
         // Delay until the next frame
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
     }

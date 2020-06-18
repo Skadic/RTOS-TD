@@ -7,10 +7,19 @@
 class GameState : public State {
     std::vector<std::vector<entt::entity>> map;
     const int mapWidth;
+public:
+    const int getMapWidth() const;
+
+    const int getMapHeight() const;
+
+private:
     const int mapHeight;
 
 public:
     GameState(int mapWidth, int mapHeight);
+
+    entt::entity &getMapTile(int x, int y);
+
 
 
 private:

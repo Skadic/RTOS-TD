@@ -3,6 +3,7 @@
 #include <entity/registry.hpp>
 #include "states/StateMachine.h"
 #include "util/LockGuard.h"
+#include "util/InputHandler.h"
 
 extern "C" {
 #include <FreeRTOS.h>
@@ -16,7 +17,7 @@ private:
     Semaphore drawSignal;
     Semaphore drawHitboxSignal;
     Semaphore swapBufferSignal;
-    LockGuard<std::vector<unsigned char>> buttons;
+    LockGuard<InputHandler> buttons;
     StateMachine stateMachine;
 
     Game();
@@ -35,7 +36,7 @@ public:
     StateMachine &getStateMachine();
 
     LockGuard<entt::registry> &getActiveStateRegistry();
-    LockGuard<std::vector<unsigned char>> &getInput();
+    LockGuard<InputHandler> &getInput();
 
     Game(Game const&)               = delete;
     void operator=(Game const&)     = delete;
