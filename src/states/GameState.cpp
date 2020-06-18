@@ -15,7 +15,7 @@
 static std::shared_ptr<Sprite> WALL = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0xFFFFFF, false);
 static std::shared_ptr<Sprite> TOWER = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FFFF, true);
 
-static std::shared_ptr<Sprite> PLAYER = std::make_shared<TextureSprite>("player.png");
+static std::shared_ptr<Sprite> PLAYER = std::make_shared<RectangleSprite>(PLAYER_SIZE, PLAYER_SIZE, 0xFF0000, true);
 
 void GameState::initMap() {
     auto registry = *this->registry.lock();
@@ -139,21 +139,21 @@ void gameControlPlayerTask(void *statePointer) {
                     Velocity &vel = view.get<Velocity>(entity);
                     // Set Horizontal speed
 
-                     if(input[SDL_SCANCODE_LEFT] && !input[SDL_SCANCODE_RIGHT]) {
-                        if(input[SDL_SCANCODE_UP] && !input[SDL_SCANCODE_DOWN]) {
+                     if(input->buttonPressed(SDL_SCANCODE_LEFT) && !input->buttonPressed(SDL_SCANCODE_RIGHT)) {
+                        if(input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_DOWN)) {
                             vel.dx = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
                             vel.dy = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
-                        } else if(!input[SDL_SCANCODE_UP] && input[SDL_SCANCODE_DOWN]) {
+                        } else if(!input->buttonPressed(SDL_SCANCODE_UP) && input->buttonPressed(SDL_SCANCODE_DOWN)) {
                             vel.dx = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
                             vel.dy = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
                         } else {
                             vel.dx = -PLAYER_SPEED;
                         }
-                    } else if(!input[SDL_SCANCODE_LEFT] && input[SDL_SCANCODE_RIGHT]) {
-                        if(input[SDL_SCANCODE_UP] && !input[SDL_SCANCODE_DOWN]) {
+                    } else if(!input->buttonPressed(SDL_SCANCODE_LEFT) && input->buttonPressed(SDL_SCANCODE_RIGHT)) {
+                        if(input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_DOWN)) {
                             vel.dx = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
                             vel.dy = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
-                        } else if(!input[SDL_SCANCODE_UP] && input[SDL_SCANCODE_DOWN]) {
+                        } else if(!input->buttonPressed(SDL_SCANCODE_UP) && input->buttonPressed(SDL_SCANCODE_DOWN)) {
                             vel.dx = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
                             vel.dy = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
                         } else {
@@ -162,9 +162,9 @@ void gameControlPlayerTask(void *statePointer) {
                     } else {
                         vel.dx = 0;
 
-                        if(input[SDL_SCANCODE_UP] && !input[SDL_SCANCODE_DOWN]) {
+                        if(input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_DOWN)) {
                             vel.dy = -PLAYER_SPEED;
-                        } else if(!input[SDL_SCANCODE_UP] && input[SDL_SCANCODE_DOWN]) {
+                        } else if(!input->buttonPressed(SDL_SCANCODE_UP) && input->buttonPressed(SDL_SCANCODE_DOWN)) {
                             vel.dy = PLAYER_SPEED;
                         } else {
                             vel.dy = 0;
