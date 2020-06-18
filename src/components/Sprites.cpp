@@ -1,6 +1,5 @@
 #include "Sprites.h"
 #include <iostream>
-#include <utility>
 
 SpriteComponent::SpriteComponent(Sprite *sprite) : sprite{std::shared_ptr<Sprite>(sprite)} {}
 

@@ -133,22 +133,22 @@ void gameControlPlayerTask(void *statePointer) {
             auto view = registry->view<Position, Velocity, Player>();
 
             if(auto inputOpt = game.getInput().lock()) {
-                auto &input = **inputOpt;
+                auto &input = *inputOpt;
 
                 for (auto &entity : view) {
                     Velocity &vel = view.get<Velocity>(entity);
                     // Set Horizontal speed
-                    if(input[SDL_SCANCODE_LEFT] && !input[SDL_SCANCODE_RIGHT]) {
+                    if(input->buttonPressed(SDL_SCANCODE_LEFT) && !input->buttonPressed(SDL_SCANCODE_RIGHT)) {
                         vel.dx = -PLAYER_SPEED;
-                    } else if(!input[SDL_SCANCODE_LEFT] && input[SDL_SCANCODE_RIGHT]) {
+                    } else if(!input->buttonPressed(SDL_SCANCODE_LEFT) && input->buttonPressed(SDL_SCANCODE_RIGHT)) {
                         vel.dx = PLAYER_SPEED;
                     } else {
                         vel.dx = 0;
                     }
 
-                    if(input[SDL_SCANCODE_UP] && !input[SDL_SCANCODE_DOWN]) {
+                    if(input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_DOWN)) {
                         vel.dy = -PLAYER_SPEED;
-                    } else if(!input[SDL_SCANCODE_UP] && input[SDL_SCANCODE_DOWN]) {
+                    } else if(!input->buttonPressed(SDL_SCANCODE_UP) && input->buttonPressed(SDL_SCANCODE_DOWN)) {
                         vel.dy = PLAYER_SPEED;
                     } else {
                         vel.dy = 0;
