@@ -9,8 +9,8 @@ class GameState : public State {
     const int mapWidth;
 public:
     const int getMapWidth() const;
-
     const int getMapHeight() const;
+    std::optional<entt::entity> getMapTileFromScreenPos(short x, short y);
 
 private:
     const int mapHeight;
