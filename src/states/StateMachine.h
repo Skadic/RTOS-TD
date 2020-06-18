@@ -19,7 +19,7 @@ enum StateChange {
 class StateMachine {
 private:
 
-    std::stack<std::unique_ptr<State>> stateStack;
+    Mutex<std::stack<std::unique_ptr<State>>> stateStack;
     QueueHandle_t nextStateQueue;
     QueueHandle_t operationQueue;
     SemaphoreHandle_t queueLock;
@@ -29,11 +29,9 @@ public:
     StateMachine();
     StateMachine(const StateMachine &) = delete;
 
-    void enqueuePush(State *state);
-    void enqueuePop();
+    void pushStack(State *state);
+    void popStack();
 
     bool hasChanged();
     State& activeState();
-
-    StateChange handleOperation();
 };

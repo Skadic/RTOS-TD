@@ -2,9 +2,6 @@
 // Created by skadic on 15.06.20.
 //
 
-
-
-
 #include "Game.h"
 #include "states/TestState.h"
 #include <FreeRTOS.h>
@@ -47,16 +44,10 @@ void Game::start(char *binPath) {
     TaskHandle_t swap_buffer = nullptr;
     xTaskCreate(swapBufferTask, "swap_buffer", 0, nullptr, 2, &swap_buffer);
 
-    // Spawn the task that will be responsible for switching states
-    TaskHandle_t state_machine = nullptr;
-    xTaskCreate(stateMachineTask, "state_machine", 0, nullptr, 2, &state_machine);
-
     TaskHandle_t input = nullptr;
     xTaskCreate(inputTask, "input", 0, nullptr, 2, &input);
 
-    TestState testState;
-
-    Game::getStateMachine().enqueuePush(&testState);
+    Game::getStateMachine().pushStack(new TestState(true));
 
     // Starts the task scheduler to start running the tasks
     vTaskStartScheduler();
@@ -105,9 +96,7 @@ void swapBufferTask(void *ptr) {
     // Get Draw access for this thread
     tumDrawBindThread();
     while (true) {
-        if(xSemaphoreTake(game.getSwapBufferSignal(), 0) == pdTRUE) {
-            std::cout << uxTaskGetNumberOfTasks() << std::endl;
-            //std::cout << "swap buffer" << std::endl;
+        //if(xSemaphoreTake(game.getSwapBufferSignal(), 0) == pdTRUE) {
             // Take exclusive access to the screen
             if (xSemaphoreTake(game.getScreenLock(), portMAX_DELAY) == pdTRUE) {
                 // Update the Screen
@@ -120,18 +109,7 @@ void swapBufferTask(void *ptr) {
                 xSemaphoreGive(game.getScreenLock());
                 xSemaphoreGive(game.getDrawSignal());
             }
-        }
-        // Delay until the next frame
-        vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
-    }
-}
-
-void stateMachineTask(void *ptr) {
-    StateMachine& stateMachine = Game::get().getStateMachine();
-
-    auto lastWake = xTaskGetTickCount();
-    while (true) {
-        stateMachine.handleOperation();
+        //}
         // Delay until the next frame
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
     }
@@ -141,13 +119,20 @@ void stateMachineTask(void *ptr) {
 void inputTask(void *ptr) {
 
     static unsigned char buttons[SDL_NUM_SCANCODES];
+    static bool added = false;
     auto &stateMachine = Game::get().getStateMachine();
     auto lastWake = xTaskGetTickCount();
     while (true) {
         xQueueReceive(buttonInputQueue, &buttons, 0);
 
-        if(buttons[SDL_SCANCODE_W]) {
-            stateMachine.enqueuePush(new TestState);
+        if(!added && buttons[SDL_SCANCODE_W]) {
+            stateMachine.pushStack(new TestState(false));
+            added = true;
+        }
+
+        if(added && buttons[SDL_SCANCODE_S]) {
+            stateMachine.popStack();
+            added = false;
         }
 
         // Delay until the next frame

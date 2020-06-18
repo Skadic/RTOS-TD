@@ -16,6 +16,7 @@ void State::suspendTasks() {
 
 State::~State() {
     deleteAll(this->tasks);
+    std::cout << "State deconstructed" << std::endl;
 }
 
 Mutex<entt::registry> &State::getRegistry() {

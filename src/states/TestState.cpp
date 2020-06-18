@@ -11,7 +11,12 @@
 
 inline const float MOVE_SPEED = 300;
 
-TestState::TestState() : State() {
+
+void spawnSquare1(Mutex<entt::registry> &regMutex);
+void spawnSquare2(Mutex<entt::registry> &regMutex);
+
+TestState::TestState(bool b) : State() {
+    std::cout << "State Constructed" << std::endl;
     // Spawn the task that will render the rectangles
     TaskHandle_t render = nullptr;
     xTaskCreate(renderTask, "render", DEFAULT_STACK_SIZE, this, 1, &render);
@@ -49,12 +54,11 @@ void renderTask(void *statePointer) {
     auto &state = *static_cast<TestState*>(statePointer);
     auto &regMutex = state.getRegistry();
 
-
     // The last time this task was waked by the scheduler
     auto lastWake = xTaskGetTickCount();
 
     while (true) {
-        std::cout << "render" << std::endl;
+        //std::cout << "render" << std::endl;
         // Try taking the Draw Signal semaphore. The task should only draw if a draw signal is given by the swap_buffer task
         if(xSemaphoreTake(game.getDrawSignal(), portMAX_DELAY) == pdTRUE) {
             if(auto regOpt = regMutex.lock()) {
@@ -137,7 +141,7 @@ void movementTask(void *statePointer) {
     auto lastRun = lastWake; // Used to calculate the time difference between now and the last time the function was run
 
     while (true) {
-        std::cout << "move" << std::endl;
+        //std::cout << "move" << std::endl;
         double dt = (xTaskGetTickCount() - lastRun) / 1000.0; // The time between now and the last run of this task in seconds
 
 
@@ -164,7 +168,7 @@ void bounceTask(void *statePointer) {
     auto lastWake = xTaskGetTickCount();
 
     while (true) {
-        std::cout << "bounce" << std::endl;
+        //std::cout << "bounce" << std::endl;
 
         if (auto regOpt = regMutex.lock()) {
             auto registry = *std::move(regOpt);
@@ -197,9 +201,9 @@ void spawnTask(void *statePointer) {
     const Sprite &rectSpriteFilled = RectangleSprite{squareSize, squareSize, 0x00ff00, true};
     std::unique_ptr<Sprite> texSprite = std::make_unique<TextureSprite>("freertos.jpg");
 
-    static auto i = 0;
+    auto i = 0;
     while (true) {
-        std::cout << "spawn" << std::endl;
+        //std::cout << "spawn" << std::endl;
 
         if (auto regOpt = regMutex.lock()) {
             Guard<entt::registry> &regGuard = *regOpt;
