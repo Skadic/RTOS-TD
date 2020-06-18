@@ -15,23 +15,25 @@ private:
     Semaphore screenLock;
     Semaphore drawSignal;
     Semaphore drawHitboxSignal;
-
+    Semaphore swapBufferSignal;
     StateMachine stateMachine;
 
     Game();
     ~Game();
 
 public:
-    static Game& get();
 
+    static Game& get();
     void start(char* binPath);
 
     Semaphore &getScreenLock();
+
     Semaphore &getDrawSignal();
     Semaphore &getDrawHitboxSignal();
+    Semaphore &getSwapBufferSignal();
+    StateMachine &getStateMachine();
 
     LockGuard<entt::registry> &getActiveStateRegistry();
-    StateMachine &getStateMachine();
 
     Game(Game const&)               = delete;
     void operator=(Game const&)     = delete;

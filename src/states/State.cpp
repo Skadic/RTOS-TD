@@ -22,3 +22,7 @@ State::~State() {
 LockGuard<entt::registry> &State::getRegistry() {
     return this->registry;
 }
+
+Renderer &State::getRenderer() {
+    return renderer;
+}

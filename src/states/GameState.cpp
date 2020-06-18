@@ -41,7 +41,6 @@ void renderMapTask(void *statePointer) {
 
     GameState &state = *static_cast<GameState*>(statePointer);
     auto &regMutex = state.getRegistry();
-
     Game &game = Game::get();
 
     auto lastWake = xTaskGetTickCount();
@@ -49,6 +48,7 @@ void renderMapTask(void *statePointer) {
     while(true) {
 
         if(game.getDrawSignal().lock(portMAX_DELAY)) {
+            std::cout << "Game render" << std::endl;
             if(auto regOpt = regMutex.lock()) {
                 auto &registry = *regOpt;
                 auto view = registry->view<TilePosition, SpriteComponent>();
@@ -60,10 +60,11 @@ void renderMapTask(void *statePointer) {
                     for(auto &entity : view) {
                         TilePosition &pos = view.get<TilePosition>(entity);
                         SpriteComponent &sprite = view.get<SpriteComponent>(entity);
-                        sprite.getSprite()->draw(pos.x * TILE_SIZE, pos.y * TILE_SIZE);
+                        state.getRenderer().draw(*sprite.getSprite(), pos.x * TILE_SIZE, pos.y * TILE_SIZE);
                     }
 
                     game.getScreenLock().unlock();
+                    game.getSwapBufferSignal().unlock();
                 }
             }
         }

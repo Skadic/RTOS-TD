@@ -21,7 +21,8 @@
 Game::Game() :
     screenLock{xSemaphoreCreateMutex()},
     drawSignal{xSemaphoreCreateBinary()},
-    drawHitboxSignal{xSemaphoreCreateBinary()}
+    drawHitboxSignal{xSemaphoreCreateBinary()},
+    swapBufferSignal{xSemaphoreCreateBinary()}
     {
     // Create semaphores to synchronize access to the draw commands and for the swap_buffer task to give a draw signal
     drawSignal.unlock();
@@ -46,13 +47,13 @@ void Game::start(char *binPath) {
 
     //GameState gameState(10, 10);
     Game::getStateMachine().pushStack(new GameState(10, 10));
+    //Game::getStateMachine().pushStack(new TestState);
 
     // Starts the task scheduler to start running the tasks
     vTaskStartScheduler();
 
     // Delete all tasks
     vTaskDelete(swap_buffer);
-    //vTaskDelete(state_machine);
 }
 
 
@@ -81,6 +82,10 @@ StateMachine &Game::getStateMachine() {
     return stateMachine;
 }
 
+Semaphore &Game::getSwapBufferSignal() {
+    return swapBufferSignal;
+}
+
 void swapBufferTask(void *ptr) {
 
     Game& game = Game::get();
@@ -90,7 +95,7 @@ void swapBufferTask(void *ptr) {
     // Get Draw access for this thread
     tumDrawBindThread();
     while (true) {
-        //if(xSemaphoreTake(game.getSwapBufferSignal(), 0) == pdTRUE) {
+        if(game.getSwapBufferSignal().lock(portMAX_DELAY)) {
             // Take exclusive access to the screen
             if (game.getScreenLock().lock(portMAX_DELAY)) {
                 // Update the Screen
@@ -103,7 +108,7 @@ void swapBufferTask(void *ptr) {
                 game.getScreenLock().unlock();
                 game.getDrawSignal().unlock();
             }
-        //}
+        }
         // Delay until the next frame
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
     }
@@ -120,7 +125,7 @@ void inputTask(void *ptr) {
         xQueueReceive(buttonInputQueue, &buttons, 0);
 
         if(!added && buttons[SDL_SCANCODE_W]) {
-            stateMachine.pushStack(new TestState(false));
+            stateMachine.pushStack(new TestState);
             added = true;
         }
 

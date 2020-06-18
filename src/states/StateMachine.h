@@ -18,7 +18,6 @@ enum StateChange {
 
 class StateMachine {
 private:
-
     LockGuard<std::stack<std::unique_ptr<State>>> stateStack;
 
 public:

@@ -10,12 +10,14 @@ extern "C" {
 
 
 struct Sprite {
+    friend class Renderer;
     int width;
     int height;
 
-    virtual void draw(short x, short y) const = 0;
-
     virtual ~Sprite() = default;
+
+private:
+    virtual void draw(short x, short y, float scale) const = 0;
 };
 
 class SpriteComponent {
@@ -33,7 +35,7 @@ struct RectangleSprite : Sprite {
 
     explicit RectangleSprite(int width, int height, unsigned int color, bool filled);
 
-    void draw(short x, short y) const override;
+    void draw(short x, short y, float scale) const override;
 };
 
 struct TextureSprite : Sprite {
@@ -42,7 +44,7 @@ struct TextureSprite : Sprite {
 
     explicit TextureSprite(std::string path);
 
-    ~TextureSprite();
+    ~TextureSprite() override;
 
-    void draw(short x, short y) const override;
+    void draw(short x, short y, float scale) const override;
 };

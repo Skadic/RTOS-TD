@@ -7,9 +7,7 @@
 #include "State.h"
 #include <iostream>
 
-StateMachine::StateMachine() : stateStack{std::stack<std::unique_ptr<State>>(), xSemaphoreCreateMutex()} {
-    std::cout << "Created State Machine" << std::endl;
-}
+StateMachine::StateMachine() : stateStack{std::stack<std::unique_ptr<State>>(), xSemaphoreCreateMutex()} {}
 
 State &StateMachine::activeState() {
     return *(*stateStack.lock(portMAX_DELAY))->top();

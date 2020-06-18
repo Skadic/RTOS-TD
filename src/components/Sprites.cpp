@@ -15,11 +15,11 @@ RectangleSprite::RectangleSprite(int width, int height, unsigned int color, bool
     this->filled = filled;
 }
 
-void RectangleSprite::draw(short x, short y) const {
+void RectangleSprite::draw(short x, short y, float scale) const {
     if(filled) {
-        tumDrawFilledBox(x, y, width, height, color);
+        tumDrawFilledBox(x, y, width * scale, height * scale, color);
     } else {
-        tumDrawBox(x, y, width, height, color);
+        tumDrawBox(x, y, width * scale, height * scale, color);
     }
 }
 
@@ -36,7 +36,8 @@ TextureSprite::TextureSprite(std::string path) {
     tumDrawGetLoadedImageSize(this->spriteHandle, &this->width, &this->height);
 }
 
-void TextureSprite::draw(short x, short y) const {
+void TextureSprite::draw(short x, short y, float scale) const {
+    tumDrawSetLoadedImageScale(this->spriteHandle, scale);
     if(tumDrawLoadedImage(this->spriteHandle, x, y)) {
         std::cout << "Failed to draw" << std::endl;
     };
@@ -45,6 +46,5 @@ void TextureSprite::draw(short x, short y) const {
 // Unload the Image upon Destruction
 TextureSprite::~TextureSprite() {
     std::cout << "Unloading image " << path << std::endl;
-    std::cout.flush();
     tumDrawFreeLoadedImage(&this->spriteHandle);
 }

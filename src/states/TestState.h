@@ -14,7 +14,7 @@ extern "C" {
 
 class TestState : public State {
 public:
-    TestState(bool b);
+    TestState();
 };
 
 

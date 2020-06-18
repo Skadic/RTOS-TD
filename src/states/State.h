@@ -3,6 +3,7 @@
 #include <vector>
 #include <entity/registry.hpp>
 #include "../util/LockGuard.h"
+#include "../util/Renderer.h"
 
 extern "C" {
 #include <FreeRTOS.h>
@@ -14,6 +15,7 @@ class State {
 protected:
     LockGuard<entt::registry> registry;
     std::vector<TaskHandle_t> tasks;
+    Renderer renderer;
 
     State() : registry{entt::registry(), xSemaphoreCreateMutex()}, tasks{std::vector<TaskHandle_t>()} {}
 
@@ -22,4 +24,5 @@ public:
     void resumeTasks();
     void suspendTasks();
     LockGuard<entt::registry> &getRegistry();
+    Renderer &getRenderer();
 };
