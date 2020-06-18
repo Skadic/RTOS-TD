@@ -22,9 +22,11 @@ Game::Game() :
     screenLock{xSemaphoreCreateMutex()},
     drawSignal{xSemaphoreCreateBinary()},
     drawHitboxSignal{xSemaphoreCreateBinary()},
-    swapBufferSignal{xSemaphoreCreateBinary()}
+    swapBufferSignal{xSemaphoreCreateBinary()},
+    buttons{std::vector<unsigned char>{}, xSemaphoreCreateMutex()}
     {
     // Create semaphores to synchronize access to the draw commands and for the swap_buffer task to give a draw signal
+    (*buttons.lock())->resize(SDL_NUM_SCANCODES);
     drawSignal.unlock();
 }
 
@@ -46,7 +48,7 @@ void Game::start(char *binPath) {
     xTaskCreate(inputTask, "input", 0, nullptr, 2, &input);
 
     //GameState gameState(10, 10);
-    Game::getStateMachine().pushStack(new GameState(10, 10));
+    Game::getStateMachine().pushStack(new GameState(5, 4));
     //Game::getStateMachine().pushStack(new TestState);
 
     // Starts the task scheduler to start running the tasks
@@ -86,6 +88,10 @@ Semaphore &Game::getSwapBufferSignal() {
     return swapBufferSignal;
 }
 
+LockGuard<std::vector<unsigned char>> &Game::getInput() {
+    return buttons;
+}
+
 void swapBufferTask(void *ptr) {
 
     Game& game = Game::get();
@@ -114,24 +120,15 @@ void swapBufferTask(void *ptr) {
     }
 }
 
-
+// The task that every frame receives the button input from the message queue
 void inputTask(void *ptr) {
+    auto &game = Game::get();
+    auto &input = game.getInput();
 
-    static unsigned char buttons[SDL_NUM_SCANCODES];
-    static bool added = false;
-    auto &stateMachine = Game::get().getStateMachine();
     auto lastWake = xTaskGetTickCount();
     while (true) {
-        xQueueReceive(buttonInputQueue, &buttons, 0);
-
-        if(!added && buttons[SDL_SCANCODE_W]) {
-            stateMachine.pushStack(new TestState);
-            added = true;
-        }
-
-        if(added && buttons[SDL_SCANCODE_S]) {
-            stateMachine.popStack();
-            added = false;
+        if(auto buttonOpt = input.lock()) {
+            xQueueReceive(buttonInputQueue, (**buttonOpt).data(), 0);
         }
 
         // Delay until the next frame

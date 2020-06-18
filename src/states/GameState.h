@@ -15,6 +15,5 @@ public:
 
 private:
     void initMap();
+    void initPlayer();
 };
-
-void renderMapTask(void *statePointer);

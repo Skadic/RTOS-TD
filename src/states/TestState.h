@@ -19,13 +19,3 @@ public:
 
 
 std::vector<TaskHandle_t> initTestTasks(entt::registry &registry);
-
-void renderTask(void *statePointer);
-
-void drawHitboxesTask(void *statePointer);
-
-void movementTask(void *statePointer);
-
-void bounceTask(void *statePointer);
-
-void spawnTask(void *statePointer);

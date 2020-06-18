@@ -16,6 +16,7 @@ private:
     Semaphore drawSignal;
     Semaphore drawHitboxSignal;
     Semaphore swapBufferSignal;
+    LockGuard<std::vector<unsigned char>> buttons;
     StateMachine stateMachine;
 
     Game();
@@ -34,6 +35,7 @@ public:
     StateMachine &getStateMachine();
 
     LockGuard<entt::registry> &getActiveStateRegistry();
+    LockGuard<std::vector<unsigned char>> &getInput();
 
     Game(Game const&)               = delete;
     void operator=(Game const&)     = delete;

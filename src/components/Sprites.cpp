@@ -1,10 +1,21 @@
 #include "Sprites.h"
 #include <iostream>
+#include <utility>
 
-SpriteComponent::SpriteComponent(Sprite *sprite) : sprite{std::unique_ptr<Sprite>(sprite)} {}
+SpriteComponent::SpriteComponent(Sprite *sprite) : sprite{std::shared_ptr<Sprite>(sprite)} {}
 
-std::unique_ptr<Sprite> &SpriteComponent::getSprite() {
+std::shared_ptr<Sprite> &SpriteComponent::getSprite() {
     return sprite;
+}
+
+SpriteComponent::SpriteComponent(std::shared_ptr<Sprite> &sprite) : sprite{sprite} {}
+
+void SpriteComponent::setSprite(std::shared_ptr<Sprite> &s) {
+    this->sprite = s;
+}
+
+void SpriteComponent::setSprite(Sprite *s) {
+    this->sprite = std::shared_ptr<Sprite>(s);
 }
 
 

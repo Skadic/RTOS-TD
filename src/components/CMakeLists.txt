@@ -3,6 +3,7 @@ set(COMPONENTS_SOURCES
         Position.cpp
         Sprites.cpp
         Velocity.cpp
-        TilePosition.cpp)
+        TilePosition.cpp
+        Health.cpp)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${COMPONENTS_SOURCES})

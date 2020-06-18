@@ -20,16 +20,7 @@ private:
     virtual void draw(short x, short y, float scale) const = 0;
 };
 
-class SpriteComponent {
-    std::unique_ptr<Sprite> sprite;
-
-public:
-    explicit SpriteComponent(Sprite *sprite);
-    std::unique_ptr<Sprite> &getSprite();
-};
-
-
-struct RectangleSprite : Sprite {
+struct RectangleSprite : public Sprite {
     unsigned int color;
     bool filled;
 
@@ -38,7 +29,8 @@ struct RectangleSprite : Sprite {
     void draw(short x, short y, float scale) const override;
 };
 
-struct TextureSprite : Sprite {
+
+struct TextureSprite : public Sprite {
     std::string path;
     image_handle_t spriteHandle;
 
@@ -47,4 +39,15 @@ struct TextureSprite : Sprite {
     ~TextureSprite() override;
 
     void draw(short x, short y, float scale) const override;
+};
+
+class SpriteComponent {
+    std::shared_ptr<Sprite> sprite;
+
+public:
+    explicit SpriteComponent(std::shared_ptr<Sprite> &sprite);
+    explicit SpriteComponent(Sprite *sprite);
+    std::shared_ptr<Sprite> &getSprite();
+    void setSprite(std::shared_ptr<Sprite> &s);
+    void setSprite(Sprite *s);
 };

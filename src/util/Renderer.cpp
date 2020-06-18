@@ -5,15 +5,23 @@
 #include "Renderer.h"
 
 #include <TUM_Draw.h>
-
+#include <iostream>
 
 
 Renderer::Renderer(short xOffset, short yOffset, float scale) : xOffset{xOffset}, yOffset{yOffset}, scale{scale} {}
 
-void Renderer::draw(Sprite &sprite, short x, short y) {
+void Renderer::drawSprite(Sprite &sprite, short x, short y) {
     // Only draw the sprite if any part of it is visible on screen
-    if(x < SCREEN_WIDTH && y < SCREEN_HEIGHT && x + sprite.width > 0 && y + sprite.height > 0) {
-        sprite.draw(this->getTransformedX(x), this->getTransformedY(y), this->scale);
+
+
+    if(
+            getTransformedX(x) < SCREEN_WIDTH &&
+            getTransformedY(y) < SCREEN_HEIGHT &&
+            getTransformedX(x + sprite.width) > 0 &&
+            getTransformedY(y + sprite.height) > 0) {
+        sprite.draw(getTransformedX(x), getTransformedY(y), this->scale);
+    } else {
+        std::cout << "Sprite not rendered!" << std::endl;
     }
 }
 
@@ -53,6 +61,18 @@ void Renderer::addXOffset(short x) {
 
 void Renderer::addYOffset(short y) {
     this->yOffset += y;
+}
+
+float Renderer::getScale() {
+    return scale;
+}
+
+short Renderer::getYOffset() {
+    return yOffset;
+}
+
+short Renderer::getXOffset() {
+    return xOffset;
 }
 
 

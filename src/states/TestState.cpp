@@ -13,40 +13,6 @@
 
 inline const float MOVE_SPEED = 300;
 
-
-void spawnSquare1(LockGuard<entt::registry> &regMutex);
-void spawnSquare2(LockGuard<entt::registry> &regMutex);
-
-TestState::TestState() : State() {
-    std::cout << "State Constructed" << std::endl;
-    // Spawn the task that will render the rectangles
-    TaskHandle_t render = nullptr;
-    xTaskCreate(renderTask, "render", DEFAULT_TASK_STACK_SIZE, this, 1, &render);
-    tasks.push_back(render);
-
-    // Spawn the task that will render the hitboxes
-    TaskHandle_t drawHitboxes = nullptr;
-    xTaskCreate(drawHitboxesTask, "hitboxes", DEFAULT_TASK_STACK_SIZE, this, 1, &drawHitboxes);
-    tasks.push_back(drawHitboxes);
-
-    // Spawn the task that will move all entities with a Position and Velocity
-    TaskHandle_t movement = nullptr;
-    xTaskCreate(movementTask, "movement", 0, this, 1, &movement);
-    tasks.push_back(movement);
-
-    // Spawn the task that will cause entities with a Position, Velocity, and hitbox to bounce off the edges of the screen
-    TaskHandle_t bounce = nullptr;
-    xTaskCreate(bounceTask, "bounce", DEFAULT_TASK_STACK_SIZE, this, 1, &bounce);
-    tasks.push_back(bounce);
-
-    // Spawns the task that will spawn squares
-    TaskHandle_t spawn = nullptr;
-    xTaskCreate(spawnTask, "spawn", DEFAULT_TASK_STACK_SIZE, this, 1, &spawn);
-    tasks.push_back(spawn);
-
-    suspendTasks();
-}
-
 // The task that should render the Rectangles to the screen
 void renderTask(void *statePointer) {
     //std::cout << "Thread[" << std::this_thread::get_id() << "] running task: " << pcTaskGetName(xTaskGetCurrentTaskHandle()) << std::endl;
@@ -63,7 +29,6 @@ void renderTask(void *statePointer) {
         //std::cout << "render" << std::endl;
         // Try taking the Draw Signal semaphore. The task should only draw if a draw signal is given by the swap_buffer task
         if(game.getDrawSignal().lock(portMAX_DELAY)) {
-            std::cout << "Test render" << std::endl;
             if(auto regOpt = regMutex.lock()) {
                 Resource<entt::registry> &registry = *regOpt;
                 // Get all entities with a Position and a Rectangle Sprite component
@@ -79,7 +44,7 @@ void renderTask(void *statePointer) {
                     const Position &pos = view.get<Position>(entity);
                     SpriteComponent &sprite = view.get<SpriteComponent>(entity);
 
-                    state.getRenderer().draw(*sprite.getSprite(), pos.x, pos.y);
+                    state.getRenderer().drawSprite(*sprite.getSprite(), pos.x, pos.y);
                 }
 
                 // Releases the semaphore after drawing is done
@@ -141,11 +106,10 @@ void movementTask(void *statePointer) {
     auto &state = *static_cast<TestState*>(statePointer);
     auto &regMutex = state.getRegistry();
     auto lastWake = xTaskGetTickCount(); // Only used to delay the task by the correct time
-    auto lastRun = lastWake; // Used to calculate the time difference between now and the last time the function was run
 
     while (true) {
         //std::cout << "move" << std::endl;
-        double dt = (xTaskGetTickCount() - lastRun) / 1000.0; // The time between now and the last run of this task in seconds
+        double dt = FRAME_TIME_MS / 1000.0; // The time between now and the last run of this task in seconds
 
 
         if(auto regOpt = regMutex.lock()) {
@@ -157,7 +121,6 @@ void movementTask(void *statePointer) {
             });
         }
 
-        lastRun = xTaskGetTickCount();
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
     }
 }
@@ -200,6 +163,9 @@ void spawnTask(void *statePointer) {
 
     static const short squareSize = 20;
 
+    static std::shared_ptr<Sprite> rectSprite = std::make_shared<RectangleSprite>(squareSize, squareSize, 0x00ff00, false);
+    static std::shared_ptr<Sprite> rectSpriteFilled = std::make_shared<RectangleSprite>(squareSize, squareSize, 0x00ff00, true);
+
     auto i = 0;
     while (true) {
         //std::cout << "spawn" << std::endl;
@@ -208,8 +174,6 @@ void spawnTask(void *statePointer) {
             Resource<entt::registry> &regGuard = *regOpt;
             entt::registry &registry = *regGuard;
 
-            Sprite *sprite = (i % 2) ? new RectangleSprite{squareSize, squareSize, 0x00ff00, false} : new RectangleSprite{squareSize, squareSize, 0x00ff00, true};
-
             // Creates a square with the corresponding components
             auto entity = registry.create();
             auto angle = 2 * M_PI * i / 80 + 1;
@@ -217,7 +181,7 @@ void spawnTask(void *statePointer) {
             registry.emplace<Position>(entity, SCREEN_WIDTH / 2 + 200 * std::sin(-angle),
                                        SCREEN_HEIGHT / 2 + 200 * std::cos(-angle));
             registry.emplace<Velocity>(entity, MOVE_SPEED * std::sin(angle), MOVE_SPEED * std::cos(angle));
-            registry.emplace<SpriteComponent>(entity, sprite);
+            registry.emplace<SpriteComponent>(entity, (i % 2) ? rectSprite : rectSpriteFilled);
             registry.emplace<Hitbox>(entity, squareSize, squareSize);
 
             i++;
@@ -225,4 +189,24 @@ void spawnTask(void *statePointer) {
         // The task should be delayed until 1/6th second has passed
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS * TARGET_FPS / 2);
     }
+}
+
+TestState::TestState() : State() {
+    std::cout << "State Constructed" << std::endl;
+    // Spawn the task that will render the rectangles
+    addTask(renderTask, "render", DEFAULT_TASK_STACK_SIZE, this, 1);
+
+    // Spawn the task that will render the hitboxes
+    addTask(drawHitboxesTask, "hitboxes", DEFAULT_TASK_STACK_SIZE, this, 1);
+
+    // Spawn the task that will move all entities with a Position and Velocity
+    addTask(movementTask, "movement", 0, this, 1);
+
+    // Spawn the task that will cause entities with a Position, Velocity, and hitbox to bounce off the edges of the screen
+    addTask(bounceTask, "bounce", DEFAULT_TASK_STACK_SIZE, this, 1);
+
+    // Spawns the task that will spawn squares
+    addTask(spawnTask, "spawn", DEFAULT_TASK_STACK_SIZE, this, 1);
+
+    suspendTasks();
 }

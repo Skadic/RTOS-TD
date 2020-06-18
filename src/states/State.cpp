@@ -19,6 +19,11 @@ State::~State() {
     std::cout << "State deconstructed" << std::endl;
 }
 
+void State::addTask(TaskFunction_t task, const char *const pcName, uint16_t stackSize, void *const parameters, UBaseType_t priority) {
+    tasks.push_back(nullptr); // Make space for another task handle
+    xTaskCreate(task, pcName, stackSize, parameters, priority, &tasks.back());
+}
+
 LockGuard<entt::registry> &State::getRegistry() {
     return this->registry;
 }
