@@ -138,21 +138,39 @@ void gameControlPlayerTask(void *statePointer) {
                 for (auto &entity : view) {
                     Velocity &vel = view.get<Velocity>(entity);
                     // Set Horizontal speed
-                    if(input[SDL_SCANCODE_LEFT] && !input[SDL_SCANCODE_RIGHT]) {
-                        vel.dx = -PLAYER_SPEED;
+
+                     if(input[SDL_SCANCODE_LEFT] && !input[SDL_SCANCODE_RIGHT]) {
+                        if(input[SDL_SCANCODE_UP] && !input[SDL_SCANCODE_DOWN]) {
+                            vel.dx = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
+                            vel.dy = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
+                        } else if(!input[SDL_SCANCODE_UP] && input[SDL_SCANCODE_DOWN]) {
+                            vel.dx = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
+                            vel.dy = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
+                        } else {
+                            vel.dx = -PLAYER_SPEED;
+                        }
                     } else if(!input[SDL_SCANCODE_LEFT] && input[SDL_SCANCODE_RIGHT]) {
-                        vel.dx = PLAYER_SPEED;
+                        if(input[SDL_SCANCODE_UP] && !input[SDL_SCANCODE_DOWN]) {
+                            vel.dx = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
+                            vel.dy = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
+                        } else if(!input[SDL_SCANCODE_UP] && input[SDL_SCANCODE_DOWN]) {
+                            vel.dx = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
+                            vel.dy = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
+                        } else {
+                            vel.dx = PLAYER_SPEED;
+                        }
                     } else {
                         vel.dx = 0;
+
+                        if(input[SDL_SCANCODE_UP] && !input[SDL_SCANCODE_DOWN]) {
+                            vel.dy = -PLAYER_SPEED;
+                        } else if(!input[SDL_SCANCODE_UP] && input[SDL_SCANCODE_DOWN]) {
+                            vel.dy = PLAYER_SPEED;
+                        } else {
+                            vel.dy = 0;
+                        }
                     }
 
-                    if(input[SDL_SCANCODE_UP] && !input[SDL_SCANCODE_DOWN]) {
-                        vel.dy = -PLAYER_SPEED;
-                    } else if(!input[SDL_SCANCODE_UP] && input[SDL_SCANCODE_DOWN]) {
-                        vel.dy = PLAYER_SPEED;
-                    } else {
-                        vel.dy = 0;
-                    }
 
                     Position &pos = view.get<Position>(entity);
                     auto &renderer = state.getRenderer();

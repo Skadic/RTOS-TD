@@ -21,7 +21,6 @@ void Renderer::drawSprite(Sprite &sprite, short x, short y) {
             getTransformedY(y + sprite.height) > 0) {
         sprite.draw(getTransformedX(x), getTransformedY(y), this->scale);
     } else {
-        std::cout << "Sprite not rendered!" << std::endl;
     }
 }
 
