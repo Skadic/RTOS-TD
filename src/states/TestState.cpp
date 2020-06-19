@@ -194,19 +194,19 @@ void spawnTask(void *statePointer) {
 TestState::TestState() : State() {
     std::cout << "State Constructed" << std::endl;
     // Spawn the task that will render the rectangles
-    addTask(renderTask, "render", DEFAULT_TASK_STACK_SIZE, this, 1);
+    addTask(renderTask, "render", DEFAULT_TASK_STACK_SIZE,  1);
 
     // Spawn the task that will render the hitboxes
-    addTask(drawHitboxesTask, "hitboxes", DEFAULT_TASK_STACK_SIZE, this, 1);
+    addTask(drawHitboxesTask, "hitboxes", DEFAULT_TASK_STACK_SIZE, 1);
 
     // Spawn the task that will move all entities with a Position and Velocity
-    addTask(movementTask, "movement", 0, this, 1);
+    addTask(movementTask, "movement", 0, 1);
 
     // Spawn the task that will cause entities with a Position, Velocity, and hitbox to bounce off the edges of the screen
-    addTask(bounceTask, "bounce", DEFAULT_TASK_STACK_SIZE, this, 1);
+    addTask(bounceTask, "bounce", DEFAULT_TASK_STACK_SIZE, 1);
 
     // Spawns the task that will spawn squares
-    addTask(spawnTask, "spawn", DEFAULT_TASK_STACK_SIZE, this, 1);
+    addTask(spawnTask, "spawn", DEFAULT_TASK_STACK_SIZE, 1);
 
     suspendTasks();
 }

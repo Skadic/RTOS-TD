@@ -93,4 +93,8 @@ short Renderer::getXOffset() {
     return xOffset;
 }
 
+void Renderer::drawLine(short x1, short y1, short x2, short y2, unsigned char thickness, unsigned int color) {
+    tumDrawLine(getTransformedX(x1), getTransformedY(y1), getTransformedX(x2), getTransformedY(y2), thickness, color);
+}
+
 

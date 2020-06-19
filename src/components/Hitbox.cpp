@@ -1,12 +1,46 @@
 
 #include "Hitbox.h"
+#include "../util/GlobalConsts.h"
+
+#include <cmath>
+#include <algorithm>
+#include <iostream>
 
 
-bool intersectsOther(Position pos, Hitbox hitbox, Position otherPos, Hitbox otherHitbox) {
-    return (((pos.x < otherPos.x) && (otherPos.x < pos.x + hitbox.width)) // Check whether the left edge of the other hitbox is within the left and right edge of this hitbox
-        || ((pos.x < otherPos.x + otherHitbox.width) && (otherPos.x + otherHitbox.width < pos.x + hitbox.width))) // Check whether the right edge of the other hitbox is within the left and right edge of this hitbox
-        && (((pos.y < otherPos.y) && (otherPos.y < pos.y + hitbox.height)) // Check whether the top edge of the other hitbox is within the top and bottom edge of this hitbox
-        || ((pos.y < otherPos.y + otherHitbox.height) && (otherPos.y + otherHitbox.width < pos.x + hitbox.width))); // Check whether the bottom edge of the other hitbox is within the top and bottom edge of this hitbox
+std::optional<glm::vec2> intersectsOther(Position pos, Hitbox hitbox, Position otherPos, Hitbox otherHitbox) {
+    // Check for collision
+
+    bool collided = pos.x < otherPos.x + otherHitbox.width &&
+                    pos.x + hitbox.width > otherPos.x &&
+                    pos.y < otherPos.y + otherHitbox.height &&
+                    pos.y + hitbox.height > otherPos.y;
+
+    if(!collided) {
+        return std::optional<glm::vec2>{};
+    }
+
+    // Determine which distance would the
+    const auto leftLen = pos.x - (otherPos.x + otherHitbox.width);
+    const auto upLen = pos.y - (otherPos.y + otherHitbox.height);
+    const auto rightLen = pos.x + hitbox.width - otherPos.x;
+    const auto downLen = pos.y + hitbox.height - otherPos.y;
+
+    const auto minDist = std::min({std::fabs(leftLen), std::fabs(upLen), std::fabs(rightLen), std::fabs(downLen)});
+    
+    if(minDist == std::fabs(leftLen)) {
+        return std::make_optional(glm::vec2{leftLen, 0});
+    } else if (minDist == std::fabs(upLen)) {
+        return std::make_optional(glm::vec2{0, upLen});
+    } else if (minDist == std::fabs(rightLen)) {
+        return std::make_optional(glm::vec2{rightLen, 0});
+    } else {
+        return std::make_optional(glm::vec2{0, downLen});
+    }
+}
+
+std::optional<glm::vec2> intersectsOther(TilePosition pos, Hitbox hitbox, Position otherPos, Hitbox otherHitbox) {
+    Position newPos = Position{static_cast<float>(pos.x * TILE_SIZE), static_cast<float>(pos.y * TILE_SIZE)};
+    return intersectsOther(newPos, hitbox, otherPos, otherHitbox);
 }
 
 bool hitboxInRange(Position rangePos, Range range, Position hitboxPos, Hitbox hitbox) {

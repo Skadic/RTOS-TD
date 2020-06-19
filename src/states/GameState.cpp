@@ -11,6 +11,7 @@
 #include "../components/AI/MoveTowardsPlayerAI.h"
 #include "../util/Log.h"
 #include "../util/TileType.h"
+#include "../components/Hitbox.h"
 #include <iostream>
 #include <string>
 #include <SDL_scancode.h>
@@ -43,6 +44,9 @@ void gameRenderTask(void *statePointer) {
                 // Get all the other entities which need to be rendered
                 auto renderView = registry->view<Position, SpriteComponent>();
 
+                // Get all entities with a velocity and position
+                //auto velView = registry->view<Position, Velocity, SpriteComponent>();
+
                 if(game.getScreenLock().lock(portMAX_DELAY)){
 
                     tumDrawClear(0x000000);
@@ -62,6 +66,20 @@ void gameRenderTask(void *statePointer) {
                         SpriteComponent &sprite = renderView.get<SpriteComponent>(entity);
                         state.getRenderer().drawSprite(*sprite.getSprite(), pos.x, pos.y);
                     }
+
+                    // Draw Velocity Vectors
+                    /*for(auto &entity : velView) {
+                        Position &pos = velView.get<Position>(entity);
+                        Velocity &vel = velView.get<Velocity>(entity);
+                        SpriteComponent &sprite = velView.get<SpriteComponent>(entity);
+                        state.getRenderer().drawLine(
+                                pos.x + sprite.getSprite()->width / 2,
+                                pos.y + sprite.getSprite()->height / 2,
+                                pos.x + sprite.getSprite()->width / 2 + vel.dx * 20,
+                                pos.y + sprite.getSprite()->height / 2 + vel.dy * 20,
+                                3,
+                                0xFFFFFF);
+                    }*/
 
                     game.getScreenLock().unlock();
                     game.getSwapBufferSignal().unlock();
@@ -91,6 +109,24 @@ void gameMoveTask(void *statePointer) {
                 Velocity &vel = view.get<Velocity>(entity);
                 pos.x += vel.dx;
                 pos.y += vel.dy;
+            }
+
+            auto entityView = registry->view<Position, Hitbox, Velocity>();
+            auto tileView = registry->view<TilePosition, Hitbox>();
+
+            for (auto &entity : entityView) {
+                for (auto &tile : tileView) {
+                    Position &entityPos = entityView.get<Position>(entity);
+                    Hitbox &entityHitbox = entityView.get<Hitbox>(entity);
+                    TilePosition &tilePos = tileView.get<TilePosition>(tile);
+                    Hitbox &tileHitbox = tileView.get<Hitbox>(tile);
+
+                    if(auto collision = intersectsOther(tilePos, tileHitbox, entityPos, entityHitbox)) {
+                        auto displacementVec = *collision;
+                        entityPos.x += displacementVec.x;
+                        entityPos.y += displacementVec.y;
+                    }
+                }
             }
         }
 
@@ -166,14 +202,9 @@ void gameMouseInputTask(void *statePointer) {
                 auto &input = *inputOpt;
                 auto &renderer = state.getRenderer();
 
-                short x = renderer.reverseTransformX(input->getMouseX()) / TILE_SIZE;
-                short y = renderer.reverseTransformY(input->getMouseY()) / TILE_SIZE;
-
                 if(input->leftClickDown()) {
-                    if (auto tileOpt = state.getMap().getMapTileFromScreenPos(input->getMouseX(), input->getMouseY(), renderer)) {
-                        auto view = registry->view<TilePosition, SpriteComponent>();
-                        SpriteComponent &sprite = view.get<SpriteComponent>(*tileOpt);
-                        sprite.setSprite(getSpriteForType(TOWER));
+                    if (state.getMap().getMapTileAtScreenPos(input->getMouseX(), input->getMouseY(), renderer)) {
+                        state.getMap().updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,renderer);
                     }
                 }
             }
@@ -207,7 +238,36 @@ void gameAITask(void *statePointer) {
     }
 }
 
+void gameCollisionTask(void *statePointer) {
+    GameState &state = *static_cast<GameState*>(statePointer);
+    auto &regMutex = state.getRegistry();
+    Game &game = Game::get();
+
+    auto lastWake = xTaskGetTickCount();
+
+    while(true) {
+        logCurrentTaskName();
+        if(auto regOpt = regMutex.lock()) {
+            auto &registry = *regOpt;
+
+
+        }
+
+        vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+    }
+}
+
 // ^ ------------------------------------- TASKS ------------------------------------- ^
+
+void GameState::initTasks() {
+    addTask(gameRenderTask, "render", DEFAULT_TASK_STACK_SIZE, 0);
+    addTask(gameMoveTask, "move", DEFAULT_TASK_STACK_SIZE, 0);
+    addTask(gameControlPlayerTask, "control", DEFAULT_TASK_STACK_SIZE, 0);
+    addTask(gameMouseInputTask, "mouse", DEFAULT_TASK_STACK_SIZE, 0);
+    addTask(gameAITask, "ai", DEFAULT_TASK_STACK_SIZE, 0);
+    addTask(gameCollisionTask, "collision", DEFAULT_TASK_STACK_SIZE, 0);
+}
+
 
 GameState::GameState(int mapWidth, int mapHeight) :
         State(),
@@ -218,13 +278,7 @@ GameState::GameState(int mapWidth, int mapHeight) :
 
     initPlayer();
     initEnemy();
-
-    addTask(gameRenderTask, "render", DEFAULT_TASK_STACK_SIZE, this, 0);
-    addTask(gameMoveTask, "move", DEFAULT_TASK_STACK_SIZE, this, 0);
-    addTask(gameControlPlayerTask, "control", DEFAULT_TASK_STACK_SIZE, this, 0);
-    addTask(gameMouseInputTask, "mouse", DEFAULT_TASK_STACK_SIZE, this, 0);
-    addTask(gameAITask, "ai", DEFAULT_TASK_STACK_SIZE, this, 0);
-
+    initTasks();
     suspendTasks();
 }
 
@@ -237,12 +291,7 @@ GameState::GameState(std::string mapPath) :
 
     initPlayer();
     initEnemy();
-
-    addTask(gameRenderTask, "render", DEFAULT_TASK_STACK_SIZE, this, 0);
-    addTask(gameMoveTask, "move", DEFAULT_TASK_STACK_SIZE, this, 0);
-    addTask(gameControlPlayerTask, "control", DEFAULT_TASK_STACK_SIZE, this, 0);
-    addTask(gameMouseInputTask, "mouse", DEFAULT_TASK_STACK_SIZE, this, 0);
-    addTask(gameAITask, "ai", DEFAULT_TASK_STACK_SIZE, this, 0);
+    initTasks();
 
     suspendTasks();
 }
@@ -259,6 +308,7 @@ void GameState::initEnemy() {
     registry->emplace<SpriteComponent>(enemy, ENEMY);
     registry->emplace<Velocity>(enemy, 0.0, 0.0);
     registry->emplace<AIComponent>(enemy, (AI*) new MoveTowardsPlayerAI(this, enemy));
+    registry->emplace<Hitbox>(enemy, PLAYER_SIZE, PLAYER_SIZE);
 }
 
 void GameState::initPlayer() {
@@ -269,4 +319,6 @@ void GameState::initPlayer() {
     registry->emplace<SpriteComponent>(player, PLAYER);
     registry->emplace<Position>(player, SCREEN_WIDTH / 2 / renderer.getScale(), SCREEN_HEIGHT / 2 / renderer.getScale());
     registry->emplace<Velocity>(player, 0.0, 0.0);
+    registry->emplace<Hitbox>(player, PLAYER_SIZE, PLAYER_SIZE);
+
 }

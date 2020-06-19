@@ -48,7 +48,6 @@ void Game::start(char *binPath) {
 
     //GameState gameState(10, 10);
     Game::getStateMachine().pushStack(new GameState("testmap.json"));
-    //Game::getStateMachine().pushStack(new TestState);
 
     // Starts the task scheduler to start running the tasks
     vTaskStartScheduler();

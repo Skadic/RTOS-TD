@@ -10,6 +10,7 @@ public:
 
     explicit Renderer(short xOffset = 0, short yOffset = 0, float scale = 1);
 
+    void drawLine(short x1, short y1, short x2, short y2, unsigned char thickness, unsigned int color);
     void drawBox(short x, short y, short width, short height, unsigned int color, bool filled);
     void drawSprite(Sprite &sprite, short x, short y);
 
