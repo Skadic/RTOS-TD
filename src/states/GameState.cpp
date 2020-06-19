@@ -159,6 +159,7 @@ void gameControlPlayerTask(void *statePointer) {
                         vel.dy = 0;
                     }
 
+                    // Make the player have the same speed in every direction
                     vel.normalize();
                     vel.dx *= PLAYER_SPEED;
                     vel.dy *= PLAYER_SPEED;
