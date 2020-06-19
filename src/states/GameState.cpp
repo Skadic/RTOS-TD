@@ -138,39 +138,27 @@ void gameControlPlayerTask(void *statePointer) {
                 for (auto &entity : view) {
                     Velocity &vel = view.get<Velocity>(entity);
                     // Set Horizontal speed
-
-                     if(input->buttonPressed(SDL_SCANCODE_LEFT) && !input->buttonPressed(SDL_SCANCODE_RIGHT)) {
-                        if(input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_DOWN)) {
-                            vel.dx = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
-                            vel.dy = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
-                        } else if(!input->buttonPressed(SDL_SCANCODE_UP) && input->buttonPressed(SDL_SCANCODE_DOWN)) {
-                            vel.dx = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
-                            vel.dy = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
-                        } else {
-                            vel.dx = -PLAYER_SPEED;
-                        }
+                    if(input->buttonPressed(SDL_SCANCODE_LEFT) && !input->buttonPressed(SDL_SCANCODE_RIGHT)) {
+                        vel.dx = -PLAYER_SPEED;
                     } else if(!input->buttonPressed(SDL_SCANCODE_LEFT) && input->buttonPressed(SDL_SCANCODE_RIGHT)) {
-                        if(input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_DOWN)) {
-                            vel.dx = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
-                            vel.dy = -sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
-                        } else if(!input->buttonPressed(SDL_SCANCODE_UP) && input->buttonPressed(SDL_SCANCODE_DOWN)) {
-                            vel.dx = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
-                            vel.dy = sqrt(PLAYER_SPEED*PLAYER_SPEED/2);
-                        } else {
-                            vel.dx = PLAYER_SPEED;
-                        }
+                        vel.dx = PLAYER_SPEED;
                     } else {
                         vel.dx = 0;
-
-                        if(input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_DOWN)) {
-                            vel.dy = -PLAYER_SPEED;
-                        } else if(!input->buttonPressed(SDL_SCANCODE_UP) && input->buttonPressed(SDL_SCANCODE_DOWN)) {
-                            vel.dy = PLAYER_SPEED;
-                        } else {
-                            vel.dy = 0;
-                        }
                     }
 
+                    if(input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_DOWN)) {
+                        vel.dy = -PLAYER_SPEED;
+                    } else if(!input->buttonPressed(SDL_SCANCODE_UP) && input->buttonPressed(SDL_SCANCODE_DOWN)) {
+                        vel.dy = PLAYER_SPEED;
+                    } else {
+                        vel.dy = 0;
+                    }
+
+                    vel.normalize();
+                    vel.dx *= PLAYER_SPEED;
+                    vel.dy *= PLAYER_SPEED;
+
+                    std::cout << vel.dx << ", " << vel.dy << std::endl;
 
                     Position &pos = view.get<Position>(entity);
                     auto &renderer = state.getRenderer();
