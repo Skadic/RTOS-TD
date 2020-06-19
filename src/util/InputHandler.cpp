@@ -6,22 +6,51 @@ extern "C" {
 #include <TUM_Event.h>
 }
 #include "InputHandler.h"
+#include <iostream>
 
-InputHandler::InputHandler() : mouseX{0}, mouseY{0}, leftClick{false}, rightClick{false}, middleClick{false} {
-    buttons.resize(SDL_NUM_SCANCODES);
+InputHandler::InputHandler() :
+        inputCurrent{std::make_unique<std::vector<unsigned char>>(std::vector<unsigned char>{})},
+        inputOld{std::make_unique<std::vector<unsigned char>>(std::vector<unsigned char>{})},
+        mouseX{0},
+        mouseY{0},
+        leftClickCurrent{false},
+        rightClickCurrent{false},
+        middleClickCurrent{false},
+        leftClickOld{false},
+        rightClickOld{false},
+        middleClickOld{false}
+    {
+    inputCurrent->resize(SDL_NUM_SCANCODES);
+    inputOld->resize(SDL_NUM_SCANCODES);
 };
 
 bool InputHandler::buttonPressed(SDL_Scancode sdlScancode) {
-    return buttons[sdlScancode];
+    return inputCurrent->at(sdlScancode);
+}
+
+bool InputHandler::buttonDown(SDL_Scancode sdlScancode) {
+    return inputCurrent->at(sdlScancode) && !inputOld->at(sdlScancode);
+}
+
+bool InputHandler::buttonUp(SDL_Scancode sdlScancode) {
+    return !inputCurrent->at(sdlScancode) && inputOld->at(sdlScancode);
 }
 
 void InputHandler::update() {
-    xQueueReceive(buttonInputQueue, this->buttons.data(), 0);
-    mouseX = tumEventGetMouseX();
-    mouseY = tumEventGetMouseY();
-    leftClick = tumEventGetMouseLeft();
-    rightClick = tumEventGetMouseRight();
-    middleClick = tumEventGetMouseMiddle();
+    inputCurrent.swap(inputOld);
+    if (xQueueReceive(buttonInputQueue, this->inputCurrent->data(), 0)) {
+        std::swap(leftClickCurrent, leftClickOld);
+        std::swap(rightClickCurrent, rightClickOld);
+        std::swap(middleClickCurrent, middleClickOld);
+
+        mouseX = tumEventGetMouseX();
+        mouseY = tumEventGetMouseY();
+        leftClickCurrent = tumEventGetMouseLeft();
+        rightClickCurrent = tumEventGetMouseRight();
+        middleClickCurrent = tumEventGetMouseMiddle();
+    } else {
+        inputCurrent.swap(inputOld);
+    }
 }
 
 short InputHandler::getMouseX() {
@@ -33,13 +62,37 @@ short InputHandler::getMouseY() {
 }
 
 bool InputHandler::leftClicked() {
-    return leftClick;
+    return leftClickCurrent;
 }
 
 bool InputHandler::rightClicked() {
-    return rightClick;
+    return rightClickCurrent;
 }
 
 bool InputHandler::middleClicked() {
-    return middleClick;
+    return middleClickCurrent;
+}
+
+bool InputHandler::leftClickDown() {
+    return leftClickCurrent && !leftClickOld;
+}
+
+bool InputHandler::rightClickDown() {
+    return rightClickCurrent && !rightClickOld;
+}
+
+bool InputHandler::middleClickDown() {
+    return middleClickCurrent && !middleClickOld;
+}
+
+bool InputHandler::leftClickUp() {
+    return !leftClickCurrent && leftClickOld;
+}
+
+bool InputHandler::rightClickUp() {
+    return !rightClickCurrent && rightClickOld;
+}
+
+bool InputHandler::middleClickUp() {
+    return !middleClickCurrent && middleClickOld;
 }

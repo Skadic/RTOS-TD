@@ -194,7 +194,7 @@ void gameMouseInputTask(void *statePointer) {
                 short x = renderer.reverseTransformX(input->getMouseX()) / TILE_SIZE;
                 short y = renderer.reverseTransformY(input->getMouseY()) / TILE_SIZE;
 
-                if(input->leftClicked()) {
+                if(input->leftClickDown()) {
                     if (auto tileOpt = state.getMapTileFromScreenPos(input->getMouseX(), input->getMouseY())) {
                         auto view = registry->view<TilePosition, SpriteComponent>();
                         SpriteComponent &sprite = view.get<SpriteComponent>(*tileOpt);
