@@ -10,6 +10,20 @@
 
 Renderer::Renderer(short xOffset, short yOffset, float scale) : xOffset{xOffset}, yOffset{yOffset}, scale{scale} {}
 
+void Renderer::drawBox(short x, short y, short width, short height, unsigned int color, bool filled) {
+    if(
+            getTransformedX(x) < SCREEN_WIDTH &&
+            getTransformedY(y) < SCREEN_HEIGHT &&
+            getTransformedX(x + width) > 0 &&
+            getTransformedY(y + height) > 0) {
+        if(filled) {
+            tumDrawFilledBox(getTransformedX(x), getTransformedY(y), width * scale, height * scale, color);
+        } else {
+            tumDrawBox(getTransformedX(x), getTransformedY(y), width * scale, height * scale, color);
+        }
+    }
+}
+
 void Renderer::drawSprite(Sprite &sprite, short x, short y) {
     // Only draw the sprite if any part of it is visible on screen
     if(

@@ -12,6 +12,7 @@
 #include <SDL_scancode.h>
 
 
+static std::shared_ptr<Sprite> EMPTY = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x000000, true);
 static std::shared_ptr<Sprite> WALL = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0xFFFFFF, false);
 static std::shared_ptr<Sprite> TOWER = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FFFF, true);
 
@@ -26,7 +27,7 @@ void GameState::initMap() {
         for (int x = 0; x < mapWidth; ++x) {
             entt::entity entity = registry->create();
             registry->emplace<TilePosition>(entity, x, y);
-            registry->emplace<SpriteComponent>(entity, WALL);
+            registry->emplace<SpriteComponent>(entity, EMPTY);
 
             map[y][x] = entity;
         }
@@ -69,12 +70,16 @@ void gameRenderTask(void *statePointer) {
 
                     tumDrawClear(0x000000);
 
+
+
                     // Render map
                     for(auto &entity : tileView) {
                         TilePosition &pos = tileView.get<TilePosition>(entity);
                         SpriteComponent &sprite = tileView.get<SpriteComponent>(entity);
                         state.getRenderer().drawSprite(*sprite.getSprite(), pos.x * TILE_SIZE, pos.y * TILE_SIZE);
                     }
+
+                    state.getRenderer().drawBox(0, 0, state.getMapWidth() * TILE_SIZE, state.getMapHeight() * TILE_SIZE, 0x0000FF, false);
 
                     // Render all else
                     for(auto &entity : renderView) {
@@ -157,8 +162,6 @@ void gameControlPlayerTask(void *statePointer) {
                     vel.normalize();
                     vel.dx *= PLAYER_SPEED;
                     vel.dy *= PLAYER_SPEED;
-
-                    std::cout << vel.dx << ", " << vel.dy << std::endl;
 
                     Position &pos = view.get<Position>(entity);
                     auto &renderer = state.getRenderer();
