@@ -21,7 +21,10 @@ protected:
 
 public:
     ~State();
-    void addTask(TaskFunction_t task, const char *const pcName, const uint16_t stackSize, void *const parameters, UBaseType_t priority);
+
+    State(State&) = delete;
+
+    void addTask(TaskFunction_t task, const char *pcName, uint16_t stackSize, void *parameters, UBaseType_t priority);
     void resumeTasks();
     void suspendTasks();
     LockGuard<entt::registry> &getRegistry();

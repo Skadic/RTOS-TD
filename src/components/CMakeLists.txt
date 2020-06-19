@@ -6,4 +6,6 @@ set(COMPONENTS_SOURCES
         TilePosition.cpp
         Health.cpp)
 
+add_subdirectory(AI)
+
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${COMPONENTS_SOURCES})

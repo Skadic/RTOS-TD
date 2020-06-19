@@ -3,6 +3,8 @@ set(UTIL_SOURCES
         Direction.cpp
         Semaphore.cpp
         Renderer.cpp
-        InputHandler.cpp)
+        InputHandler.cpp
+        Log.cpp
+        Map.cpp)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${UTIL_SOURCES})

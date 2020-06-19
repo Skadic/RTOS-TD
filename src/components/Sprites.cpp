@@ -9,7 +9,7 @@ std::shared_ptr<Sprite> &SpriteComponent::getSprite() {
 
 SpriteComponent::SpriteComponent(std::shared_ptr<Sprite> &sprite) : sprite{sprite} {}
 
-void SpriteComponent::setSprite(std::shared_ptr<Sprite> &s) {
+void SpriteComponent::setSprite(std::shared_ptr<Sprite> &&s) {
     this->sprite = s;
 }
 
@@ -26,7 +26,7 @@ RectangleSprite::RectangleSprite(int width, int height, unsigned int color, bool
 }
 
 void RectangleSprite::draw(short x, short y, float scale) {
-    if(filled) {
+    if (filled) {
         tumDrawFilledBox(x, y, width * scale, height * scale, color);
     } else {
         tumDrawBox(x, y, width * scale, height * scale, color);
@@ -61,3 +61,5 @@ TextureSprite::~TextureSprite() {
     std::cout << "Unloading image " << path << std::endl;
     tumDrawFreeLoadedImage(&this->spriteHandle);
 }
+
+void EmptySprite::draw(short x, short y, float scale) {}

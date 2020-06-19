@@ -6,6 +6,7 @@
 #include "states/TestState.h"
 #include "states/GameState.h"
 #include "util/GlobalConsts.h"
+#include "util/Log.h"
 #include <FreeRTOS.h>
 #include <semphr.h>
 #include <task.h>
@@ -46,7 +47,7 @@ void Game::start(char *binPath) {
     xTaskCreate(inputTask, "input", 0, nullptr, 2, &input);
 
     //GameState gameState(10, 10);
-    Game::getStateMachine().pushStack(new GameState(10, 10));
+    Game::getStateMachine().pushStack(new GameState("testmap.json"));
     //Game::getStateMachine().pushStack(new TestState);
 
     // Starts the task scheduler to start running the tasks
@@ -100,6 +101,7 @@ void swapBufferTask(void *ptr) {
     // Get Draw access for this thread
     tumDrawBindThread();
     while (true) {
+        logCurrentTaskName();
         if(game.getSwapBufferSignal().lock(portMAX_DELAY)) {
             // Take exclusive access to the screen
             if (game.getScreenLock().lock(portMAX_DELAY)) {
@@ -123,6 +125,7 @@ void inputTask(void *ptr) {
 
     auto lastWake = xTaskGetTickCount();
     while (true) {
+        logCurrentTaskName();
         // Update input
         if(auto inputOpt = input.lock()) {
             // Update events (like keyboard and mouse input)

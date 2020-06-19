@@ -1,25 +1,25 @@
 #pragma once
 
 #include "State.h"
+#include "../util/Map.h"
 #include <entity/registry.hpp>
 
 
 class GameState : public State {
-    std::vector<std::vector<entt::entity>> map;
-    const int mapWidth;
-    const int mapHeight;
+    Map map;
+    int mapWidth;
+    int mapHeight;
 
 public:
+    // Initializes the game state with an empty map of the given size
     GameState(int mapWidth, int mapHeight);
+    // Initializes the game state with a map read from a file
+    explicit GameState(std::string mapPath);
 
-    const int getMapWidth() const;
-    const int getMapHeight() const;
 
-    std::optional<entt::entity> getMapTileFromScreenPos(short x, short y);
-
-    entt::entity &getMapTile(int x, int y);
+    Map &getMap();
 
 private:
-    void initMap();
     void initPlayer();
+    void initEnemy();
 };

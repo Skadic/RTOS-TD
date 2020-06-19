@@ -11,3 +11,4 @@ inline const auto TILE_SIZE = 32;
 inline const auto PLAYER_SIZE = 16;
 
 inline const auto PLAYER_SPEED = 1.5;
+inline const auto ENEMY_SPEED = PLAYER_SPEED / 2.0;

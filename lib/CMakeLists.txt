@@ -42,3 +42,6 @@ target_include_directories(glm INTERFACE
         glm
         glm/ext)
 target_link_libraries(glm INTERFACE m)
+
+add_library(json INTERFACE)
+target_include_directories(json INTERFACE json/include)

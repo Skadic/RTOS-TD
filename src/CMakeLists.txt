@@ -11,7 +11,7 @@ add_subdirectory(components)
 add_subdirectory(states)
 add_subdirectory(util)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} freertos gfx async tracer entt glm m)
+target_link_libraries(${CMAKE_PROJECT_NAME} freertos gfx async tracer entt glm m json)
 
 if(ENABLE_ASAN)
     target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -g -fsanitize=address -static-libasan -fno-omit-frame-pointer -O0)

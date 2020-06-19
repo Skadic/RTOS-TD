@@ -41,6 +41,10 @@ struct TextureSprite : public Sprite {
     void draw(short x, short y, float scale) override;
 };
 
+struct EmptySprite : public Sprite {
+    void draw(short x, short y, float scale) override;
+};
+
 class SpriteComponent {
     std::shared_ptr<Sprite> sprite;
 
@@ -48,6 +52,6 @@ public:
     explicit SpriteComponent(std::shared_ptr<Sprite> &sprite);
     explicit SpriteComponent(Sprite *sprite);
     std::shared_ptr<Sprite> &getSprite();
-    void setSprite(std::shared_ptr<Sprite> &s);
+    void setSprite(std::shared_ptr<Sprite> &&s);
     void setSprite(Sprite *s);
 };
