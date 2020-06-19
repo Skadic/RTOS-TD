@@ -5,6 +5,7 @@ set(UTIL_SOURCES
         Renderer.cpp
         InputHandler.cpp
         Log.cpp
-        Map.cpp)
+        Map.cpp
+        TileType.cpp)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${UTIL_SOURCES})

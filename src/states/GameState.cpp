@@ -93,7 +93,6 @@ void gameRenderTask(void *statePointer) {
 void gameMoveTask(void *statePointer) {
     GameState &state = *static_cast<GameState*>(statePointer);
     auto &regMutex = state.getRegistry();
-    Game &game = Game::get();
 
     auto lastWake = xTaskGetTickCount();
 
@@ -111,6 +110,7 @@ void gameMoveTask(void *statePointer) {
                 pos.y += vel.dy;
             }
 
+            // Handle Collision with the map and displace Entities if needed.
             auto entityView = registry->view<Position, Hitbox, Velocity>();
             auto tileView = registry->view<TilePosition, Hitbox>();
 
@@ -217,8 +217,6 @@ void gameMouseInputTask(void *statePointer) {
 void gameAITask(void *statePointer) {
     GameState &state = *static_cast<GameState*>(statePointer);
     auto &regMutex = state.getRegistry();
-    Game &game = Game::get();
-
     auto lastWake = xTaskGetTickCount();
 
     while(true) {
@@ -241,7 +239,6 @@ void gameAITask(void *statePointer) {
 void gameCollisionTask(void *statePointer) {
     GameState &state = *static_cast<GameState*>(statePointer);
     auto &regMutex = state.getRegistry();
-    Game &game = Game::get();
 
     auto lastWake = xTaskGetTickCount();
 

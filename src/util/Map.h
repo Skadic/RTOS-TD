@@ -1,3 +1,4 @@
+#pragma once
 
 #include <vector>
 #include <entity/registry.hpp>
@@ -28,5 +29,3 @@ public:
     entt::entity &getMapTile(int x, int y);
     TileType getTileType(int x, int y, entt::registry &registry);
 };
-
-std::shared_ptr<Sprite> getSpriteForType(TileType type);
