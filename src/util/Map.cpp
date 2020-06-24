@@ -54,10 +54,11 @@ Map::Map(entt::registry &registry, std::string path) {
         for (int x = 0; x < mapWidth; ++x) {
             entt::entity entity = registry.create();
             TileType type = static_cast<TileType>(tileData[y][x]);
-            registry.emplace<TilePosition>(entity, x, y);
+            TilePosition &tilePos = registry.emplace<TilePosition>(entity, x, y);
             registry.emplace<TileTypeComponent>(entity, type);
             registry.emplace<SpriteComponent>(entity, getSpriteForType(type));
-            if(isSolid(type)) registry.emplace<Hitbox>(entity, TILE_SIZE, TILE_SIZE);
+            if(type != EMPTY) registry.emplace<Hitbox>(entity, TILE_SIZE, TILE_SIZE);
+            if(type == GOAL) nexus = tilePos;
 
             tiles[y][x] = entity;
         }
@@ -103,4 +104,12 @@ void Map::updateTileAtScreenPos(short x, short y, entt::registry &registry, Tile
 
     registry.emplace_or_replace<TileTypeComponent>(entity, type);
     registry.emplace_or_replace<SpriteComponent>(entity, getSpriteForType(type));
+}
+
+TilePosition Map::getNexus() const {
+    return nexus;
+}
+
+TileType Map::getTileType(entt::entity tile, entt::registry &registry) {
+    return registry.get<TileTypeComponent>(tile).type;
 }

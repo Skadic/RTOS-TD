@@ -12,6 +12,11 @@
 #include "../util/Log.h"
 #include "../util/TileType.h"
 #include "../components/Hitbox.h"
+#include "../components/AI/AStar.h"
+#include "../components/AI/PathfindToNexusAI.h"
+#include "../components/TileTypeComponent.h"
+#include "../components/Name.h"
+#include "../util/TileType.h"
 #include <iostream>
 #include <string>
 #include <SDL_scancode.h>
@@ -112,7 +117,12 @@ void gameMoveTask(void *statePointer) {
 
             // Handle Collision with the map and displace Entities if needed.
             auto entityView = registry->view<Position, Hitbox, Velocity>();
-            auto tileView = registry->view<TilePosition, Hitbox>();
+            auto tileView = registry->view<TilePosition, Hitbox, TileTypeComponent>();
+
+            // Contains all entities that should be deleted after reaching the goal
+            // If we deleted the entities in the loop, we would mess up the views and get errors
+            // So we just flag them as to be destroyed, and delete them afterwards
+            std::vector<entt::entity> toDestroy;
 
             for (auto &entity : entityView) {
                 for (auto &tile : tileView) {
@@ -122,12 +132,22 @@ void gameMoveTask(void *statePointer) {
                     Hitbox &tileHitbox = tileView.get<Hitbox>(tile);
 
                     if(auto collision = intersectsOther(tilePos, tileHitbox, entityPos, entityHitbox)) {
-                        auto displacementVec = *collision;
-                        entityPos.x += displacementVec.x;
-                        entityPos.y += displacementVec.y;
+                        auto type = registry->get<TileTypeComponent>(tile).type;
+                        if(isSolid(type)) {
+                            auto displacementVec = *collision;
+                            entityPos.x += displacementVec.x;
+                            entityPos.y += displacementVec.y;
+                        } else {
+                            if (type == GOAL) {
+                                // If an enemy reaches the goal, they are flagged for deletion
+                                toDestroy.push_back(entity);
+                            }
+                        }
                     }
                 }
             }
+
+            for(auto &entity : toDestroy) registry->destroy(entity);
         }
 
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
@@ -290,6 +310,8 @@ GameState::GameState(std::string mapPath) :
     initEnemy();
     initTasks();
 
+    aStarPathfinding(TilePosition{0, 0}, TilePosition{2, 2}, map, **registry.lock(portMAX_DELAY));
+
     suspendTasks();
 }
 
@@ -300,12 +322,16 @@ Map &GameState::getMap() {
 void GameState::initEnemy() {
     auto registry = *this->registry.lock();
 
-    entt::entity enemy = registry->create();
-    registry->emplace<Position>(enemy, 0, 0);
-    registry->emplace<SpriteComponent>(enemy, ENEMY);
-    registry->emplace<Velocity>(enemy, 0.0, 0.0);
-    registry->emplace<AIComponent>(enemy, (AI*) new MoveTowardsPlayerAI(this, enemy));
-    registry->emplace<Hitbox>(enemy, PLAYER_SIZE, PLAYER_SIZE);
+    for (int i = 0; i < 10; ++i) {
+        std::string name = "enemy" + std::to_string(i);
+        entt::entity enemy = registry->create();
+        registry->emplace<Position>(enemy, 100 + 40 * i, 0);
+        registry->emplace<SpriteComponent>(enemy, ENEMY);
+        registry->emplace<Velocity>(enemy, 0.0, 0.0);
+        registry->emplace<AIComponent>(enemy, (AI*) new PathfindToNexusAI(this, enemy, getMap().getNexus()));
+        registry->emplace<Hitbox>(enemy, PLAYER_SIZE, PLAYER_SIZE);
+        registry->emplace<Name>(enemy, name);
+    }
 }
 
 void GameState::initPlayer() {
