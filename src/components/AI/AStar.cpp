@@ -29,7 +29,19 @@ struct TileData {
     }
 };
 
-TileData* findPos(TilePosition pos, std::set<TileData*> &s) {
+struct ScoreCompare {
+    bool operator() (TileData *lhs, TileData *rhs) const {
+        if(lhs->getScore() != rhs->getScore())
+            return lhs->getScore() < rhs->getScore();
+        else if(lhs->pos.x != rhs->pos.x) {
+            return lhs->pos.x < rhs->pos.x;
+        } else {
+            return lhs->pos.y < rhs->pos.y;
+        }
+    }
+};
+
+TileData* findPos(TilePosition pos, std::set<TileData*, ScoreCompare> &s) {
     for(auto &ptr : s) {
         if(ptr->pos == pos) {
             return ptr;
@@ -38,7 +50,8 @@ TileData* findPos(TilePosition pos, std::set<TileData*> &s) {
     return nullptr;
 }
 
-void dealloc(std::set<TileData*> set) {
+
+void dealloc(std::set<TileData*, ScoreCompare> set) {
     for (auto data = set.begin(); data != set.end();) {
         delete *data;
         data = set.erase(data);
@@ -46,18 +59,16 @@ void dealloc(std::set<TileData*> set) {
 }
 
 
+// A* Pathfinding algorithm
+// Code inspired by https://github.com/daancode/a-star
 std::vector<TilePosition> aStarPathfinding(TilePosition start, TilePosition end, Map &map, entt::registry &registry) {
     TileData *current = nullptr;
-    std::set<TileData*> openSet, closedSet {};
+    std::set<TileData*, ScoreCompare> openSet {};
+    std::set<TileData*, ScoreCompare> closedSet {};
     openSet.insert(new TileData(start));
 
     while (!openSet.empty()) {
         current = *openSet.begin();
-        for (auto tile : openSet) {
-            if(tile->getScore() <= current->getScore()) {
-                current = tile;
-            }
-        }
 
         if(current->pos == end) { break; }
 
@@ -74,8 +85,10 @@ std::vector<TilePosition> aStarPathfinding(TilePosition start, TilePosition end,
 
             if(TileData *newTile = findPos(newPos, openSet)) {
                 if(totalCost < newTile->g) {
+                    openSet.erase(newTile);
                     newTile->pred = current;
                     newTile->g = totalCost;
+                    openSet.insert(newTile);
                 }
             } else {
                 newTile = new TileData(newPos, current);
