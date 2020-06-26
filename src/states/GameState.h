@@ -7,8 +7,6 @@
 
 class GameState : public State {
     Map map;
-    int mapWidth;
-    int mapHeight;
 
 public:
     // Initializes the game state with an empty map of the given size

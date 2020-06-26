@@ -104,6 +104,9 @@ void Map::updateTileAtScreenPos(short x, short y, entt::registry &registry, Tile
 
     registry.emplace_or_replace<TileTypeComponent>(entity, type);
     registry.emplace_or_replace<SpriteComponent>(entity, getSpriteForType(type));
+    if(isSolid(type)) {
+        registry.emplace_or_replace<Hitbox>(entity, TILE_SIZE, TILE_SIZE);
+    }
 }
 
 TilePosition Map::getNexus() const {

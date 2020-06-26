@@ -133,6 +133,9 @@ void gameMoveTask(void *statePointer) {
 
                     if(auto collision = intersectsOther(tilePos, tileHitbox, entityPos, entityHitbox)) {
                         auto type = registry->get<TileTypeComponent>(tile).type;
+                        if(type == TOWER) {
+                            std::cout << "Tower collision" << std::endl;
+                        }
                         if(isSolid(type)) {
                             auto displacementVec = *collision;
                             entityPos.x += displacementVec.x;
@@ -288,9 +291,7 @@ void GameState::initTasks() {
 
 GameState::GameState(int mapWidth, int mapHeight) :
         State(),
-        map{Map(**registry.lock(portMAX_DELAY), mapWidth, mapHeight)},
-        mapWidth{mapWidth},
-        mapHeight{mapHeight} {
+        map{Map(**registry.lock(portMAX_DELAY), mapWidth, mapHeight)}{
     renderer.setScale(2);
 
     initPlayer();
@@ -301,9 +302,7 @@ GameState::GameState(int mapWidth, int mapHeight) :
 
 GameState::GameState(std::string mapPath) :
         State(),
-        map{Map(**registry.lock(portMAX_DELAY), mapPath)},
-        mapWidth{mapWidth},
-        mapHeight{mapHeight} {
+        map{Map(**registry.lock(portMAX_DELAY), mapPath)}{
     renderer.setScale(2);
 
     initPlayer();
@@ -322,10 +321,10 @@ Map &GameState::getMap() {
 void GameState::initEnemy() {
     auto registry = *this->registry.lock();
 
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 1; ++i) {
         std::string name = "enemy" + std::to_string(i);
         entt::entity enemy = registry->create();
-        registry->emplace<Position>(enemy, 100 + 40 * i, 0);
+        registry->emplace<Position>(enemy, 800 + 40 * i, 0);
         registry->emplace<SpriteComponent>(enemy, ENEMY);
         registry->emplace<Velocity>(enemy, 0.0, 0.0);
         registry->emplace<AIComponent>(enemy, (AI*) new PathfindToNexusAI(this, enemy, getMap().getNexus()));

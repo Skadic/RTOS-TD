@@ -10,6 +10,7 @@ class PathfindToNexusAI : public AI {
     std::vector<TilePosition> path;
     int currentTile;
     TilePosition nexusPos;
+    double remainingDistance;
 public:
     explicit PathfindToNexusAI(GameState *state, entt::entity &, TilePosition nexusPos);
     void act(entt::registry &registry) override;
