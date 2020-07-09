@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Position.h"
-#include "TilePosition.h"
+#include "tilecomponents/TilePosition.h"
 #include <glm.hpp>
 #include <optional>
 

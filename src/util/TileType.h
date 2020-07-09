@@ -8,6 +8,7 @@ enum TileType {
     WALL = 1,
     TOWER = 2,
     GOAL = 3,
+    ENEMY_SPAWN = 4,
 };
 
 std::shared_ptr<Sprite> &getSpriteForType(TileType type);

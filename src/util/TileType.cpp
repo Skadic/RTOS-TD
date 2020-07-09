@@ -9,8 +9,9 @@ std::map<TileType, std::shared_ptr<Sprite>> initTileSprites() {
     std::map<TileType, std::shared_ptr<Sprite>> map;
     map[EMPTY] = std::make_shared<EmptySprite>();
     map[WALL] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0xFFFFFF, false);
-    map[TOWER] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FFFF, false);
+    map[TOWER] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FFFF, true);
     map[GOAL] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FF00, true);
+    map[ENEMY_SPAWN] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0xFFA000, true);
     return map;
 }
 
@@ -21,5 +22,5 @@ std::shared_ptr<Sprite> &getSpriteForType(TileType type) {
 }
 
 bool isSolid(TileType type) {
-    return type != EMPTY && type != GOAL;
+    return type != EMPTY && type != GOAL && type != ENEMY_SPAWN;
 }

@@ -97,4 +97,22 @@ void Renderer::drawLine(short x1, short y1, short x2, short y2, unsigned char th
     tumDrawLine(getTransformedX(x1), getTransformedY(y1), getTransformedX(x2), getTransformedY(y2), thickness, color);
 }
 
+void Renderer::drawCircle(short x, short y, short radius, unsigned int color, bool filled) {
+    if (filled) {
+        tumDrawCircle(getTransformedX(x), getTransformedY(y), radius * scale, color);
+    } else {
+        tumDrawCircleClear(getTransformedX(x), getTransformedY(y), radius * scale, color);
+    }
+}
+
+void Renderer::drawPie(short x, short y, short radius, short start, short end, unsigned int color, bool filled) {
+    if (filled) {
+        tumDrawPieFilled(getTransformedX(x), getTransformedY(y), radius * scale, start, end, color);
+    } else {
+        tumDrawPie(getTransformedX(x), getTransformedY(y), radius * scale, start, end, color);
+    }
+}
+
+
+
 

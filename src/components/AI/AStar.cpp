@@ -60,7 +60,7 @@ void dealloc(std::set<TileData*, ScoreCompare> set) {
 
 // A* Pathfinding algorithm
 // Code inspired by https://github.com/daancode/a-star
-std::vector<TilePosition> aStarPathfinding(TilePosition start, TilePosition end, Map &map, entt::registry &registry) {
+std::vector<TilePosition> AStar::pathfind(TilePosition start, TilePosition end, Map &map, entt::registry &registry) {
     TileData *current = nullptr;
     std::set<TileData*, ScoreCompare> openSet {};
     std::set<TileData*, ScoreCompare> closedSet {};
@@ -76,7 +76,7 @@ std::vector<TilePosition> aStarPathfinding(TilePosition start, TilePosition end,
 
         for (int i = 0; i < 4; ++i) {
             TilePosition newPos = current->pos.neighbor((Direction) i);
-            if(isSolid(map.getTileType(newPos.x, newPos.y, registry)) || findPos(newPos, closedSet)) {
+            if(isSolid(map.getTileTypeAt(newPos.x, newPos.y, registry)) || findPos(newPos, closedSet)) {
                 continue;
             }
 

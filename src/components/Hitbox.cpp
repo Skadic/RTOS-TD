@@ -56,7 +56,7 @@ bool hitboxInRange(Position rangePos, Range range, Position hitboxPos, Hitbox hi
 
     float xDist = rangePos.x - testX;
     float yDist = rangePos.y - testY;
-    float distSquared = xDist * xDist + yDist * yDist; // The distance squared. We'll compare this to the radius squared so we don't do an sqrt operation
+    float dist = std::sqrt(xDist * xDist + yDist * yDist); // The distance squared. We'll compare this to the radius squared so we don't do an sqrt operation
 
-    return distSquared <= range.radius * range.radius;
+    return dist <= range.radius;
 }

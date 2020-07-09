@@ -3,7 +3,7 @@
 //
 
 #include "MoveTowardsPlayerAI.h"
-#include "../Player.h"
+#include "../tags/Player.h"
 #include "../Position.h"
 #include "../Velocity.h"
 #include "../../util/GlobalConsts.h"

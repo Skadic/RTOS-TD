@@ -37,20 +37,32 @@ bool InputHandler::buttonUp(SDL_Scancode sdlScancode) {
 }
 
 void InputHandler::update() {
+    static bool changeNextTick = false;
+
     inputCurrent.swap(inputOld);
     if (xQueueReceive(buttonInputQueue, this->inputCurrent->data(), 0)) {
         std::swap(leftClickCurrent, leftClickOld);
         std::swap(rightClickCurrent, rightClickOld);
         std::swap(middleClickCurrent, middleClickOld);
 
-        mouseX = tumEventGetMouseX();
-        mouseY = tumEventGetMouseY();
         leftClickCurrent = tumEventGetMouseLeft();
         rightClickCurrent = tumEventGetMouseRight();
         middleClickCurrent = tumEventGetMouseMiddle();
+
+        changeNextTick = true;
     } else {
         inputCurrent.swap(inputOld);
+        if(changeNextTick) {
+            leftClickOld = leftClickCurrent;
+            middleClickOld = middleClickCurrent;
+            rightClickOld = rightClickCurrent;
+
+            std::copy(inputCurrent->begin(), inputCurrent->end(), inputOld->begin());
+            changeNextTick = false;
+        }
     }
+    mouseX = tumEventGetMouseX();
+    mouseY = tumEventGetMouseY();
 }
 
 short InputHandler::getMouseX() {

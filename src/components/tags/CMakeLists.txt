@@ -1,0 +1,5 @@
+set(COMPONENTS_SOURCES
+        )
+
+
+target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${COMPONENTS_SOURCES})

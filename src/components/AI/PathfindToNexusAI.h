@@ -2,16 +2,15 @@
 
 #include "AI.h"
 #include "../../states/State.h"
-#include "../TilePosition.h"
+#include "../tilecomponents/TilePosition.h"
 #include "../../states/GameState.h"
 
 class PathfindToNexusAI : public AI {
     GameState *state;
     std::vector<TilePosition> path;
     int currentTile;
-    TilePosition nexusPos;
     double remainingDistance;
 public:
-    explicit PathfindToNexusAI(GameState *state, entt::entity &, TilePosition nexusPos);
+    explicit PathfindToNexusAI(GameState *state, entt::entity &entity, std::vector<TilePosition> &path);
     void act(entt::registry &registry) override;
 };

@@ -3,9 +3,10 @@ set(COMPONENTS_SOURCES
         Position.cpp
         Sprites.cpp
         Velocity.cpp
-        TilePosition.cpp
         Health.cpp)
 
 add_subdirectory(AI)
+add_subdirectory(tilecomponents)
+add_subdirectory(tags)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${COMPONENTS_SOURCES})

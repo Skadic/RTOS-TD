@@ -18,7 +18,5 @@ public:
     Map &getMap();
 
 private:
-    void initPlayer();
-    void initEnemy();
     void initTasks();
 };

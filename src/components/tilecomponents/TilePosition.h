@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../util/Direction.h"
+#include "../../util/Direction.h"
 
 struct TilePosition {
     short x;

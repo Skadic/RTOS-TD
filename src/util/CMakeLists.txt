@@ -8,4 +8,6 @@ set(UTIL_SOURCES
         Map.cpp
         TileType.cpp)
 
+add_subdirectory(spawn)
+
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${UTIL_SOURCES})
