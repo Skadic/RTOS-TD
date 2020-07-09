@@ -58,6 +58,9 @@ typedef enum {
 	DRAW_RECT,
 	DRAW_FILLED_RECT,
 	DRAW_CIRCLE,
+	DRAW_CIRCLE_CLEAR,
+	DRAW_PIE_FILLED,
+	DRAW_PIE,
 	DRAW_LINE,
 	DRAW_POLY,
 	DRAW_TRIANGLE,
@@ -122,6 +125,15 @@ typedef struct circle_data {
 	unsigned int colour;
 } circle_data_t;
 
+typedef struct pie_data {
+    signed short x;
+    signed short y;
+    signed short radius;
+    signed short start;
+    signed short end;
+    unsigned int colour;
+} pie_data_t;
+
 typedef struct line_data {
 	signed short x1;
 	signed short y1;
@@ -184,6 +196,7 @@ union data_u {
 	ellipse_data_t ellipse;
 	rect_data_t rect;
 	circle_data_t circle;
+	pie_data_t pie;
 	line_data_t line;
 	poly_data_t poly;
 	triangle_data_t triangle;
@@ -321,6 +334,33 @@ static int _drawCircle(signed short x, signed short y, signed short radius,
 			  SwapBytes((colour << ONE_BYTE) | ALPHA_SOLID));
 
 	return 0;
+}
+
+static int _drawCircleClear(signed short x, signed short y, signed short radius,
+                       unsigned int colour)
+{
+    circleColor(renderer, x, y, radius,
+                      SwapBytes((colour << ONE_BYTE) | ALPHA_SOLID));
+
+    return 0;
+}
+
+static int _drawPie(signed short x, signed short y, signed short radius, signed short start, signed short end,
+                            unsigned int colour)
+{
+    pieColor(renderer, x, y, radius, start, end,
+                SwapBytes((colour << ONE_BYTE) | ALPHA_SOLID));
+
+    return 0;
+}
+
+static int _drawPieFilled(signed short x, signed short y, signed short radius, signed short start, signed short end,
+                    unsigned int colour)
+{
+    filledPieColor(renderer, x, y, radius, start, end,
+             SwapBytes((colour << ONE_BYTE) | ALPHA_SOLID));
+
+    return 0;
 }
 
 static int _drawLine(signed short x1, signed short y1, signed short x2,
@@ -599,6 +639,25 @@ static int vHandleDrawJob(draw_job_t *job)
 				  job->data->circle.radius,
 				  job->data->circle.colour);
 		break;
+    case DRAW_CIRCLE_CLEAR:
+        ret = _drawCircleClear(job->data->circle.x, job->data->circle.y,
+                          job->data->circle.radius,
+                          job->data->circle.colour);
+        break;
+    case DRAW_PIE:
+        ret = _drawPie(job->data->pie.x, job->data->pie.y,
+                job->data->pie.radius,
+                job->data->pie.start,
+                job->data->pie.end,
+                job->data->pie.colour);
+        break;
+    case DRAW_PIE_FILLED:
+        ret = _drawPieFilled(job->data->pie.x, job->data->pie.y,
+                       job->data->pie.radius,
+                       job->data->pie.start,
+                       job->data->pie.end,
+                       job->data->pie.colour);
+        break;
 	case DRAW_LINE:
 		ret = _drawLine(job->data->line.x1, job->data->line.y1,
 				job->data->line.x2, job->data->line.y2,
@@ -1003,6 +1062,50 @@ int tumDrawCircle(signed short x, signed short y, signed short radius,
 
 	return 0;
 }
+
+int tumDrawCircleClear(signed short x, signed short y, signed short radius,
+                  unsigned int colour)
+{
+    INIT_JOB(job, DRAW_CIRCLE_CLEAR);
+
+    job->data->circle.x = x;
+    job->data->circle.y = y;
+    job->data->circle.radius = radius;
+    job->data->circle.colour = colour;
+
+    return 0;
+}
+
+int tumDrawPie(signed short x, signed short y, signed short radius, signed short start, signed short end,
+                       unsigned int colour)
+{
+    INIT_JOB(job, DRAW_PIE);
+
+    job->data->pie.x = x;
+    job->data->pie.y = y;
+    job->data->pie.radius = radius;
+    job->data->pie.start = start;
+    job->data->pie.end = end;
+    job->data->pie.colour = colour;
+
+    return 0;
+}
+
+int tumDrawPieFilled(signed short x, signed short y, signed short radius, signed short start, signed short end,
+               unsigned int colour)
+{
+    INIT_JOB(job, DRAW_PIE_FILLED);
+
+    job->data->pie.x = x;
+    job->data->pie.y = y;
+    job->data->pie.radius = radius;
+    job->data->pie.start = start;
+    job->data->pie.end = end;
+    job->data->pie.colour = colour;
+
+    return 0;
+}
+
 
 int tumDrawLine(signed short x1, signed short y1, signed short x2,
 		signed short y2, unsigned char thickness, unsigned int colour)

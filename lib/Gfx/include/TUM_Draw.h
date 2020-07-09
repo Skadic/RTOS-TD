@@ -256,6 +256,15 @@ int tumDrawFilledBox(signed short x, signed short y, signed short w,
 int tumDrawCircle(signed short x, signed short y, signed short radius,
                   unsigned int colour);
 
+int tumDrawCircleClear(signed short x, signed short y, signed short radius,
+                       unsigned int colour);
+
+int tumDrawPie(signed short x, signed short y, signed short radius, signed short start, signed short end,
+               unsigned int colour);
+
+int tumDrawPieFilled(signed short x, signed short y, signed short radius, signed short start, signed short end,
+               unsigned int colour);
+
 /**
  * @brief Draws a line on the screen
  *
