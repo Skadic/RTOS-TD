@@ -22,7 +22,7 @@ entt::entity spawnEnemy(TilePosition spawnPos, entt::registry &registry, int hea
     registry.emplace<SpriteComponent>(entity, ENEMY);
     registry.emplace<Hitbox>(entity, PLAYER_SIZE, PLAYER_SIZE);
     registry.emplace<Enemy>(entity);
-    registry.emplace<Health>(entity, health, health * 3/4);
+    registry.emplace<Health>(entity, health, health);
     return entity;
 }
 

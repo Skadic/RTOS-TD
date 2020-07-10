@@ -15,8 +15,14 @@ struct Range {
     float radius;
 };
 
-std::optional<glm::vec2> intersectsOther(Position pos, Hitbox hitbox, Position otherPos, Hitbox otherHitbox);
+bool intersectPointHitbox(Position pos, Position hitboxPos, Hitbox hitbox);
 
-std::optional<glm::vec2> intersectsOther(TilePosition pos, Hitbox hitbox, Position otherPos, Hitbox otherHitbox);
+std::optional<glm::vec2> intersectHitbox(Position pos, Hitbox hitbox, Position otherPos, Hitbox otherHitbox);
 
-bool hitboxInRange(Position rangePos, Range range, Position hitboxPos, Hitbox hitbox);
+std::optional<glm::vec2> intersectHitbox(TilePosition pos, Hitbox hitbox, Position otherPos, Hitbox otherHitbox);
+
+bool intersectHitboxRange(Position rangePos, Range range, Position hitboxPos, Hitbox hitbox);
+
+bool intersectLine(short x1, short y1, short x2, short y2);
+
+bool intersectLineRect(Position p1, Position p2, Position rectPos, Hitbox hitbox);

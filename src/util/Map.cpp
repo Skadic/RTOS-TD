@@ -116,7 +116,7 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
     if(type == TOWER) {
         registry.emplace_or_replace<Range>(tile, 3 * TILE_SIZE);
         registry.emplace_or_replace<Tower>(tile);
-        registry.emplace_or_replace<Damage>(tile, 5);
+        registry.emplace_or_replace<Damage>(tile, 1);
         registry.emplace_or_replace<AIComponent>(tile, new AreaOfEffectTowerAI(tile, 10, registry));
     } else {
         registry.remove_if_exists<Range>(tile);

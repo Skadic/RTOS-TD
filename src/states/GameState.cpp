@@ -99,6 +99,24 @@ void gameRenderTask(void *statePointer) {
                         state.getRenderer().drawPie(pos.x, pos.y, 4, -90 + 360 * (health.value / (double) health.maxHealth), -90, 0xFF0000, true);
                     }
 
+                    auto towerView = registry->view<TilePosition, Tower>();
+                    auto enemyView = registry->view<Position, Enemy>();
+
+                    for (auto &tower : towerView) {
+                        TilePosition &pos = towerView.get<TilePosition>(tower);
+                        Tower &towerData = towerView.get<Tower>(tower);
+
+                        std::set<entt::entity> &targets = towerData.getTargets();
+                        for (auto &target : targets) {
+                            if(registry->valid(target)) {
+                                Position &targetPos = enemyView.get<Position>(target);
+                                state.getRenderer().drawLine(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, targetPos.x + PLAYER_SIZE / 2, targetPos.y + PLAYER_SIZE / 2, 2, 0x800020);
+                            }
+                        }
+                    }
+
+                    tumDrawText("Hallo", 0, 0, 0xFFFFFF);
+
                     game.getScreenLock().unlock();
                     game.getSwapBufferSignal().unlock();
                 }
@@ -144,7 +162,7 @@ void gameMoveTask(void *statePointer) {
                     TilePosition &tilePos = tileView.get<TilePosition>(tile);
                     Hitbox &tileHitbox = tileView.get<Hitbox>(tile);
 
-                    if(auto collision = intersectsOther(tilePos, tileHitbox, entityPos, entityHitbox)) {
+                    if(auto collision = intersectHitbox(tilePos, tileHitbox, entityPos, entityHitbox)) {
                         auto type = registry->get<TileTypeComponent>(tile).type;
 
                         if(isSolid(type)) {
@@ -324,7 +342,7 @@ void gameTowerTask(void *statePointer) {
                     Position &enemyPos = enemyView.get<Position>(enemy);
                     Hitbox &enemyHitbox = enemyView.get<Hitbox>(enemy);
 
-                    if(hitboxInRange(towerPos, towerRange, enemyPos, enemyHitbox)) {
+                    if(intersectHitboxRange(towerPos, towerRange, enemyPos, enemyHitbox)) {
                         targets.push_back(enemy);
                     }
                 }

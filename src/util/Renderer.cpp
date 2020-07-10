@@ -3,6 +3,7 @@
 //
 
 #include "Renderer.h"
+#include "../components/Hitbox.h"
 
 #include <TUM_Draw.h>
 #include <iostream>
@@ -94,22 +95,45 @@ short Renderer::getXOffset() {
 }
 
 void Renderer::drawLine(short x1, short y1, short x2, short y2, unsigned char thickness, unsigned int color) {
-    tumDrawLine(getTransformedX(x1), getTransformedY(y1), getTransformedX(x2), getTransformedY(y2), thickness, color);
+    float transX1 = getTransformedX(x1);
+    float transY1 = getTransformedY(y1);
+    float transX2 = getTransformedX(x2);
+    float transY2 = getTransformedY(y2);
+    if(intersectLineRect(
+            {transX1, transY1},
+            {transX2, transY2},
+            {0, 0},
+            {SCREEN_WIDTH, SCREEN_HEIGHT})) {
+        tumDrawLine(transX1, transY1, transX2, transY2, thickness, color);
+    }
 }
 
 void Renderer::drawCircle(short x, short y, short radius, unsigned int color, bool filled) {
-    if (filled) {
-        tumDrawCircle(getTransformedX(x), getTransformedY(y), radius * scale, color);
-    } else {
-        tumDrawCircleClear(getTransformedX(x), getTransformedY(y), radius * scale, color);
+
+    float transX = getTransformedX(x);
+    float transY = getTransformedY(y);
+    float scaledRadius = radius * scale;
+
+    if (intersectHitboxRange({transX, transY}, {scaledRadius}, {0, 0}, {SCREEN_WIDTH, SCREEN_HEIGHT})) {
+        if (filled) {
+            tumDrawCircle(transX, transY, scaledRadius, color);
+        } else {
+            tumDrawCircleClear(transX, transY, scaledRadius, color);
+        }
     }
 }
 
 void Renderer::drawPie(short x, short y, short radius, short start, short end, unsigned int color, bool filled) {
-    if (filled) {
-        tumDrawPieFilled(getTransformedX(x), getTransformedY(y), radius * scale, start, end, color);
-    } else {
-        tumDrawPie(getTransformedX(x), getTransformedY(y), radius * scale, start, end, color);
+    float transX = getTransformedX(x);
+    float transY = getTransformedY(y);
+    float scaledRadius = radius * scale;
+
+    if (intersectHitboxRange({transX, transY}, {scaledRadius}, {0, 0}, {SCREEN_WIDTH, SCREEN_HEIGHT})) {
+        if (filled) {
+            tumDrawPieFilled(transX, transY, scaledRadius, start, end, color);
+        } else {
+            tumDrawPie(transX, transY, scaledRadius, start, end, color);
+        }
     }
 }
 

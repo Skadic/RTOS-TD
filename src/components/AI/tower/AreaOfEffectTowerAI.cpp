@@ -25,8 +25,8 @@ void AreaOfEffectTowerAI::act(entt::registry &registry) {
 
     if(time.count() * 1000 > timeInterval) {
         auto view = registry.view<Position, Enemy, Health>();
-        for (auto &target : view) {
-            if (towerData.getTargets().find(target) != towerData.getTargets().end()) {
+        for (auto &target : towerData.getTargets()) {
+            if (registry.valid(target) && registry.has<Health>(target)) {
                 Health &health = view.get<Health>(target);
                 health.value -= damage.value;
             }

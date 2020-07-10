@@ -8,7 +8,7 @@
 
 class entity;
 
-class Tower{
+class Tower {
     std::set<entt::entity> targets;
 
 public:

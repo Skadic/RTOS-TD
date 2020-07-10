@@ -3,7 +3,7 @@ set(COMPONENTS_SOURCES
         Position.cpp
         Sprites.cpp
         Velocity.cpp
-        Health.cpp)
+        )
 
 add_subdirectory(AI)
 add_subdirectory(tilecomponents)
