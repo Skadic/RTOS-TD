@@ -6,7 +6,6 @@
 #include "../components/Hitbox.h"
 
 #include <TUM_Draw.h>
-#include <iostream>
 
 
 Renderer::Renderer(short xOffset, short yOffset, float scale) : xOffset{xOffset}, yOffset{yOffset}, scale{scale} {}

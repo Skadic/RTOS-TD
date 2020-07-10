@@ -7,7 +7,7 @@
 
 #define SAMPLE_FOLDER "/../resources/waveforms/"
 
-#define NUM_WAVEFORMS 20
+#define NUM_WAVEFORMS COUNT
 
 #define AUDIO_CHANNELS 2
 #define MIXING_CHANNELS 4
@@ -37,7 +37,6 @@ int tumSoundInit(char *bin_dir_str)
     int ret;
     size_t bin_dir_len = strlen(bin_dir_str);
     unsigned int i, j;
-
     for (i = 0; i < NUM_WAVEFORMS; i++) {
         fullWaveFileNames[i] =
             calloc(1, sizeof(char) * (strlen(waveFileNames[i]) +

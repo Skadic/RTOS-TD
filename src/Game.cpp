@@ -18,6 +18,11 @@
 
 #include <iostream>
 #include <entity/registry.hpp>
+#include <FreeRTOS.h>
+
+extern "C" {
+#include <TUM_Sound.h>
+}
 
 Game::Game() :
     screenLock{xSemaphoreCreateMutex()},
@@ -38,6 +43,7 @@ void Game::start(char *binPath) {
     // Init event handling and drawing
     tumEventInit();
     tumDrawInit(path);
+    tumSoundInit(path);
 
     // Spawn the task that will update the screen each frame
     TaskHandle_t swap_buffer = nullptr;
@@ -55,6 +61,7 @@ void Game::start(char *binPath) {
     // Delete all tasks
     vTaskDelete(swap_buffer);
     tumEventExit();
+    tumSoundExit();
 }
 
 
