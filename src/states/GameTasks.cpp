@@ -7,7 +7,7 @@
 #include "../components/Hitbox.h"
 #include "../components/Health.h"
 #include "../components/tilecomponents/Tower.h"
-#include "../components/tags/Enemy.h"
+#include "../components/Enemy.h"
 #include "../components/Velocity.h"
 #include "../components/tilecomponents/TileTypeComponent.h"
 #include "../components/tags/Player.h"

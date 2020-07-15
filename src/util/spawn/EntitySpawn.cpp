@@ -8,7 +8,7 @@
 #include "../../components/Velocity.h"
 #include "../../components/Sprites.h"
 #include "../../components/Hitbox.h"
-#include "../../components/tags/Enemy.h"
+#include "../../components/Enemy.h"
 #include "../../components/tags/Player.h"
 #include "../../components/Health.h"
 

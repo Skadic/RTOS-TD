@@ -14,3 +14,7 @@ void Tower::setTargets(std::vector<entt::entity> &newTargets) {
 std::set<entt::entity> &Tower::getTargets() {
     return targets;
 }
+
+bool Tower::hasTargets() {
+    return !targets.empty();
+}

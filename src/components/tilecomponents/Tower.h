@@ -16,4 +16,5 @@ public:
 
     void setTargets(std::vector<entt::entity> &newTargets);
     std::set<entt::entity> &getTargets();
+    bool hasTargets();
 };

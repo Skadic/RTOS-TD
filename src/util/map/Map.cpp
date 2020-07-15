@@ -15,6 +15,7 @@
 #include "../../components/tilecomponents/Tower.h"
 #include "../../components/Damage.h"
 #include "../../components/AI/tower/AreaOfEffectTowerAI.h"
+#include "../../components/AI/tower/LaserTowerAI.h"
 #include <map>
 
 Map::Map(entt::registry &registry, int width, int height) : mapWidth{width}, mapHeight{height} {
@@ -117,7 +118,7 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
         registry.emplace_or_replace<Range>(tile, 3 * TILE_SIZE);
         registry.emplace_or_replace<Tower>(tile);
         registry.emplace_or_replace<Damage>(tile, 1);
-        registry.emplace_or_replace<AIComponent>(tile, new AreaOfEffectTowerAI(tile, 10, registry));
+        registry.emplace_or_replace<AIComponent>(tile, new LaserTowerAI(tile, 10, registry));
     } else {
         registry.remove_if_exists<Range>(tile);
         registry.remove_if_exists<Tower>(tile);
