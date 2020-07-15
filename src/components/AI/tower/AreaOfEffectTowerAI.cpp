@@ -11,9 +11,7 @@ using namespace std::chrono;
 
 AreaOfEffectTowerAI::AreaOfEffectTowerAI(entt::entity self, int timeInterval, entt::registry &registry) :
     timeInterval{timeInterval},
-    lastRun{std::chrono::high_resolution_clock::now()},
-    towerData{registry.get<Tower>(self)},
-    damage{registry.get<Damage>(self)}{
+    lastRun{std::chrono::high_resolution_clock::now()}{
     this->self = self;
 }
 
@@ -26,6 +24,7 @@ void AreaOfEffectTowerAI::act(entt::registry &registry) {
     if(time.count() * 1000 > timeInterval) {
         auto view = registry.view<Position, Enemy, Health>();
         Tower &towerData = registry.get<Tower>(this->self);
+        Damage &damage = registry.get<Damage>(this->self);
         for (auto &target : towerData.getTargets()) {
             if (registry.valid(target) && registry.has<Health>(target)) {
                 Health &health = view.get<Health>(target);

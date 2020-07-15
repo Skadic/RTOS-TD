@@ -6,8 +6,6 @@
 #include <chrono>
 
 class AreaOfEffectTowerAI : public AI {
-    Tower &towerData;
-    Damage damage;
     int timeInterval;
     std::chrono::time_point<std::chrono::high_resolution_clock> lastRun;
 
