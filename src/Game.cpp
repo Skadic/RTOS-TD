@@ -4,22 +4,16 @@
 
 #include "Game.h"
 #include "states/GameState.h"
-#include "util/GlobalConsts.h"
 #include "util/Log.h"
-#include <FreeRTOS.h>
-#include <semphr.h>
-#include <task.h>
-#include <TUM_Event.h>
-#include <TUM_Draw.h>
-#include <TUM_Utils.h>
-#include <SDL2/SDL_scancode.h>
-
+#include "util/GlobalConsts.h"
 
 #include <iostream>
 #include <entity/registry.hpp>
-#include <FreeRTOS.h>
 
 extern "C" {
+#include <FreeRTOS.h>
+#include <TUM_Event.h>
+#include <TUM_Utils.h>
 #include <TUM_Sound.h>
 }
 

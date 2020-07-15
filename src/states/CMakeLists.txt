@@ -1,5 +1,6 @@
 set(STATES_SOURCES
         GameState.cpp
+        GameTasks.cpp
         State.cpp
         StateMachine.cpp)
 
