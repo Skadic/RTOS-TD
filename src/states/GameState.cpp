@@ -316,7 +316,7 @@ void gameSpawnTask(void *statePointer) {
 
             auto enemy = spawnEnemy(state.getMap().getSpawn(), *registry, 100);
             registry->emplace<AIComponent>(enemy, new PathfindToNexusAI(&state, enemy, state.getMap().getPath()));
-            tumSoundPlaySample(enemy_spawn);
+            //tumSoundPlaySample(enemy_spawn);
         }
 
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS * TARGET_FPS);
@@ -376,7 +376,7 @@ void gameKillTask(void *statePointer) {
                 Health &health = view.get<Health>(entity);
                 if(health.value <= 0) {
                     toDelete.push_back(entity);
-                    tumSoundPlaySample(enemy_death);
+                    //tumSoundPlaySample(enemy_death);
                 }
             }
 

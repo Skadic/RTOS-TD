@@ -25,15 +25,12 @@ void AreaOfEffectTowerAI::act(entt::registry &registry) {
 
     if(time.count() * 1000 > timeInterval) {
         auto view = registry.view<Position, Enemy, Health>();
+        Tower &towerData = registry.get<Tower>(this->self);
         for (auto &target : towerData.getTargets()) {
             if (registry.valid(target) && registry.has<Health>(target)) {
                 Health &health = view.get<Health>(target);
                 health.value -= damage.value;
             }
-            /*std::cout << "Has Pos: " << registry.has<Position>(target) << std::endl;
-            std::cout << "Has Enemy: " << registry.has<Enemy>(target) << std::endl;
-            std::cout << "Has Health: " << registry.has<Health>(target) << std::endl;
-            std::cout << std::endl;*/
         }
         lastRun = high_resolution_clock::now();
     }
