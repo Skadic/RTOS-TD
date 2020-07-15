@@ -3,7 +3,6 @@
 //
 
 #include "Game.h"
-#include "states/TestState.h"
 #include "states/GameState.h"
 #include "util/GlobalConsts.h"
 #include "util/Log.h"
