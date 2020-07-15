@@ -2,8 +2,8 @@
 #include "TileType.h"
 
 #include <map>
-#include "GlobalConsts.h"
-#include "../components/Sprites.h"
+#include "../GlobalConsts.h"
+#include "../../components/Sprites.h"
 
 std::map<TileType, std::shared_ptr<Sprite>> initTileSprites() {
     std::map<TileType, std::shared_ptr<Sprite>> map;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../util/TileType.h"
+#include "../../util/map/TileType.h"
 
 struct TileTypeComponent {
     TileType type;

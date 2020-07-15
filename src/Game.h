@@ -2,7 +2,7 @@
 
 #include <entity/registry.hpp>
 #include "states/StateMachine.h"
-#include "util/LockGuard.h"
+#include "util/sync/LockGuard.h"
 #include "util/InputHandler.h"
 
 extern "C" {

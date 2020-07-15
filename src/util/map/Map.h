@@ -2,11 +2,11 @@
 
 #include <vector>
 #include <entity/registry.hpp>
-#include "LockGuard.h"
+#include "../sync/LockGuard.h"
 #include "TileType.h"
-#include "../components/Sprites.h"
-#include "Renderer.h"
-#include "../components/tilecomponents/TilePosition.h"
+#include "../../components/Sprites.h"
+#include "../Renderer.h"
+#include "../../components/tilecomponents/TilePosition.h"
 
 
 class Map {

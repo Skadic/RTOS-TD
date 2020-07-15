@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../components/Sprites.h"
+#include "../../components/Sprites.h"
 
 enum TileType {
     EMPTY = 0,

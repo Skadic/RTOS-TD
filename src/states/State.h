@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <entity/registry.hpp>
-#include "../util/LockGuard.h"
+#include "../util/sync/LockGuard.h"
 #include "../util/Renderer.h"
 
 extern "C" {

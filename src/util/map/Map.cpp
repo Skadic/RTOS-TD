@@ -5,16 +5,16 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include "Map.h"
-#include "../components/tilecomponents/TilePosition.h"
-#include "../components/Sprites.h"
+#include "../../components/tilecomponents/TilePosition.h"
+#include "../../components/Sprites.h"
 #include "TileType.h"
-#include "GlobalConsts.h"
-#include "../components/Hitbox.h"
-#include "../components/tilecomponents/TileTypeComponent.h"
-#include "../components/AI/AStar.h"
-#include "../components/tilecomponents/Tower.h"
-#include "../components/Damage.h"
-#include "../components/AI/tower/AreaOfEffectTowerAI.h"
+#include "../GlobalConsts.h"
+#include "../../components/Hitbox.h"
+#include "../../components/tilecomponents/TileTypeComponent.h"
+#include "../../components/AI/AStar.h"
+#include "../../components/tilecomponents/Tower.h"
+#include "../../components/Damage.h"
+#include "../../components/AI/tower/AreaOfEffectTowerAI.h"
 #include <map>
 
 Map::Map(entt::registry &registry, int width, int height) : mapWidth{width}, mapHeight{height} {
