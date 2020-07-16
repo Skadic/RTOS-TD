@@ -13,6 +13,10 @@
 #include "../components/tags/Player.h"
 #include "../util/spawn/EntitySpawn.h"
 #include "../components/AI/PathfindToNexusAI.h"
+extern "C" {
+    #include <TUM_Sound.h>
+}
+
 
 namespace GameTasks {
     void gameRenderTask(void *statePointer) {
@@ -364,4 +368,8 @@ namespace GameTasks {
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }
+
+
 }
+
+
