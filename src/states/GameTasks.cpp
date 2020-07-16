@@ -102,9 +102,17 @@ namespace GameTasks {
                         }
 
                         Wave wave = state.getWave();
+                        Map map = state.getMap();
+                        TilePosition pos = state.getMap().getNexus();
+                        auto nexus = map.getMapTile(pos.x, pos.y);
+                        Health nexusHealth = registry->get<Health>(nexus);
 
                         drawInfo("Enemies remaining: ", wave.getRemainingEnemies(),5, 5);
-                        drawInfo("Wave: ", wave.getWaveNumber(), SCREEN_WIDTH-70, 5);
+                        drawInfo("Enemies health: ", 100*wave.getEnemyHealthFactor(),5, 25);
+                        drawInfo("Wave: ", wave.getWaveNumber(), SCREEN_WIDTH-65, 5);
+                        drawInfo("Nexus Health: ", nexusHealth.value, (SCREEN_WIDTH/2)-45, 5);
+                        drawInfo("Coins: ", state.getCoins(), 5, SCREEN_HEIGHT-25);
+                        drawInfo("Coins per enemy: ", wave.getEnemyCoins(), 5, SCREEN_HEIGHT-45);
 
 
                         game.getScreenLock().unlock();
@@ -165,6 +173,9 @@ namespace GameTasks {
                                     if(registry->has<Enemy>(entity) && registry->has<Health>(entity)){
                                         Health &health = registry->get<Health>(entity);
                                         health.value = 0;
+                                        Health &nexusHealth = registry->get<Health>(tile);
+                                        nexusHealth.value--;
+                                        state.setCoins(state.getCoins()-state.getWave().getEnemyCoins());
                                     }
 
 
@@ -256,12 +267,14 @@ namespace GameTasks {
                                                                                                input->getMouseY(),
                                                                                                renderer);
                         if (tileOpt) {
-                            if(map.getTileType(*tileOpt, *registry) == WALL) {
+                            if(map.getTileType(*tileOpt, *registry) == WALL && state.getCoins() >= 5) {
                                 map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
                                                           renderer);
+                                state.setCoins(state.getCoins()-5);
                             } else if(map.getTileType(*tileOpt, *registry) == TOWER) {
                                 map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, WALL,
                                                           renderer);
+                                state.setCoins(state.getCoins()+3);
                             }
                         }
 
@@ -306,7 +319,7 @@ namespace GameTasks {
                 auto &registry = *regOpt;
                 Wave &wave = state.getWave();
                 if (wave.getEnemyCount()>0){
-                    auto enemy = spawnEnemy(state.getMap().getSpawn(), *registry, 100);
+                    auto enemy = spawnEnemy(state.getMap().getSpawn(), *registry, 100*state.getWave().getEnemyHealthFactor());
                     registry->emplace<AIComponent>(enemy, new PathfindToNexusAI(&state, enemy, state.getMap().getPath()));
                     //tumSoundPlaySample(enemy_spawn);
                     wave.decreaseEnemyCount();
@@ -372,6 +385,7 @@ namespace GameTasks {
                         toDelete.push_back(entity);
                         if(registry->has<Enemy>(entity)){
                             state.getWave().setRemainingEnemies(state.getWave().getRemainingEnemies()-1);
+                            state.setCoins(state.getCoins()+state.getWave().getEnemyCoins());
                         }
                         //tumSoundPlaySample(enemy_death);
                     }
@@ -400,7 +414,7 @@ namespace GameTasks {
                     auto &input = *inputOpt;
                     if (input->buttonPressed(SDL_SCANCODE_SPACE)) {
                         state.setWave(
-                                Wave(state.getWave().getSpawnLimit() + 3, state.getWave().getEnemyHealthFactor() * 1.2,
+                                Wave(state.getWave().getSpawnLimit() + 3, state.getWave().getEnemyHealthFactor() * 1.5,
                                      state.getWave().getEnemyCoins() + 1, state.getWave().getWaveNumber() + 1));
                     }
                 }

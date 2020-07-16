@@ -5,7 +5,7 @@
 #include "Wave.h"
 
 
-Wave::Wave(int spawnLimit, double enemyHealth, int enemyCoins, int waveNumber): spawnLimit(spawnLimit),enemyCount(spawnLimit), enemyHealthFactor(enemyHealth), enemyCoins(enemyCoins), remainingEnemies(enemyCount), waveNumber(waveNumber){}
+Wave::Wave(int spawnLimit, double enemyHealthFactor, int enemyCoins, int waveNumber): spawnLimit(spawnLimit),enemyCount(spawnLimit), enemyHealthFactor(enemyHealthFactor), enemyCoins(enemyCoins), remainingEnemies(enemyCount), waveNumber(waveNumber){}
 
 int Wave::getWaveNumber() const {
     return waveNumber;

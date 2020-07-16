@@ -9,6 +9,9 @@
 class GameState : public State {
     Map map;
     Wave wave;
+    int coins;
+public:
+    int getCoins() const;
 
 public:
     // Initializes the game state with an empty map of the given size
@@ -21,6 +24,8 @@ public:
     Wave &getWave();
 
     void setWave(const Wave &wave);
+
+    void setCoins(int coins);
 
 private:
     void initTasks();

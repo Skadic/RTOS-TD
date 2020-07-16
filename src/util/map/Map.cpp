@@ -16,6 +16,7 @@
 #include "../../components/Damage.h"
 #include "../../components/AI/tower/AreaOfEffectTowerAI.h"
 #include "../../components/AI/tower/LaserTowerAI.h"
+#include "../../components/Health.h"
 #include <map>
 
 Map::Map(entt::registry &registry, int width, int height) : mapWidth{width}, mapHeight{height} {
@@ -68,7 +69,10 @@ Map::Map(entt::registry &registry, std::string path) {
             registry.emplace<SpriteComponent>(entity, getSpriteForType(type));
 
             if(type != EMPTY) registry.emplace<Hitbox>(entity, TILE_SIZE, TILE_SIZE);
-            if(type == GOAL) nexus = tilePos;
+            if(type == GOAL) {
+                nexus = tilePos;
+                registry.emplace<Health>(entity, 20, 20);
+            }
             if(type == ENEMY_SPAWN) spawn = tilePos;
             tiles[y][x] = entity;
         }

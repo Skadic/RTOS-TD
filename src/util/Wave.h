@@ -14,7 +14,7 @@ class Wave {
     int enemyCoins;
     int remainingEnemies;
 public:
-    explicit Wave(int spawnLimit, double enemyHealth, int enemyCoins, int waveNumber);
+    explicit Wave(int spawnLimit, double enemyHealthFactor, int enemyCoins, int waveNumber);
 
     int getWaveNumber() const;
 
