@@ -15,6 +15,7 @@ public:
     void drawCircle(short x, short y, short radius, unsigned int color, bool filled);
     void drawPie(short x, short y, short radius, short start, short end, unsigned int color, bool filled);
     void drawSprite(Sprite &sprite, short x, short y);
+    void drawText(char* text, short x, short y, unsigned int color);
 
     void setScale(float s);
     void setOffset(short x, short y);
@@ -29,9 +30,9 @@ public:
     short getYOffset();
     float getScale();
 
-    short getTransformedX(short x);
-    short getTransformedY(short y);
+    short getScreenX(short gameX);
+    short getScreenY(short gameY);
 
-    short reverseTransformX(short transformedX);
-    short reverseTransformY(short transformedY);
+    short getGameX(short screenX);
+    short getGameY(short screenY);
 };

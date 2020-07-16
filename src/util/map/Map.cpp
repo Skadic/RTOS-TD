@@ -90,8 +90,8 @@ entt::entity &Map::getMapTile(int x, int y) {
 }
 
 std::optional<entt::entity> Map::getMapTileAtScreenPos(short xPos, short yPos, Renderer &renderer) {
-    short x = renderer.reverseTransformX(xPos) / TILE_SIZE;
-    short y = renderer.reverseTransformY(yPos) / TILE_SIZE;
+    short x = renderer.getGameX(xPos) / TILE_SIZE;
+    short y = renderer.getGameY(yPos) / TILE_SIZE;
 
     if(x >= 0 && y >= 0 && x < mapWidth && y < mapHeight) {
         return std::make_optional<entt::entity>(getMapTile(x, y));

@@ -16,8 +16,6 @@ AreaOfEffectTowerAI::AreaOfEffectTowerAI(entt::entity self, int timeInterval, en
     this->self = self;
 }
 
-
-
 void AreaOfEffectTowerAI::act(entt::registry &registry) {
 
     auto now = high_resolution_clock::now();

@@ -94,7 +94,7 @@ namespace GameTasks {
                             }
                         }
 
-                        tumDrawText("Hallo", 0, 0, 0xFFFFFF);
+                        state.getRenderer().drawText("Hallo", 0, 0, 0xFFFFFF);
 
                         game.getScreenLock().unlock();
                         game.getSwapBufferSignal().unlock();

@@ -12,14 +12,14 @@ Renderer::Renderer(short xOffset, short yOffset, float scale) : xOffset{xOffset}
 
 void Renderer::drawBox(short x, short y, short width, short height, unsigned int color, bool filled) {
     if(
-            getTransformedX(x) < SCREEN_WIDTH &&
-            getTransformedY(y) < SCREEN_HEIGHT &&
-            getTransformedX(x + width) > 0 &&
-            getTransformedY(y + height) > 0) {
+            getScreenX(x) < SCREEN_WIDTH &&
+                    getScreenY(y) < SCREEN_HEIGHT &&
+                    getScreenX(x + width) > 0 &&
+                    getScreenY(y + height) > 0) {
         if(filled) {
-            tumDrawFilledBox(getTransformedX(x), getTransformedY(y), width * scale, height * scale, color);
+            tumDrawFilledBox(getScreenX(x), getScreenY(y), width * scale, height * scale, color);
         } else {
-            tumDrawBox(getTransformedX(x), getTransformedY(y), width * scale, height * scale, color);
+            tumDrawBox(getScreenX(x), getScreenY(y), width * scale, height * scale, color);
         }
     }
 }
@@ -27,11 +27,11 @@ void Renderer::drawBox(short x, short y, short width, short height, unsigned int
 void Renderer::drawSprite(Sprite &sprite, short x, short y) {
     // Only draw the sprite if any part of it is visible on screen
     if(
-            getTransformedX(x) < SCREEN_WIDTH &&
-            getTransformedY(y) < SCREEN_HEIGHT &&
-            getTransformedX(x + sprite.width) > 0 &&
-            getTransformedY(y + sprite.height) > 0) {
-        sprite.draw(getTransformedX(x), getTransformedY(y), this->scale);
+            getScreenX(x) < SCREEN_WIDTH &&
+                    getScreenY(y) < SCREEN_HEIGHT &&
+                    getScreenX(x + sprite.width) > 0 &&
+                    getScreenY(y + sprite.height) > 0) {
+        sprite.draw(getScreenX(x), getScreenY(y), this->scale);
     }
 }
 
@@ -52,20 +52,20 @@ void Renderer::setYOffset(short y) {
     this->yOffset = y;
 }
 
-short Renderer::getTransformedX(short x) {
-    return (x + xOffset) * scale;
+short Renderer::getScreenX(short gameX) {
+    return (gameX + xOffset) * scale;
 }
 
-short Renderer::getTransformedY(short y) {
-    return (y + yOffset) * scale;
+short Renderer::getScreenY(short gameY) {
+    return (gameY + yOffset) * scale;
 }
 
-short Renderer::reverseTransformX(short transformedX) {
-    return (transformedX / scale) - xOffset;
+short Renderer::getGameX(short screenX) {
+    return (screenX / scale) - xOffset;
 }
 
-short Renderer::reverseTransformY(short transformedY) {
-    return (transformedY / scale) - yOffset;
+short Renderer::getGameY(short screenY) {
+    return (screenY / scale) - yOffset;
 }
 
 void Renderer::addOffset(short x, short y) {
@@ -94,10 +94,10 @@ short Renderer::getXOffset() {
 }
 
 void Renderer::drawLine(short x1, short y1, short x2, short y2, unsigned char thickness, unsigned int color) {
-    float transX1 = getTransformedX(x1);
-    float transY1 = getTransformedY(y1);
-    float transX2 = getTransformedX(x2);
-    float transY2 = getTransformedY(y2);
+    float transX1 = getScreenX(x1);
+    float transY1 = getScreenY(y1);
+    float transX2 = getScreenX(x2);
+    float transY2 = getScreenY(y2);
     if(intersectLineRect(
             {transX1, transY1},
             {transX2, transY2},
@@ -109,8 +109,8 @@ void Renderer::drawLine(short x1, short y1, short x2, short y2, unsigned char th
 
 void Renderer::drawCircle(short x, short y, short radius, unsigned int color, bool filled) {
 
-    float transX = getTransformedX(x);
-    float transY = getTransformedY(y);
+    float transX = getScreenX(x);
+    float transY = getScreenY(y);
     float scaledRadius = radius * scale;
 
     if (intersectHitboxRange({transX, transY}, {scaledRadius}, {0, 0}, {SCREEN_WIDTH, SCREEN_HEIGHT})) {
@@ -123,8 +123,8 @@ void Renderer::drawCircle(short x, short y, short radius, unsigned int color, bo
 }
 
 void Renderer::drawPie(short x, short y, short radius, short start, short end, unsigned int color, bool filled) {
-    float transX = getTransformedX(x);
-    float transY = getTransformedY(y);
+    float transX = getScreenX(x);
+    float transY = getScreenY(y);
     float scaledRadius = radius * scale;
 
     if (intersectHitboxRange({transX, transY}, {scaledRadius}, {0, 0}, {SCREEN_WIDTH, SCREEN_HEIGHT})) {
@@ -134,6 +134,10 @@ void Renderer::drawPie(short x, short y, short radius, short start, short end, u
             tumDrawPie(transX, transY, scaledRadius, start, end, color);
         }
     }
+}
+
+void Renderer::drawText(char *text, short x, short y, unsigned int color) {
+    tumDrawText(text, getScreenX(x), getScreenY(y), color);
 }
 
 
