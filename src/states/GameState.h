@@ -2,11 +2,13 @@
 
 #include "State.h"
 #include "../util/map/Map.h"
+#include "../util/Wave.h"
 #include <entity/registry.hpp>
 
 
 class GameState : public State {
     Map map;
+    Wave wave;
 
 public:
     // Initializes the game state with an empty map of the given size
@@ -16,6 +18,9 @@ public:
 
 
     Map &getMap();
+    Wave &getWave();
+
+    void setWave(const Wave &wave);
 
 private:
     void initTasks();

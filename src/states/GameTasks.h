@@ -51,4 +51,6 @@ namespace GameTasks {
      * @param statePointer Pointer to the GameState object executing the task
      */
     void gameKillTask(void *statePointer);
+
+    void gameWaveTask(void *statePointer);
 }

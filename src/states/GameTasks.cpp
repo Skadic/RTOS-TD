@@ -13,9 +13,12 @@
 #include "../components/tags/Player.h"
 #include "../util/spawn/EntitySpawn.h"
 #include "../components/AI/PathfindToNexusAI.h"
+#include "../util/StringUtils.h"
 extern "C" {
     #include <TUM_Sound.h>
 }
+#include <iostream>
+#include <sstream>
 
 
 namespace GameTasks {
@@ -98,7 +101,11 @@ namespace GameTasks {
                             }
                         }
 
-                        state.getRenderer().drawText("Hallo", 0, 0, 0xFFFFFF);
+                        Wave wave = state.getWave();
+
+                        drawInfo("Enemies remaining: ", wave.getRemainingEnemies(),5, 5);
+                        drawInfo("Wave: ", wave.getWaveNumber(), SCREEN_WIDTH-70, 5);
+
 
                         game.getScreenLock().unlock();
                         game.getSwapBufferSignal().unlock();
@@ -155,7 +162,12 @@ namespace GameTasks {
                             } else {
                                 if (type == GOAL) {
                                     // If an enemy reaches the goal, they are flagged for deletion
-                                    if(registry->has<Enemy>(entity))toDestroy.push_back(entity);
+                                    if(registry->has<Enemy>(entity) && registry->has<Health>(entity)){
+                                        Health &health = registry->get<Health>(entity);
+                                        health.value = 0;
+                                    }
+
+
                                 }
                             }
                         }
@@ -292,10 +304,13 @@ namespace GameTasks {
             logCurrentTaskName();
             if(auto regOpt = regMutex.lock()) {
                 auto &registry = *regOpt;
-
-                auto enemy = spawnEnemy(state.getMap().getSpawn(), *registry, 100);
-                registry->emplace<AIComponent>(enemy, new PathfindToNexusAI(&state, enemy, state.getMap().getPath()));
-                //tumSoundPlaySample(enemy_spawn);
+                Wave &wave = state.getWave();
+                if (wave.getEnemyCount()>0){
+                    auto enemy = spawnEnemy(state.getMap().getSpawn(), *registry, 100);
+                    registry->emplace<AIComponent>(enemy, new PathfindToNexusAI(&state, enemy, state.getMap().getPath()));
+                    //tumSoundPlaySample(enemy_spawn);
+                    wave.decreaseEnemyCount();
+                }
             }
 
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS * TARGET_FPS);
@@ -355,6 +370,9 @@ namespace GameTasks {
                     Health &health = view.get<Health>(entity);
                     if(health.value <= 0) {
                         toDelete.push_back(entity);
+                        if(registry->has<Enemy>(entity)){
+                            state.getWave().setRemainingEnemies(state.getWave().getRemainingEnemies()-1);
+                        }
                         //tumSoundPlaySample(enemy_death);
                     }
                 }
@@ -369,6 +387,27 @@ namespace GameTasks {
         }
     }
 
+    void gameWaveTask(void *statePointer) {
+        GameState &state = *static_cast<GameState*>(statePointer);
+        auto &regMutex = state.getRegistry();
+        auto lastWake = xTaskGetTickCount();
+        Game &game = Game::get();
+
+        while(true) {
+            logCurrentTaskName();
+            if(state.getWave().getRemainingEnemies()==0){
+                if(auto inputOpt = game.getInput().lock()) {
+                    auto &input = *inputOpt;
+                    if (input->buttonPressed(SDL_SCANCODE_SPACE)) {
+                        state.setWave(
+                                Wave(state.getWave().getSpawnLimit() + 3, state.getWave().getEnemyHealthFactor() * 1.2,
+                                     state.getWave().getEnemyCoins() + 1, state.getWave().getWaveNumber() + 1));
+                    }
+                }
+            }
+            vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+        }
+    }
 
 }
 

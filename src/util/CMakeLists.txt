@@ -3,7 +3,8 @@ set(UTIL_SOURCES
         Renderer.cpp
         InputHandler.cpp
         Log.cpp
-        waves.cpp)
+        Wave.cpp
+        StringUtils.cpp)
 
 add_subdirectory(spawn)
 add_subdirectory(sync)
