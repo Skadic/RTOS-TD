@@ -23,7 +23,7 @@ GameState::GameState(int mapWidth, int mapHeight) :
         State(),
         map{Map(**registry.lock(portMAX_DELAY), mapWidth, mapHeight)},
         wave(0,1,0, 0),
-        coins(20),
+        coins(25),
         tileTypeToPlace(WALL)
         {
     renderer.setScale(2);
@@ -37,7 +37,7 @@ GameState::GameState(std::string mapPath) :
         State(),
         map{Map(**registry.lock(portMAX_DELAY), mapPath)},
         wave(0,1,0, 0),
-        coins(20),
+        coins(25),
         tileTypeToPlace(WALL)
         {
     renderer.setScale(2);

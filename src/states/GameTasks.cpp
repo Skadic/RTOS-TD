@@ -458,7 +458,7 @@ namespace GameTasks {
                         auto &input = *inputOpt;
                         if (input->buttonPressed(SDL_SCANCODE_SPACE)) {
                             state.setWave(
-                                    Wave(state.getWave().getSpawnLimit() + 3, state.getWave().getEnemyHealthFactor() * 1.5,
+                                    Wave(state.getWave().getSpawnLimit() + 3, state.getWave().getEnemyHealthFactor() * 1.2,
                                          state.getWave().getEnemyCoins() + 1, state.getWave().getWaveNumber() + 1));
                             state.getMap().updateEnemyPath(*registry);
                         }
