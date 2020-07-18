@@ -107,12 +107,20 @@ namespace GameTasks {
                         auto nexus = map.getMapTile(pos.x, pos.y);
                         Health nexusHealth = registry->get<Health>(nexus);
 
-                        drawInfo("Enemies remaining: ", wave.getRemainingEnemies(),5, 5);
-                        drawInfo("Enemies health: ", 100*wave.getEnemyHealthFactor(),5, 25);
-                        drawInfo("Wave: ", wave.getWaveNumber(), SCREEN_WIDTH-65, 5);
-                        drawInfo("Nexus Health: ", nexusHealth.value, (SCREEN_WIDTH/2)-45, 5);
-                        drawInfo("Coins: ", state.getCoins(), 5, SCREEN_HEIGHT-25);
-                        drawInfo("Coins per enemy: ", wave.getEnemyCoins(), 5, SCREEN_HEIGHT-45);
+                        if (wave.getRemainingEnemies() == 0){
+                            tumDrawText("BUILDING PHASE", (SCREEN_WIDTH/2)-55, 25, 0xFFFFFF);
+                        }else{
+                            drawInfo("Enemies remaining: ", wave.getRemainingEnemies(),(SCREEN_WIDTH/2)-70, 25);
+                        }
+
+
+                        drawInfo("Wave: ", wave.getWaveNumber(), (SCREEN_WIDTH/2)-25, 5);
+                        drawInfo("Nexus Health: ", nexusHealth.value, SCREEN_WIDTH-125, 5);
+                        tumDrawText(nexusHealth.value, x, y, 0xFFFFFF);
+
+                        drawInfo("Coins: ", state.getCoins(), 5, 5);
+                        drawInfo("Coins per enemy: ", wave.getEnemyCoins(), 5, SCREEN_HEIGHT-25);
+                        drawInfo("Enemies health: ", 100*wave.getEnemyHealthFactor(),5, SCREEN_HEIGHT-45);
 
 
                         game.getScreenLock().unlock();
