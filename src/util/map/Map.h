@@ -35,4 +35,5 @@ public:
     entt::entity &getMapTile(int x, int y);
     TileType getTileTypeAt(int x, int y, entt::registry &registry);
     TileType getTileType(entt::entity tile, entt::registry &registry);
+    void updateEnemyPath(entt::registry &registry);
 };

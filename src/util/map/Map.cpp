@@ -78,8 +78,10 @@ Map::Map(entt::registry &registry, std::string path) {
         }
     }
 
-    enemyPath = AStar::pathfind(spawn, nexus, *this, registry);
+    Map::updateEnemyPath(registry);
+    //enemyPath = AStar::pathfind(spawn, nexus, *this, registry);
 }
+
 
 int Map::getWidth() const {
     return mapWidth;
@@ -155,4 +157,8 @@ TilePosition Map::getSpawn() const {
 
 std::vector<TilePosition> &Map::getPath() {
     return enemyPath;
+}
+
+void Map::updateEnemyPath(entt::registry &registry) {
+    enemyPath = AStar::pathfind(spawn, nexus, *this, registry);
 }

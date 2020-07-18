@@ -442,13 +442,17 @@ namespace GameTasks {
 
         while(true) {
             logCurrentTaskName();
-            if(state.getWave().getRemainingEnemies()==0){
-                if(auto inputOpt = game.getInput().lock()) {
-                    auto &input = *inputOpt;
-                    if (input->buttonPressed(SDL_SCANCODE_SPACE)) {
-                        state.setWave(
-                                Wave(state.getWave().getSpawnLimit() + 3, state.getWave().getEnemyHealthFactor() * 1.5,
-                                     state.getWave().getEnemyCoins() + 1, state.getWave().getWaveNumber() + 1));
+            if(auto regOpt = regMutex.lock()) {
+                auto &registry = *regOpt;
+                if(state.getWave().getRemainingEnemies()==0){
+                    if(auto inputOpt = game.getInput().lock()) {
+                        auto &input = *inputOpt;
+                        if (input->buttonPressed(SDL_SCANCODE_SPACE)) {
+                            state.setWave(
+                                    Wave(state.getWave().getSpawnLimit() + 3, state.getWave().getEnemyHealthFactor() * 1.5,
+                                         state.getWave().getEnemyCoins() + 1, state.getWave().getWaveNumber() + 1));
+                            state.getMap().updateEnemyPath(*registry);
+                        }
                     }
                 }
             }
