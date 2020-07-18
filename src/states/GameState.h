@@ -11,6 +11,11 @@ class GameState : public State {
     Wave wave;
     int coins;
 public:
+    TileType getTileTypeToPlace() const;
+
+private:
+    TileType tileTypeToPlace;
+public:
     int getCoins() const;
 
 public:
@@ -26,6 +31,8 @@ public:
     void setWave(const Wave &wave);
 
     void setCoins(int coins);
+
+    void setTileTypeToPlace(TileType tileTypeToPlace);
 
 private:
     void initTasks();

@@ -212,18 +212,18 @@ namespace GameTasks {
                     for (auto &entity : view) {
                         Velocity &vel = view.get<Velocity>(entity);
                         // Set Horizontal speed
-                        if(input->buttonPressed(SDL_SCANCODE_LEFT) && !input->buttonPressed(SDL_SCANCODE_RIGHT)) {
+                        if((input->buttonPressed(SDL_SCANCODE_LEFT) || input->buttonPressed(SDL_SCANCODE_A)) && (!input->buttonPressed(SDL_SCANCODE_RIGHT) && !input->buttonPressed(SDL_SCANCODE_D))) {
                             vel.dx = -PLAYER_SPEED;
-                        } else if(!input->buttonPressed(SDL_SCANCODE_LEFT) && input->buttonPressed(SDL_SCANCODE_RIGHT)) {
+                        } else if((input->buttonPressed(SDL_SCANCODE_RIGHT) || input->buttonPressed(SDL_SCANCODE_D)) && (!input->buttonPressed(SDL_SCANCODE_LEFT) && !input->buttonPressed(SDL_SCANCODE_A))) {
                             vel.dx = PLAYER_SPEED;
                         } else {
                             vel.dx = 0;
                         }
 
                         // Set Vertical speed
-                        if(input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_DOWN)) {
+                        if((input->buttonPressed(SDL_SCANCODE_UP) || input->buttonPressed(SDL_SCANCODE_W)) && (!input->buttonPressed(SDL_SCANCODE_DOWN) && !input->buttonPressed(SDL_SCANCODE_S))) {
                             vel.dy = -PLAYER_SPEED;
-                        } else if(!input->buttonPressed(SDL_SCANCODE_UP) && input->buttonPressed(SDL_SCANCODE_DOWN)) {
+                        } else if((input->buttonPressed(SDL_SCANCODE_DOWN) || input->buttonPressed(SDL_SCANCODE_S)) && (!input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_W))) {
                             vel.dy = PLAYER_SPEED;
                         } else {
                             vel.dy = 0;
@@ -267,17 +267,50 @@ namespace GameTasks {
                                                                                                input->getMouseY(),
                                                                                                renderer);
                         if (tileOpt) {
-                            if(map.getTileType(*tileOpt, *registry) == WALL && state.getCoins() >= 5) {
-                                map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
-                                                          renderer);
-                                state.setCoins(state.getCoins()-5);
-                            } else if(map.getTileType(*tileOpt, *registry) == TOWER) {
-                                map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, WALL,
-                                                          renderer);
-                                state.setCoins(state.getCoins()+3);
+                            if(state.getTileTypeToPlace() == WALL){
+                                if(map.getTileType(*tileOpt, *registry) == TOWER) {
+                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, WALL,
+                                                              renderer);
+                                    state.setCoins(state.getCoins()+4);
+                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY) {
+                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, WALL,
+                                                              renderer);
+                                    state.setCoins(state.getCoins()-1);
+                                }
+                            }else if(state.getTileTypeToPlace() == TOWER){
+                                if(map.getTileType(*tileOpt, *registry) == WALL && state.getCoins() >= 5) {
+                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
+                                                              renderer);
+                                    state.setCoins(state.getCoins()-4);
+                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY) {
+                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
+                                                              renderer);
+                                    state.setCoins(state.getCoins()-5);
+                                }
                             }
+
                         }
 
+                    }else if(input->rightClickDown()){
+                        Map &map = state.getMap();
+                        const std::optional<entt::entity> &tileOpt = map.getMapTileAtScreenPos(input->getMouseX(),
+                                                                                               input->getMouseY(),
+                                                                                               renderer);
+                        if (tileOpt) {
+                            if(map.getTileType(*tileOpt, *registry) == WALL) {
+                                map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, EMPTY,
+                                                          renderer);
+                                state.setCoins(state.getCoins()+1);
+                            } else if(map.getTileType(*tileOpt, *registry) == TOWER) {
+                                map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, EMPTY,
+                                                          renderer);
+                                state.setCoins(state.getCoins()+5);
+                            }
+                        }
+                    }else if(input->buttonPressed(SDL_SCANCODE_1)) {
+                        state.setTileTypeToPlace(WALL);
+                    }else if(input->buttonPressed(SDL_SCANCODE_2)) {
+                        state.setTileTypeToPlace(TOWER);
                     }
                 }
             }
