@@ -6,7 +6,9 @@
 enum TileType {
     EMPTY = 0,
     WALL = 1,
+    WALLPRE = -1,
     TOWER = 2,
+    TOWERPRE = -2,
     GOAL = 3,
     ENEMY_SPAWN = 4,
 };

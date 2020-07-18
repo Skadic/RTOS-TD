@@ -22,8 +22,8 @@ void GameState::initTasks() {
 GameState::GameState(int mapWidth, int mapHeight) :
         State(),
         map{Map(**registry.lock(portMAX_DELAY), mapWidth, mapHeight)},
-        wave(5,1,1, 1),
-        coins(10),
+        wave(0,1,0, 0),
+        coins(20),
         tileTypeToPlace(WALL)
         {
     renderer.setScale(2);
@@ -36,8 +36,8 @@ GameState::GameState(int mapWidth, int mapHeight) :
 GameState::GameState(std::string mapPath) :
         State(),
         map{Map(**registry.lock(portMAX_DELAY), mapPath)},
-        wave(5,1,1, 1),
-        coins(10),
+        wave(0,1,0, 0),
+        coins(20),
         tileTypeToPlace(WALL)
         {
     renderer.setScale(2);

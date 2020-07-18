@@ -88,18 +88,18 @@ namespace GameTasks {
                         auto towerView = registry->view<TilePosition, Tower>();
                         auto enemyView = registry->view<Position, Enemy>();
 
-                        for (auto &tower : towerView) {
-                            TilePosition &pos = towerView.get<TilePosition>(tower);
-                            Tower &towerData = towerView.get<Tower>(tower);
-
-                            std::set<entt::entity> &targets = towerData.getTargets();
-                            for (auto &target : targets) {
-                                if(registry->valid(target)) {
-                                    Position &targetPos = enemyView.get<Position>(target);
-                                    state.getRenderer().drawLine(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, targetPos.x + PLAYER_SIZE / 2, targetPos.y + PLAYER_SIZE / 2, 2, 0x800020);
-                                }
-                            }
-                        }
+//                        for (auto &tower : towerView) {
+//                            TilePosition &pos = towerView.get<TilePosition>(tower);
+//                            Tower &towerData = towerView.get<Tower>(tower);
+//
+//                            std::set<entt::entity> &targets = towerData.getTargets();
+//                            for (auto &target : targets) {
+//                                if(registry->valid(target)) {
+//                                    Position &targetPos = enemyView.get<Position>(target);
+//                                    state.getRenderer().drawLine(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, targetPos.x + PLAYER_SIZE / 2, targetPos.y + PLAYER_SIZE / 2, 2, 0x800020);
+//                                }
+//                            }
+//                        }
 
                         Wave wave = state.getWave();
                         Map map = state.getMap();
@@ -109,19 +109,20 @@ namespace GameTasks {
 
                         if (wave.getRemainingEnemies() == 0){
                             tumDrawText("BUILDING PHASE", (SCREEN_WIDTH/2)-55, 25, 0xFFFFFF);
+                            drawInfo("Prepare yourself for Wave ", wave.getWaveNumber()+1, (SCREEN_WIDTH/2)-85, 5);
                         }else{
+                            drawInfo("Wave: ", wave.getWaveNumber(), (SCREEN_WIDTH/2)-25, 5);
                             drawInfo("Enemies remaining: ", wave.getRemainingEnemies(),(SCREEN_WIDTH/2)-70, 25);
+                            drawInfo("Coins per enemy: ", wave.getEnemyCoins(), SCREEN_WIDTH-155, SCREEN_HEIGHT-25);
+                            drawInfo("Enemies health: ", 100*wave.getEnemyHealthFactor(),SCREEN_WIDTH-155, SCREEN_HEIGHT-45);
                         }
-
-
-                        drawInfo("Wave: ", wave.getWaveNumber(), (SCREEN_WIDTH/2)-25, 5);
                         drawInfo("Nexus Health: ", nexusHealth.value, SCREEN_WIDTH-125, 5);
-                        //tumDrawText(nexusHealth.value, getScreenX(state.getMap().getNexus().x), y, 0xFFFFFF);
-
                         drawInfo("Coins: ", state.getCoins(), 5, 5);
-                        drawInfo("Coins per enemy: ", wave.getEnemyCoins(), 5, SCREEN_HEIGHT-25);
-                        drawInfo("Enemies health: ", 100*wave.getEnemyHealthFactor(),5, SCREEN_HEIGHT-45);
-
+                        if (state.getTileTypeToPlace() == 1){
+                            tumDrawText("Selected Block: WALL", 5, SCREEN_HEIGHT-25, 0xFFFFFF);
+                        }else if(state.getTileTypeToPlace() == 2){
+                            tumDrawText("Selected Block: TOWER", 5, SCREEN_HEIGHT-25, 0xFFFFFF);
+                        }
 
                         game.getScreenLock().unlock();
                         game.getSwapBufferSignal().unlock();
@@ -280,17 +281,17 @@ namespace GameTasks {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, WALL,
                                                               renderer);
                                     state.setCoins(state.getCoins()+4);
-                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY && state.getWave().getRemainingEnemies()==0) {
+                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY && state.getWave().getRemainingEnemies()==0 && state.getCoins()>=1) {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, WALL,
                                                               renderer);
                                     state.setCoins(state.getCoins()-1);
                                 }
                             }else if(state.getTileTypeToPlace() == TOWER){
-                                if(map.getTileType(*tileOpt, *registry) == WALL && state.getCoins() >= 5) {
+                                if(map.getTileType(*tileOpt, *registry) == WALL && state.getCoins() >= 5 && state.getCoins()>=4) {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
                                                               renderer);
                                     state.setCoins(state.getCoins()-4);
-                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY && state.getWave().getRemainingEnemies()==0) {
+                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY && state.getWave().getRemainingEnemies()==0 && state.getCoins()>=5)) {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
                                                               renderer);
                                     state.setCoins(state.getCoins()-5);
