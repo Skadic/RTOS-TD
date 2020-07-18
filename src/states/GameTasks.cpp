@@ -116,7 +116,7 @@ namespace GameTasks {
 
                         drawInfo("Wave: ", wave.getWaveNumber(), (SCREEN_WIDTH/2)-25, 5);
                         drawInfo("Nexus Health: ", nexusHealth.value, SCREEN_WIDTH-125, 5);
-                        tumDrawText(nexusHealth.value, x, y, 0xFFFFFF);
+                        //tumDrawText(nexusHealth.value, getScreenX(state.getMap().getNexus().x), y, 0xFFFFFF);
 
                         drawInfo("Coins: ", state.getCoins(), 5, 5);
                         drawInfo("Coins per enemy: ", wave.getEnemyCoins(), 5, SCREEN_HEIGHT-25);
@@ -280,7 +280,7 @@ namespace GameTasks {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, WALL,
                                                               renderer);
                                     state.setCoins(state.getCoins()+4);
-                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY) {
+                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY && state.getWave().getRemainingEnemies()==0) {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, WALL,
                                                               renderer);
                                     state.setCoins(state.getCoins()-1);
@@ -290,7 +290,7 @@ namespace GameTasks {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
                                                               renderer);
                                     state.setCoins(state.getCoins()-4);
-                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY) {
+                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY && state.getWave().getRemainingEnemies()==0) {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
                                                               renderer);
                                     state.setCoins(state.getCoins()-5);
@@ -299,7 +299,7 @@ namespace GameTasks {
 
                         }
 
-                    }else if(input->rightClickDown()){
+                    }else if(input->rightClickDown() && state.getWave().getRemainingEnemies()==0){
                         Map &map = state.getMap();
                         const std::optional<entt::entity> &tileOpt = map.getMapTileAtScreenPos(input->getMouseX(),
                                                                                                input->getMouseY(),
