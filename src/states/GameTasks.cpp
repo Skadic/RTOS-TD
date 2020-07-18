@@ -291,7 +291,7 @@ namespace GameTasks {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
                                                               renderer);
                                     state.setCoins(state.getCoins()-4);
-                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY && state.getWave().getRemainingEnemies()==0 && state.getCoins()>=5)) {
+                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY && state.getWave().getRemainingEnemies()==0 && state.getCoins()>=5) {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
                                                               renderer);
                                     state.setCoins(state.getCoins()-5);
