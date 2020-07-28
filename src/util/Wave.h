@@ -1,9 +1,4 @@
-//
-// Created by hendrik on 16.07.20.
-//
-
-#ifndef RTOS_TD_WAVE_H
-#define RTOS_TD_WAVE_H
+#pragma once
 
 
 class Wave {
@@ -15,6 +10,8 @@ class Wave {
     int remainingEnemies;
 public:
     explicit Wave(int spawnLimit, double enemyHealthFactor, int enemyCoins, int waveNumber);
+
+    bool isFinished() const;
 
     int getWaveNumber() const;
 
@@ -34,6 +31,3 @@ public:
 
     void setRemainingEnemies(int remainingEnemies);
 };
-
-
-#endif //RTOS_TD_WAVE_H

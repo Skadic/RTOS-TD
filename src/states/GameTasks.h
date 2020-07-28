@@ -11,10 +11,16 @@ namespace GameTasks {
     void gameRenderTask(void *statePointer);
 
     /**
-     * Handles movement and collisions
+     * Handles movement
      * @param statePointer Pointer to the GameState object executing the task
      */
     void gameMoveTask(void *statePointer);
+
+    /**
+     * Handles collisions
+     * @param statePointer Pointer to the GameState object executing the task
+     */
+    void gameCollisionTask(void *statePointer);
 
     /**
      * Handles getting input related to controlling the player and moving the player accordingly

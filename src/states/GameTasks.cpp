@@ -14,12 +14,19 @@
 #include "../util/spawn/EntitySpawn.h"
 #include "../components/AI/PathfindToNexusAI.h"
 #include "../util/StringUtils.h"
+#include "GameTasks.h"
+
 extern "C" {
     #include <TUM_Sound.h>
 }
 #include <iostream>
 #include <sstream>
 
+/**
+ * Used to synchronize running the collision task and movement task
+ */
+static Semaphore COLLISION_SIGNAL = Semaphore{xSemaphoreCreateBinary()};
+static Semaphore MOVE_SIGNAL = Semaphore{xSemaphoreCreateBinary()};
 
 namespace GameTasks {
     void gameRenderTask(void *statePointer) {
@@ -103,11 +110,11 @@ namespace GameTasks {
 
                         Wave wave = state.getWave();
                         Map map = state.getMap();
-                        TilePosition pos = state.getMap().getNexus();
-                        auto nexus = map.getMapTile(pos.x, pos.y);
+                        TilePosition nexusPos = state.getMap().getNexus();
+                        auto nexus = map.getMapTile(nexusPos.x, nexusPos.y);
                         Health nexusHealth = registry->get<Health>(nexus);
 
-                        if (wave.getRemainingEnemies() == 0){
+                        if (wave.isFinished()){
                             tumDrawText("BUILDING PHASE", (SCREEN_WIDTH/2)-55, 25, 0xFFFFFF);
                             drawInfo("Prepare yourself for Wave ", wave.getWaveNumber()+1, (SCREEN_WIDTH/2)-85, 5);
                         }else{
@@ -138,8 +145,15 @@ namespace GameTasks {
         auto &regMutex = state.getRegistry();
 
         auto lastWake = xTaskGetTickCount();
+        MOVE_SIGNAL.unlock();
 
         while(true) {
+            logCurrentTaskName();
+
+            if(!MOVE_SIGNAL.lock(portMAX_DELAY)) {
+                vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+                continue;
+            }
 
             if(auto regOpt = regMutex.lock()) {
                 auto &registry = *regOpt;
@@ -152,6 +166,27 @@ namespace GameTasks {
                     pos.x += vel.dx;
                     pos.y += vel.dy;
                 }
+                COLLISION_SIGNAL.unlock();
+            }
+            vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+        }
+    }
+
+    void gameCollisionTask(void *statePointer) {
+        GameState &state = *static_cast<GameState*>(statePointer);
+        auto &regMutex = state.getRegistry();
+
+        auto lastWake = xTaskGetTickCount();
+
+        while(true) {
+            logCurrentTaskName();
+            if(!COLLISION_SIGNAL.lock(portMAX_DELAY)) {
+                vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+                continue;
+            }
+
+            if(auto regOpt = regMutex.lock()) {
+                auto &registry = *regOpt;
 
                 // Handle Collision with the map and displace Entities if needed.
                 auto entityView = registry->view<Position, Hitbox, Velocity>();
@@ -176,25 +211,23 @@ namespace GameTasks {
                                 auto displacementVec = *collision;
                                 entityPos.x += displacementVec.x;
                                 entityPos.y += displacementVec.y;
-                            } else {
-                                if (type == GOAL) {
-                                    // If an enemy reaches the goal, they are flagged for deletion
-                                    if(registry->has<Enemy>(entity) && registry->has<Health>(entity)){
-                                        Health &health = registry->get<Health>(entity);
-                                        health.value = 0;
-                                        Health &nexusHealth = registry->get<Health>(tile);
-                                        nexusHealth.value--;
-                                        state.setCoins(state.getCoins()-state.getWave().getEnemyCoins());
-                                    }
-
-
+                            } else if (type == GOAL) {
+                                // If an enemy reaches the goal, they are flagged for deletion
+                                if(registry->has<Enemy>(entity) && registry->has<Health>(entity)){
+                                    Health &health = registry->get<Health>(entity);
+                                    health.value = 0;
+                                    Health &nexusHealth = registry->get<Health>(tile);
+                                    nexusHealth.value--;
+                                    state.setCoins(state.getCoins()-state.getWave().getEnemyCoins());
                                 }
+
                             }
                         }
                     }
                 }
 
                 for(auto &entity : toDestroy) registry->destroy(entity);
+                MOVE_SIGNAL.unlock();
             }
 
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);

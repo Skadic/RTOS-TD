@@ -9,6 +9,7 @@
 void GameState::initTasks() {
     addTask(GameTasks::gameRenderTask, "render", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameMoveTask, "move", DEFAULT_TASK_STACK_SIZE, 0);
+    addTask(GameTasks::gameCollisionTask, "collide", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameControlPlayerTask, "control", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameMouseInputTask, "mouse", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameAITask, "ai", DEFAULT_TASK_STACK_SIZE, 0);
