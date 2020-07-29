@@ -250,8 +250,8 @@ namespace GameTasks {
             if(auto regOpt = regMutex.lock()) {
                 auto &registry = *regOpt;
 
+                // Refresh all collision data
                 state.getCollisionTable().refresh(*registry);
-
 
                 // Handle Collision with the map and displace Entities if needed.
                 auto entityView = registry->view<Position, Hitbox>();
