@@ -25,7 +25,8 @@ GameState::GameState(int mapWidth, int mapHeight) :
         map{Map(**registry.lock(portMAX_DELAY), mapWidth, mapHeight)},
         wave(0,1,0, 0),
         coins(25),
-        tileTypeToPlace(WALL)
+        tileTypeToPlace(WALL),
+        collisionTable{map.getWidth(), map.getHeight()}
         {
     renderer.setScale(2);
 
@@ -39,7 +40,8 @@ GameState::GameState(std::string mapPath) :
         map{Map(**registry.lock(portMAX_DELAY), mapPath)},
         wave(0,1,0, 0),
         coins(25),
-        tileTypeToPlace(WALL)
+        tileTypeToPlace(WALL),
+        collisionTable{map.getWidth(), map.getHeight()}
         {
     renderer.setScale(2);
 
@@ -74,4 +76,8 @@ TileType GameState::getTileTypeToPlace() const {
 
 void GameState::setTileTypeToPlace(TileType tileTypeToPlace) {
     GameState::tileTypeToPlace = tileTypeToPlace;
+}
+
+CollisionTable &GameState::getCollisionTable() {
+    return collisionTable;
 }

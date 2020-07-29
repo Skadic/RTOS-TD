@@ -3,12 +3,18 @@
 #include "State.h"
 #include "../util/map/Map.h"
 #include "../util/Wave.h"
+#include "../util/CollisionTable.h"
 #include <entity/registry.hpp>
 
 
 class GameState : public State {
     Map map;
     Wave wave;
+    CollisionTable collisionTable;
+public:
+    CollisionTable &getCollisionTable();
+
+private:
     int coins;
 public:
     TileType getTileTypeToPlace() const;
