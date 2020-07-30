@@ -116,11 +116,11 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
     registry.emplace_or_replace<SpriteComponent>(tile, getSpriteForType(type));
     if(isSolid(type)) {
         registry.emplace_or_replace<Hitbox>(tile, TILE_SIZE, TILE_SIZE);
-    } else if(type == EMPTY) {
+    } else {
         registry.remove_if_exists<Hitbox>(tile);
     }
 
-    if(type == TOWER) {
+    if(type == TOWER_LASER) {
         registry.emplace_or_replace<Range>(tile, 3 * TILE_SIZE);
         registry.emplace_or_replace<Tower>(tile);
         registry.emplace_or_replace<Damage>(tile, 1);

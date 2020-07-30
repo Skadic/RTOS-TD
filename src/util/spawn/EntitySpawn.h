@@ -2,6 +2,7 @@
 
 #include "../../components/tilecomponents/TilePosition.h"
 #include "../../components/AI/AI.h"
+#include <glm.hpp>
 
 entt::entity spawnEnemy(TilePosition spawnPos, entt::registry &registry, int health);
 

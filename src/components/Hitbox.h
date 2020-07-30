@@ -8,6 +8,9 @@
 struct Hitbox {
     float width;
     float height;
+    bool solid;
+
+    Hitbox(float width, float height, bool solid = true) : width{width}, height{height}, solid{solid} {}
 };
 
 // A circular Range used for towers

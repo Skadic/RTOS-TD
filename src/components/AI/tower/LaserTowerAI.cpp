@@ -7,6 +7,8 @@
 #include "../../Position.h"
 #include "../../Enemy.h"
 #include "../../Health.h"
+#include "../../../util/TowerUtil.h"
+#include <set>
 
 using namespace std::chrono;
 
@@ -16,32 +18,7 @@ LaserTowerAI::LaserTowerAI(entt::entity self, int timeInterval, entt::registry &
     this->self = self;
 }
 
-std::optional<entt::entity> closestTarget(Tower &towerData, entt::registry &registry) {
-    // If the tower has no targets, there is no target to return
-    if(!towerData.hasTargets()) return {};
-
-    auto view = registry.view<Position, Enemy, Health>();
-    const entt::entity *closestTarget = nullptr;
-    double lowestDist = INFINITY;
-    for (auto &target : towerData.getTargets()) {
-        if(registry.valid(target)) {
-            Enemy &enemy = view.get<Enemy>(target);
-            if (lowestDist > enemy.remainingDistance) {
-                closestTarget = &target;
-                lowestDist = enemy.remainingDistance;
-            }
-        }
-    }
-
-    if(closestTarget) {
-        return std::make_optional(*closestTarget);
-    } else {
-        return {};
-    }
-}
-
 void LaserTowerAI::act(entt::registry &registry) {
-
     auto now = high_resolution_clock::now();
 
     duration<double> time = duration_cast<duration<double>>(now - lastRun);
@@ -54,6 +31,8 @@ void LaserTowerAI::act(entt::registry &registry) {
         if (auto closest = closestTarget(towerData, registry)) {
             Health &health = view.get<Health>(*closest);
             health.value -= damage.value;
+            std::set<entt::entity> s {*closest};
+            towerData.setActualTargets(s);
             lastRun = high_resolution_clock::now();
         }
     }

@@ -27,7 +27,9 @@ void AreaOfEffectTowerAI::act(entt::registry &registry) {
         Tower &towerData = registry.get<Tower>(this->self);
         Damage &damage = registry.get<Damage>(this->self);
 
-        for (auto &target : towerData.getTargets()) {
+        towerData.setActualTargets(towerData.getPotentialTargets());
+
+        for (auto &target : towerData.getPotentialTargets()) {
             Health &health = view.get<Health>(target);
             health.value -= damage.value;
         }

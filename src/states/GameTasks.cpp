@@ -15,6 +15,7 @@
 #include "../components/AI/PathfindToNexusAI.h"
 #include "../util/StringUtils.h"
 #include "GameTasks.h"
+#include "RenderTasks.h"
 
 extern "C" {
     #include <TUM_Sound.h>
@@ -33,68 +34,6 @@ static Semaphore MOVE_SIGNAL = Semaphore{xSemaphoreCreateBinary()};
 
 
 namespace GameTasks {
-
-    void renderEntities(Renderer &renderer, entt::registry &registry) {
-        auto renderView = registry.view<Position, SpriteComponent>();
-        for(auto &entity : renderView) {
-            Position &pos = renderView.get<Position>(entity);
-            SpriteComponent &sprite = renderView.get<SpriteComponent>(entity);
-            renderer.drawSprite(*sprite.getSprite(), pos.x, pos.y);
-        }
-    }
-    void renderMap(Renderer &renderer, entt::registry &registry, Map &map) {
-        // Get all tile entities from the registry
-        auto tileView = registry.view<TilePosition, SpriteComponent>();
-        // Render map
-        for(auto &entity : tileView) {
-            TilePosition &pos = tileView.get<TilePosition>(entity);
-            SpriteComponent &sprite = tileView.get<SpriteComponent>(entity);
-            renderer.drawSprite(*sprite.getSprite(), pos.x * TILE_SIZE, pos.y * TILE_SIZE);
-        }
-        
-        // Render the map border
-        renderer.drawBox(0, 0, map.getWidth() * TILE_SIZE, map.getHeight() * TILE_SIZE, 0x0000FF, false);
-    }
-    void renderTowerTargetConnections(Renderer &renderer, entt::registry &registry) {
-        auto towerView = registry.view<TilePosition, Tower>();
-        auto enemyView = registry.view<Position, Enemy>();
-
-        for (auto &tower : towerView) {
-            TilePosition &pos = towerView.get<TilePosition>(tower);
-            Tower &towerData = towerView.get<Tower>(tower);
-
-            std::set<entt::entity> &targets = towerData.getTargets();
-            for (auto &target : targets) {
-                if(registry.valid(target)) {
-                    Position &targetPos = enemyView.get<Position>(target);
-                    renderer.drawLine(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, targetPos.x + PLAYER_SIZE / 2, targetPos.y + PLAYER_SIZE / 2, 2, 0x800020);
-                }
-            }
-        }
-    }
-    void renderHealth(Renderer &renderer, entt::registry &registry) {
-        auto healthView = registry.view<Position, Health>();
-
-        for (auto &entity : healthView) {
-            Position &pos = healthView.get<Position>(entity);
-            Health &health = healthView.get<Health>(entity);
-
-            renderer.drawPie(pos.x, pos.y, 5, -90, -90 + 360 * (health.value / (double) health.maxHealth), 0x00FF00, true);
-            renderer.drawPie(pos.x, pos.y, 4, -90 + 360 * (health.value / (double) health.maxHealth), -90, 0xFF0000, true);
-        }
-    }
-    void renderRanges(Renderer &renderer, entt::registry &registry) {
-        auto rangeView = registry.view<TilePosition, SpriteComponent, Range>();
-
-        // Render Ranges
-        for (auto &entity : rangeView) {
-            TilePosition &pos = rangeView.get<TilePosition>(entity);
-            SpriteComponent &sprite = rangeView.get<SpriteComponent>(entity);
-            Range &range = rangeView.get<Range>(entity);
-
-            renderer.drawCircle(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, range.radius, 0xFFFF00, false);
-        }
-    }
 
     void gameRenderTask(void *statePointer) {
 
@@ -119,7 +58,7 @@ namespace GameTasks {
 
                         renderMap(renderer, *registry, map);
                         renderEntities(renderer, *registry);
-                        renderRanges(renderer, *registry);
+                        //renderRanges(renderer, *registry);
                         renderHealth(renderer, *registry);
                         renderTowerTargetConnections(renderer, *registry);
 
@@ -142,7 +81,7 @@ namespace GameTasks {
                         if (state.getTileTypeToPlace() == 1){
                             tumDrawText("Selected Block: WALL", 5, SCREEN_HEIGHT-25, 0xFFFFFF);
                         }else if(state.getTileTypeToPlace() == 2){
-                            tumDrawText("Selected Block: TOWER", 5, SCREEN_HEIGHT-25, 0xFFFFFF);
+                            tumDrawText("Selected Block: TOWER_LASER", 5, SCREEN_HEIGHT-25, 0xFFFFFF);
                         }
 
                         game.getScreenLock().unlock();
@@ -297,6 +236,7 @@ namespace GameTasks {
                         Position &entityPos = entityView.get<Position>(entity);
                         Hitbox &entityHitbox = entityView.get<Hitbox>(entity);
 
+                        // Handle collision of entities with Tiles
                         if(auto collision = intersectHitbox(tilePos, tileHitbox, entityPos, entityHitbox)) {
                             auto type = registry->get<TileTypeComponent>(tile).type;
 
@@ -405,7 +345,7 @@ namespace GameTasks {
                                                                                                renderer);
                         if (tileOpt) {
                             if(state.getTileTypeToPlace() == WALL){
-                                if(map.getTileType(*tileOpt, *registry) == TOWER) {
+                                if(map.getTileType(*tileOpt, *registry) == TOWER_LASER) {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, WALL,
                                                               renderer);
                                     state.setCoins(state.getCoins()+4);
@@ -414,13 +354,13 @@ namespace GameTasks {
                                                               renderer);
                                     state.setCoins(state.getCoins()-1);
                                 }
-                            }else if(state.getTileTypeToPlace() == TOWER){
+                            }else if(state.getTileTypeToPlace() == TOWER_LASER){
                                 if(map.getTileType(*tileOpt, *registry) == WALL && state.getCoins() >= 5 && state.getCoins()>=4) {
-                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
+                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER_LASER,
                                                               renderer);
                                     state.setCoins(state.getCoins()-4);
                                 } else if(map.getTileType(*tileOpt, *registry) == EMPTY && state.getWave().getRemainingEnemies()==0 && state.getCoins()>=5) {
-                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER,
+                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER_LASER,
                                                               renderer);
                                     state.setCoins(state.getCoins()-5);
                                 }
@@ -438,7 +378,7 @@ namespace GameTasks {
                                 map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, EMPTY,
                                                           renderer);
                                 state.setCoins(state.getCoins()+1);
-                            } else if(map.getTileType(*tileOpt, *registry) == TOWER) {
+                            } else if(map.getTileType(*tileOpt, *registry) == TOWER_LASER) {
                                 map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, EMPTY,
                                                           renderer);
                                 state.setCoins(state.getCoins()+5);
@@ -447,7 +387,7 @@ namespace GameTasks {
                     }else if(input->buttonPressed(SDL_SCANCODE_1)) {
                         state.setTileTypeToPlace(WALL);
                     }else if(input->buttonPressed(SDL_SCANCODE_2)) {
-                        state.setTileTypeToPlace(TOWER);
+                        state.setTileTypeToPlace(TOWER_LASER);
                     }
                 }
             }
@@ -517,7 +457,7 @@ namespace GameTasks {
 
                 for(auto &tower : towerView) {
 
-                    std::vector<entt::entity> targets;
+                    std::set<entt::entity> targets;
                     TilePosition &towerTilePos = towerView.get<TilePosition>(tower);
                     Position towerPos = Position{static_cast<float>(towerTilePos.x * TILE_SIZE + TILE_SIZE / 2), static_cast<float>(towerTilePos.y * TILE_SIZE + TILE_SIZE / 2)};
                     Range &towerRange = towerView.get<Range>(tower);
@@ -528,10 +468,10 @@ namespace GameTasks {
                         Hitbox &enemyHitbox = enemyView.get<Hitbox>(enemy);
 
                         if(intersectHitboxRange(towerPos, towerRange, enemyPos, enemyHitbox)) {
-                            targets.push_back(enemy);
+                            targets.insert(enemy);
                         }
                     }
-                    towerData.setTargets(targets);
+                    towerData.setPotentialTargets(targets);
                 }
             }
 
@@ -557,10 +497,10 @@ namespace GameTasks {
                 for(auto tower : towerView) {
 
                     auto approxInRange = state.getCollisionTable().getEnemiesInRangeApprox(tower);
-                    // If there aren't any targets even remotely in range, just continue with the next tower
+                    // If there aren't any potentialTargets even remotely in range, just continue with the next tower
                     if(approxInRange.empty()) continue;
 
-                    std::vector<entt::entity> targets;
+                    std::set<entt::entity> targets;
                     TilePosition &towerTilePos = towerView.get<TilePosition>(tower);
                     Position towerPos = Position{static_cast<float>(towerTilePos.x * TILE_SIZE + TILE_SIZE / 2), static_cast<float>(towerTilePos.y * TILE_SIZE + TILE_SIZE / 2)};
                     Range &towerRange = towerView.get<Range>(tower);
@@ -571,10 +511,11 @@ namespace GameTasks {
                         Hitbox &enemyHitbox = enemyView.get<Hitbox>(enemy);
 
                         if(intersectHitboxRange(towerPos, towerRange, enemyPos, enemyHitbox)) {
-                            targets.push_back(enemy);
+                            targets.insert(enemy);
                         }
                     }
-                    towerData.setTargets(targets);
+
+                    towerData.setPotentialTargets(targets);
                 }
             }
 
@@ -624,15 +565,16 @@ namespace GameTasks {
 
         while(true) {
             logCurrentTaskName();
-            if(auto regOpt = regMutex.lock()) {
-                auto &registry = *regOpt;
-                if(state.getWave().getRemainingEnemies()==0){
+            Wave &wave = state.getWave();
+            if(wave.isFinished()){
+                if(auto regOpt = regMutex.lock()) {
+                    auto &registry = *regOpt;
                     if(auto inputOpt = game.getInput().lock()) {
                         auto &input = *inputOpt;
                         if (input->buttonPressed(SDL_SCANCODE_SPACE)) {
                             state.setWave(
-                                    Wave(state.getWave().getSpawnLimit() + 3, state.getWave().getEnemyHealthFactor() * 1.2,
-                                         state.getWave().getEnemyCoins() + 1, state.getWave().getWaveNumber() + 1));
+                                    Wave(wave.getSpawnLimit() + 3, wave.getEnemyHealthFactor() * 1.2,
+                                         wave.getEnemyCoins() + 1, wave.getWaveNumber() + 1));
                             state.getMap().updateEnemyPath(*registry);
                         }
                     }

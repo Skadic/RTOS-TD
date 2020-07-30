@@ -11,9 +11,12 @@
 #include "../../components/Enemy.h"
 #include "../../components/tags/Player.h"
 #include "../../components/Health.h"
+#include "../../components/tags/Projectile.h"
 
 static std::shared_ptr<Sprite> ENEMY = std::make_shared<RectangleSprite>(PLAYER_SIZE, PLAYER_SIZE, 0xFF0000, true);
 static std::shared_ptr<Sprite> PLAYER = std::make_shared<RectangleSprite>(PLAYER_SIZE, PLAYER_SIZE, 0x00FF00, true);
+
+static std::shared_ptr<Sprite> DEFAULT_PROJECTILE_SPRITE = std::make_shared<RectangleSprite>(DEFAULT_PROJECTILE_SIZE, DEFAULT_PROJECTILE_SIZE, 0xFF7000, true);
 
 entt::entity spawnEnemy(TilePosition spawnPos, entt::registry &registry, int health) {
     auto entity = registry.create();
@@ -34,4 +37,14 @@ entt::entity spawnPlayer(TilePosition spawnPos, entt::registry &registry) {
     registry.emplace<Velocity>(player, 0.0, 0.0);
     registry.emplace<Hitbox>(player, PLAYER_SIZE, PLAYER_SIZE);
     return player;
+}
+
+entt::entity spawnProjectile(Position spawnPos, entt::registry &registry) {
+    entt::entity projectile = registry.create();
+    registry.emplace<Projectile>(projectile);
+    registry.emplace<SpriteComponent>(projectile, DEFAULT_PROJECTILE_SPRITE);
+    registry.emplace<Position>(projectile, spawnPos.x, spawnPos.y);
+    registry.emplace<Velocity>(projectile, 0.0, 0.0);
+    registry.emplace<Hitbox>(projectile, DEFAULT_PROJECTILE_SIZE, DEFAULT_PROJECTILE_SIZE);
+    return projectile;
 }

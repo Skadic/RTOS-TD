@@ -10,7 +10,7 @@ std::map<TileType, std::shared_ptr<Sprite>> initTileSprites() {
     map[EMPTY] = std::make_shared<EmptySprite>();
     map[WALL] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0xFFFFFF, false);
     map[WALLPRE] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x535353, false);
-    map[TOWER] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FFFF, true);
+    map[TOWER_LASER] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FFFF, true);
     map[TOWERPRE] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x004242, true);
     map[GOAL] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FF00, true);
     map[ENEMY_SPAWN] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0xFFA000, true);

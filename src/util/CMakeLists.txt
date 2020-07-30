@@ -5,7 +5,8 @@ set(UTIL_SOURCES
         Log.cpp
         Wave.cpp
         StringUtils.cpp
-        CollisionTable.cpp)
+        CollisionTable.cpp
+        TowerUtil.cpp)
 
 add_subdirectory(spawn)
 add_subdirectory(sync)

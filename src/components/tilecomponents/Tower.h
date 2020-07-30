@@ -9,12 +9,15 @@
 class entity;
 
 class Tower {
-    std::set<entt::entity> targets;
+    std::set<entt::entity> potentialTargets;
+    std::set<entt::entity> actualTargets;
 
 public:
     Tower() = default;
 
-    void setTargets(std::vector<entt::entity> &newTargets);
-    std::set<entt::entity> &getTargets();
-    bool hasTargets();
+    void setActualTargets(std::set<entt::entity> &newTargets);
+    std::set<entt::entity> &getActualTargets();
+    void setPotentialTargets(std::set<entt::entity> &newTargets);
+    std::set<entt::entity> &getPotentialTargets();
+    bool hasPotentialTargets();
 };
