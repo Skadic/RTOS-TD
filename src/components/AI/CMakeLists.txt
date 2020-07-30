@@ -5,5 +5,6 @@ set(AI_SOURCES
         PathfindToNexusAI.cpp)
 
 add_subdirectory(tower)
+add_subdirectory(projectile)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${AI_SOURCES})

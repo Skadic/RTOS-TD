@@ -6,6 +6,6 @@ struct Position {
 
     float distance(Position &other);
 
-    Position operator-(Position &other);
-    Position operator+(Position &other);
+    Position operator-(Position other);
+    Position operator+(Position other);
 };

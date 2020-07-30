@@ -17,6 +17,7 @@
 #include "../../components/AI/tower/AreaOfEffectTowerAI.h"
 #include "../../components/AI/tower/LaserTowerAI.h"
 #include "../../components/Health.h"
+#include "../../components/AI/tower/ProjectileTowerAI.h"
 #include <map>
 
 Map::Map(entt::registry &registry, int width, int height) : mapWidth{width}, mapHeight{height} {
@@ -115,16 +116,16 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
     registry.emplace_or_replace<TileTypeComponent>(tile, type);
     registry.emplace_or_replace<SpriteComponent>(tile, getSpriteForType(type));
     if(isSolid(type)) {
-        registry.emplace_or_replace<Hitbox>(tile, TILE_SIZE, TILE_SIZE);
+        registry.emplace_or_replace<Hitbox>(tile, TILE_SIZE, TILE_SIZE, true);
     } else {
-        registry.remove_if_exists<Hitbox>(tile);
+        registry.emplace_or_replace<Hitbox>(tile, TILE_SIZE, TILE_SIZE, false);
     }
 
     if(type == TOWER_LASER) {
         registry.emplace_or_replace<Range>(tile, 3 * TILE_SIZE);
         registry.emplace_or_replace<Tower>(tile);
-        registry.emplace_or_replace<Damage>(tile, 1);
-        registry.emplace_or_replace<AIComponent>(tile, new LaserTowerAI(tile, 10, registry));
+        registry.emplace_or_replace<Damage>(tile, 8);
+        registry.emplace_or_replace<AIComponent>(tile, new ProjectileTowerAI(tile, 3));
     } else {
         registry.remove_if_exists<Range>(tile);
         registry.remove_if_exists<Tower>(tile);

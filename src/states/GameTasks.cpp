@@ -16,6 +16,9 @@
 #include "../util/StringUtils.h"
 #include "GameTasks.h"
 #include "RenderTasks.h"
+#include "../components/tags/Projectile.h"
+#include "../components/Damage.h"
+#include "../components/tags/Delete.h"
 
 extern "C" {
     #include <TUM_Sound.h>
@@ -96,6 +99,7 @@ namespace GameTasks {
     void gameMoveTask(void *statePointer) {
         GameState &state = *static_cast<GameState*>(statePointer);
         auto &regMutex = state.getRegistry();
+        Map &map = state.getMap();
 
         auto lastWake = xTaskGetTickCount();
         MOVE_SIGNAL.unlock();
@@ -119,7 +123,12 @@ namespace GameTasks {
                     Velocity &vel = view.get<Velocity>(entity);
                     pos.x += vel.dx;
                     pos.y += vel.dy;
+
+                    if(pos.x > map.getWidth() * TILE_SIZE || pos.x < 0 || pos.y > map.getHeight() * TILE_SIZE || pos.y < 0) {
+                        if(registry->valid(entity)) registry->emplace_or_replace<Delete>(entity);
+                    }
                 }
+
 
                 // Signal the collision task to run
                 COLLISION_SIGNAL.unlock();
@@ -150,11 +159,6 @@ namespace GameTasks {
                 auto entityView = registry->view<Position, Hitbox, Velocity>();
                 auto tileView = registry->view<TilePosition, Hitbox, TileTypeComponent>();
 
-                // Contains all entities that should be deleted after reaching the goal
-                // If we deleted the entities in the loop, we would mess up the views and get errors
-                // So we just flag them as to be destroyed, and delete them afterwards
-                std::vector<entt::entity> toDestroy;
-
                 for (auto &entity : entityView) {
                     for (auto &tile : tileView) {
                         Position &entityPos = entityView.get<Position>(entity);
@@ -165,26 +169,23 @@ namespace GameTasks {
                         if(auto collision = intersectHitbox(tilePos, tileHitbox, entityPos, entityHitbox)) {
                             auto type = registry->get<TileTypeComponent>(tile).type;
 
-                            if(isSolid(type)) {
+                            if(tileHitbox.solid && entityHitbox.solid) {
                                 auto displacementVec = *collision;
                                 entityPos.x += displacementVec.x;
                                 entityPos.y += displacementVec.y;
                             } else if (type == GOAL) {
                                 // If an enemy reaches the goal, they are flagged for deletion
                                 if(registry->has<Enemy>(entity) && registry->has<Health>(entity)){
-                                    Health &health = registry->get<Health>(entity);
-                                    health.value = 0;
+                                    registry->emplace<Delete>(entity);
+                                    registry->remove<Enemy>(entity);
                                     Health &nexusHealth = registry->get<Health>(tile);
                                     nexusHealth.value--;
-                                    state.setCoins(state.getCoins()-state.getWave().getEnemyCoins());
                                 }
 
                             }
                         }
                     }
                 }
-
-                for(auto &entity : toDestroy) registry->destroy(entity);
 
                 // Signal the move task to run
                 MOVE_SIGNAL.unlock();
@@ -212,18 +213,13 @@ namespace GameTasks {
             if(auto regOpt = regMutex.lock()) {
                 auto &registry = *regOpt;
 
-                // Refresh all collision data
+                // Refresh all collision data as broad phase collision detection
                 state.getCollisionTable().refreshTiles(*registry);
 
                 // Handle Collision with the map and displace Entities if needed.
                 auto entityView = registry->view<Position, Hitbox>();
                 auto tileView = registry->view<TilePosition, Hitbox, TileTypeComponent>();
-
-
-                // Contains all entities that should be deleted after reaching the goal
-                // If we deleted the entities in the loop, we would mess up the views and get errors
-                // So we just flag them as to be destroyed, and delete them afterwards
-                std::vector<entt::entity> toDestroy;
+                auto enemyView = registry->view<Enemy, Health, Position, Hitbox>();
 
                 for (auto &tile : tileView) {
                     TilePosition &tilePos = tileView.get<TilePosition>(tile);
@@ -240,26 +236,21 @@ namespace GameTasks {
                         if(auto collision = intersectHitbox(tilePos, tileHitbox, entityPos, entityHitbox)) {
                             auto type = registry->get<TileTypeComponent>(tile).type;
 
-                            if(isSolid(type)) {
+                            if(tileHitbox.solid && entityHitbox.solid) {
                                 auto displacementVec = *collision;
                                 entityPos.x += displacementVec.x;
                                 entityPos.y += displacementVec.y;
                             } else if (type == GOAL) {
                                 // If an enemy reaches the goal, they are flagged for deletion
-                                if(registry->has<Enemy>(entity) && registry->has<Health>(entity)){
-                                    Health &health = registry->get<Health>(entity);
-                                    health.value = 0;
+                                if(enemyView.contains(entity) && !registry->has<Delete>(entity)){
+                                    registry->emplace<Delete>(entity);
                                     Health &nexusHealth = registry->get<Health>(tile);
                                     nexusHealth.value--;
-                                    state.setCoins(state.getCoins()-state.getWave().getEnemyCoins());
                                 }
-
                             }
                         }
                     }
                 }
-
-                for(auto &entity : toDestroy) registry->destroy(entity);
 
                 // Signal the Move task to run
                 MOVE_SIGNAL.unlock();
@@ -440,45 +431,6 @@ namespace GameTasks {
         }
     }
 
-    void gameTowerTaskOld(void *statePointer) {
-        GameState &state = *static_cast<GameState*>(statePointer);
-        auto &regMutex = state.getRegistry();
-        auto lastWake = xTaskGetTickCount();
-
-        while(true) {
-            logCurrentTaskName();
-            if(auto regOpt = regMutex.lock()) {
-                auto &registry = *regOpt;
-
-                auto enemyView = registry->view<Enemy, Position, Hitbox>();
-                auto towerView = registry->view<TilePosition, Range, Tower>();
-
-                state.getCollisionTable().refreshRanges(*registry);
-
-                for(auto &tower : towerView) {
-
-                    std::set<entt::entity> targets;
-                    TilePosition &towerTilePos = towerView.get<TilePosition>(tower);
-                    Position towerPos = Position{static_cast<float>(towerTilePos.x * TILE_SIZE + TILE_SIZE / 2), static_cast<float>(towerTilePos.y * TILE_SIZE + TILE_SIZE / 2)};
-                    Range &towerRange = towerView.get<Range>(tower);
-                    Tower &towerData = towerView.get<Tower>(tower);
-
-                    for (auto &enemy : enemyView) {
-                        Position &enemyPos = enemyView.get<Position>(enemy);
-                        Hitbox &enemyHitbox = enemyView.get<Hitbox>(enemy);
-
-                        if(intersectHitboxRange(towerPos, towerRange, enemyPos, enemyHitbox)) {
-                            targets.insert(enemy);
-                        }
-                    }
-                    towerData.setPotentialTargets(targets);
-                }
-            }
-
-            vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
-        }
-    }
-
     void gameTowerTask(void *statePointer) {
         GameState &state = *static_cast<GameState*>(statePointer);
         auto &regMutex = state.getRegistry();
@@ -502,7 +454,7 @@ namespace GameTasks {
 
                     std::set<entt::entity> targets;
                     TilePosition &towerTilePos = towerView.get<TilePosition>(tower);
-                    Position towerPos = Position{static_cast<float>(towerTilePos.x * TILE_SIZE + TILE_SIZE / 2), static_cast<float>(towerTilePos.y * TILE_SIZE + TILE_SIZE / 2)};
+                    Position towerPos = towerTilePos.toPosition() + Position{TILE_SIZE / 2, TILE_SIZE / 2};
                     Range &towerRange = towerView.get<Range>(tower);
                     Tower &towerData = towerView.get<Tower>(tower);
 
@@ -535,21 +487,15 @@ namespace GameTasks {
 
                 auto view = registry->view<Health>();
 
-                std::vector<entt::entity> toDelete;
                 for (auto &entity : view) {
                     Health &health = view.get<Health>(entity);
                     if(health.value <= 0) {
-                        toDelete.push_back(entity);
+                        registry->emplace_or_replace<Delete>(entity);
                         if(registry->has<Enemy>(entity)){
-                            state.getWave().setRemainingEnemies(state.getWave().getRemainingEnemies()-1);
                             state.setCoins(state.getCoins()+state.getWave().getEnemyCoins());
                         }
                         //tumSoundPlaySample(enemy_death);
                     }
-                }
-
-                for (auto &entity : toDelete) {
-                    registry->destroy(entity);
                 }
             }
 
@@ -580,6 +526,35 @@ namespace GameTasks {
                     }
                 }
             }
+            vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+        }
+    }
+
+    void gameDeleteTask(void *statePointer) {
+        GameState &state = *static_cast<GameState*>(statePointer);
+        auto &regMutex = state.getRegistry();
+        auto lastWake = xTaskGetTickCount();
+
+        while(true) {
+            logCurrentTaskName();
+            if(auto regOpt = regMutex.lock()) {
+                auto &registry = *regOpt;
+
+                auto view = registry->view<Delete>();
+
+                std::vector<entt::entity> toDelete;
+                for (auto &entity : view) {
+                    if(registry->has<Enemy>(entity)) {
+                        state.getWave().decrementRemainingEnemies();
+                    }
+                    toDelete.push_back(entity);
+                }
+
+                for (auto &entity : toDelete) {
+                    registry->destroy(entity);
+                }
+            }
+
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }

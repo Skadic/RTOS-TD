@@ -59,4 +59,6 @@ namespace GameTasks {
     void gameKillTask(void *statePointer);
 
     void gameWaveTask(void *statePointer);
+
+    void gameDeleteTask(void *statePointer);
 }

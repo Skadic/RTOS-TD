@@ -46,3 +46,7 @@ int Wave::getSpawnLimit() const {
 bool Wave::isFinished() const {
     return remainingEnemies == 0;
 }
+
+void Wave::decrementRemainingEnemies() {
+    remainingEnemies--;
+}

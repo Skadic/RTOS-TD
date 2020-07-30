@@ -7,3 +7,5 @@
 entt::entity spawnEnemy(TilePosition spawnPos, entt::registry &registry, int health);
 
 entt::entity spawnPlayer(TilePosition spawnPos, entt::registry &registry);
+
+entt::entity spawnProjectile(Position spawnPos, entt::registry &registry);

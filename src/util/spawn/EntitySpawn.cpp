@@ -23,7 +23,7 @@ entt::entity spawnEnemy(TilePosition spawnPos, entt::registry &registry, int hea
     registry.emplace<Position>(entity, spawnPos.x * TILE_SIZE + TILE_SIZE / 2 - PLAYER_SIZE / 2, spawnPos.y * TILE_SIZE  + TILE_SIZE / 2 - PLAYER_SIZE / 2);
     registry.emplace<Velocity>(entity, 0, 0);
     registry.emplace<SpriteComponent>(entity, ENEMY);
-    registry.emplace<Hitbox>(entity, PLAYER_SIZE, PLAYER_SIZE);
+    registry.emplace<Hitbox>(entity, PLAYER_SIZE, PLAYER_SIZE, true);
     registry.emplace<Enemy>(entity);
     registry.emplace<Health>(entity, health, health);
     return entity;
@@ -35,7 +35,7 @@ entt::entity spawnPlayer(TilePosition spawnPos, entt::registry &registry) {
     registry.emplace<SpriteComponent>(player, PLAYER);
     registry.emplace<Position>(player, spawnPos.x * TILE_SIZE + TILE_SIZE / 2 - PLAYER_SIZE / 2, spawnPos.y * TILE_SIZE  + TILE_SIZE / 2 - PLAYER_SIZE / 2);
     registry.emplace<Velocity>(player, 0.0, 0.0);
-    registry.emplace<Hitbox>(player, PLAYER_SIZE, PLAYER_SIZE);
+    registry.emplace<Hitbox>(player, PLAYER_SIZE, PLAYER_SIZE, true);
     return player;
 }
 
@@ -45,6 +45,6 @@ entt::entity spawnProjectile(Position spawnPos, entt::registry &registry) {
     registry.emplace<SpriteComponent>(projectile, DEFAULT_PROJECTILE_SPRITE);
     registry.emplace<Position>(projectile, spawnPos.x, spawnPos.y);
     registry.emplace<Velocity>(projectile, 0.0, 0.0);
-    registry.emplace<Hitbox>(projectile, DEFAULT_PROJECTILE_SIZE, DEFAULT_PROJECTILE_SIZE);
+    registry.emplace<Hitbox>(projectile, DEFAULT_PROJECTILE_SIZE, DEFAULT_PROJECTILE_SIZE, false);
     return projectile;
 }

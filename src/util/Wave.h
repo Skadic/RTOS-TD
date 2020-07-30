@@ -30,4 +30,6 @@ public:
     int getRemainingEnemies() const;
 
     void setRemainingEnemies(int remainingEnemies);
+
+    void decrementRemainingEnemies();
 };

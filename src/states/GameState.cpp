@@ -16,6 +16,7 @@ void GameState::initTasks() {
     addTask(GameTasks::gameSpawnTask, "spawn", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameTowerTask, "tower", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameKillTask, "kill", DEFAULT_TASK_STACK_SIZE, 0);
+    addTask(GameTasks::gameDeleteTask, "delete", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameWaveTask, "wave", DEFAULT_TASK_STACK_SIZE, 0);
 }
 
