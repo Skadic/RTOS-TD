@@ -23,7 +23,7 @@ public:
     Map(entt::registry &regMutex, std::string path);
     int getWidth() const;
     int getHeight() const;
-    TilePosition getNexus() const;
+    TilePosition getNexusPosition() const;
     TilePosition getSpawn() const;
     std::vector<TilePosition> &getPath();
 

@@ -19,8 +19,10 @@
 extern "C" {
     #include <TUM_Sound.h>
 }
+
 #include <iostream>
 #include <sstream>
+#include <chrono>
 
 /**
  * Used to synchronize running the collision task and movement task
@@ -28,12 +30,79 @@ extern "C" {
 static Semaphore COLLISION_SIGNAL = Semaphore{xSemaphoreCreateBinary()};
 static Semaphore MOVE_SIGNAL = Semaphore{xSemaphoreCreateBinary()};
 
+
+
 namespace GameTasks {
+
+    void renderEntities(Renderer &renderer, entt::registry &registry) {
+        auto renderView = registry.view<Position, SpriteComponent>();
+        for(auto &entity : renderView) {
+            Position &pos = renderView.get<Position>(entity);
+            SpriteComponent &sprite = renderView.get<SpriteComponent>(entity);
+            renderer.drawSprite(*sprite.getSprite(), pos.x, pos.y);
+        }
+    }
+    void renderMap(Renderer &renderer, entt::registry &registry, Map &map) {
+        // Get all tile entities from the registry
+        auto tileView = registry.view<TilePosition, SpriteComponent>();
+        // Render map
+        for(auto &entity : tileView) {
+            TilePosition &pos = tileView.get<TilePosition>(entity);
+            SpriteComponent &sprite = tileView.get<SpriteComponent>(entity);
+            renderer.drawSprite(*sprite.getSprite(), pos.x * TILE_SIZE, pos.y * TILE_SIZE);
+        }
+        
+        // Render the map border
+        renderer.drawBox(0, 0, map.getWidth() * TILE_SIZE, map.getHeight() * TILE_SIZE, 0x0000FF, false);
+    }
+    void renderTowerTargetConnections(Renderer &renderer, entt::registry &registry) {
+        auto towerView = registry.view<TilePosition, Tower>();
+        auto enemyView = registry.view<Position, Enemy>();
+
+        for (auto &tower : towerView) {
+            TilePosition &pos = towerView.get<TilePosition>(tower);
+            Tower &towerData = towerView.get<Tower>(tower);
+
+            std::set<entt::entity> &targets = towerData.getTargets();
+            for (auto &target : targets) {
+                if(registry.valid(target)) {
+                    Position &targetPos = enemyView.get<Position>(target);
+                    renderer.drawLine(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, targetPos.x + PLAYER_SIZE / 2, targetPos.y + PLAYER_SIZE / 2, 2, 0x800020);
+                }
+            }
+        }
+    }
+    void renderHealth(Renderer &renderer, entt::registry &registry) {
+        auto healthView = registry.view<Position, Health>();
+
+        for (auto &entity : healthView) {
+            Position &pos = healthView.get<Position>(entity);
+            Health &health = healthView.get<Health>(entity);
+
+            renderer.drawPie(pos.x, pos.y, 5, -90, -90 + 360 * (health.value / (double) health.maxHealth), 0x00FF00, true);
+            renderer.drawPie(pos.x, pos.y, 4, -90 + 360 * (health.value / (double) health.maxHealth), -90, 0xFF0000, true);
+        }
+    }
+    void renderRanges(Renderer &renderer, entt::registry &registry) {
+        auto rangeView = registry.view<TilePosition, SpriteComponent, Range>();
+
+        // Render Ranges
+        for (auto &entity : rangeView) {
+            TilePosition &pos = rangeView.get<TilePosition>(entity);
+            SpriteComponent &sprite = rangeView.get<SpriteComponent>(entity);
+            Range &range = rangeView.get<Range>(entity);
+
+            renderer.drawCircle(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, range.radius, 0xFFFF00, false);
+        }
+    }
+
     void gameRenderTask(void *statePointer) {
 
         GameState &state = *static_cast<GameState*>(statePointer);
         auto &regMutex = state.getRegistry();
         Game &game = Game::get();
+        Renderer &renderer = state.getRenderer();
+        Map &map = state.getMap();
 
         auto lastWake = xTaskGetTickCount();
 
@@ -43,74 +112,19 @@ namespace GameTasks {
                 if(auto regOpt = regMutex.lock()) {
                     auto &registry = *regOpt;
 
-                    // Get all tile entities from the registry
-                    auto tileView = registry->view<TilePosition, SpriteComponent>();
-                    // Get all the other entities which need to be rendered
-                    auto renderView = registry->view<Position, SpriteComponent>();
-
-                    // Get all entities with a velocity and position
-                    //auto velView = registry->view<Position, Velocity, SpriteComponent>();
-
                     if(game.getScreenLock().lock(portMAX_DELAY)){
 
                         tumDrawClear(0x000000);
 
-                        // Render map
-                        for(auto &entity : tileView) {
-                            TilePosition &pos = tileView.get<TilePosition>(entity);
-                            SpriteComponent &sprite = tileView.get<SpriteComponent>(entity);
-                            state.getRenderer().drawSprite(*sprite.getSprite(), pos.x * TILE_SIZE, pos.y * TILE_SIZE);
-                        }
 
-                        state.getRenderer().drawBox(0, 0, state.getMap().getWidth() * TILE_SIZE, state.getMap().getHeight() * TILE_SIZE, 0x0000FF, false);
-
-                        // Render all else
-                        for(auto &entity : renderView) {
-                            Position &pos = renderView.get<Position>(entity);
-                            SpriteComponent &sprite = renderView.get<SpriteComponent>(entity);
-                            state.getRenderer().drawSprite(*sprite.getSprite(), pos.x, pos.y);
-                        }
-
-                        auto rangeView = registry->view<TilePosition, SpriteComponent, Range>();
-
-                        // Render Ranges
-                        for (auto &entity : rangeView) {
-                            TilePosition &pos = rangeView.get<TilePosition>(entity);
-                            SpriteComponent &sprite = rangeView.get<SpriteComponent>(entity);
-                            Range &range = rangeView.get<Range>(entity);
-
-                            state.getRenderer().drawCircle(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, range.radius, 0xFFFF00, false);
-                        }
-
-                        auto healthView = registry->view<Position, Health>();
-
-                        for (auto &entity : healthView) {
-                            Position &pos = healthView.get<Position>(entity);
-                            Health &health = healthView.get<Health>(entity);
-
-                            state.getRenderer().drawPie(pos.x, pos.y, 5, -90, -90 + 360 * (health.value / (double) health.maxHealth), 0x00FF00, true);
-                            state.getRenderer().drawPie(pos.x, pos.y, 4, -90 + 360 * (health.value / (double) health.maxHealth), -90, 0xFF0000, true);
-                        }
-
-                        auto towerView = registry->view<TilePosition, Tower>();
-                        auto enemyView = registry->view<Position, Enemy>();
-
-//                        for (auto &tower : towerView) {
-//                            TilePosition &pos = towerView.get<TilePosition>(tower);
-//                            Tower &towerData = towerView.get<Tower>(tower);
-//
-//                            std::set<entt::entity> &targets = towerData.getTargets();
-//                            for (auto &target : targets) {
-//                                if(registry->valid(target)) {
-//                                    Position &targetPos = enemyView.get<Position>(target);
-//                                    state.getRenderer().drawLine(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, targetPos.x + PLAYER_SIZE / 2, targetPos.y + PLAYER_SIZE / 2, 2, 0x800020);
-//                                }
-//                            }
-//                        }
+                        renderMap(renderer, *registry, map);
+                        renderEntities(renderer, *registry);
+                        renderRanges(renderer, *registry);
+                        renderHealth(renderer, *registry);
+                        renderTowerTargetConnections(renderer, *registry);
 
                         Wave wave = state.getWave();
-                        Map map = state.getMap();
-                        TilePosition nexusPos = state.getMap().getNexus();
+                        TilePosition nexusPos = map.getNexusPosition();
                         auto nexus = map.getMapTile(nexusPos.x, nexusPos.y);
                         Health nexusHealth = registry->get<Health>(nexus);
 
@@ -150,6 +164,7 @@ namespace GameTasks {
         while(true) {
             logCurrentTaskName();
 
+            // Wait for the Signal to run the task
             if(!MOVE_SIGNAL.lock(portMAX_DELAY)) {
                 vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
                 continue;
@@ -166,6 +181,8 @@ namespace GameTasks {
                     pos.x += vel.dx;
                     pos.y += vel.dy;
                 }
+
+                // Signal the collision task to run
                 COLLISION_SIGNAL.unlock();
             }
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
@@ -180,6 +197,8 @@ namespace GameTasks {
 
         while(true) {
             logCurrentTaskName();
+
+            // Wait for the Signal to run the task
             if(!COLLISION_SIGNAL.lock(portMAX_DELAY)) {
                 vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
                 continue;
@@ -227,6 +246,8 @@ namespace GameTasks {
                 }
 
                 for(auto &entity : toDestroy) registry->destroy(entity);
+
+                // Signal the move task to run
                 MOVE_SIGNAL.unlock();
             }
 
@@ -242,6 +263,8 @@ namespace GameTasks {
 
         while(true) {
             logCurrentTaskName();
+
+            // Wait for the Signal to run the task
             if(!COLLISION_SIGNAL.lock(portMAX_DELAY)) {
                 vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
                 continue;
@@ -297,6 +320,8 @@ namespace GameTasks {
                 }
 
                 for(auto &entity : toDestroy) registry->destroy(entity);
+
+                // Signal the Move task to run
                 MOVE_SIGNAL.unlock();
             }
 

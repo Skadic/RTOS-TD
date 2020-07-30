@@ -30,7 +30,7 @@ GameState::GameState(int mapWidth, int mapHeight) :
         {
     renderer.setScale(2);
 
-    spawnPlayer(TilePosition{map.getNexus().x, map.getNexus().y}, **registry.lock(portMAX_DELAY));
+    spawnPlayer(TilePosition{map.getNexusPosition().x, map.getNexusPosition().y}, **registry.lock(portMAX_DELAY));
     initTasks();
     suspendTasks();
 }
@@ -46,7 +46,7 @@ GameState::GameState(std::string mapPath) :
     renderer.setScale(2);
 
     initTasks();
-    spawnPlayer(TilePosition{map.getNexus().x, static_cast<short>(map.getNexus().y-1)}, **registry.lock(portMAX_DELAY));
+    spawnPlayer(TilePosition{map.getNexusPosition().x, static_cast<short>(map.getNexusPosition().y - 1)}, **registry.lock(portMAX_DELAY));
 
     suspendTasks();
 }

@@ -143,7 +143,7 @@ void Map::updateTileAtScreenPos(short x, short y, entt::registry &registry, Tile
     updateTile(entity, registry, type);
 }
 
-TilePosition Map::getNexus() const {
+TilePosition Map::getNexusPosition() const {
     return nexus;
 }
 
