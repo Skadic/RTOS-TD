@@ -21,3 +21,7 @@ TilePosition TilePosition::neighbor(Direction dir) {
 bool TilePosition::operator==(TilePosition &a) {
     return x == a.x && y == a.y;
 }
+
+bool TilePosition::operator!=(TilePosition &a) {
+    return !(*this == a);
+}

@@ -9,4 +9,5 @@ struct TilePosition {
     TilePosition neighbor(Direction dir);
 
     bool operator==(TilePosition& a);
+    bool operator!=(TilePosition& a);
 };
