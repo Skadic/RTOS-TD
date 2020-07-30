@@ -12,7 +12,7 @@
 
 using namespace std::chrono;
 
-LaserTowerAI::LaserTowerAI(entt::entity self, int timeInterval, entt::registry &registry) :
+LaserTowerAI::LaserTowerAI(entt::entity self, int timeInterval) :
     timeInterval{timeInterval},
     lastRun{std::chrono::high_resolution_clock::now()}{
     this->self = self;

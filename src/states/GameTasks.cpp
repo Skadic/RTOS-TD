@@ -81,11 +81,11 @@ namespace GameTasks {
                         }
                         drawInfo("Nexus Health: ", nexusHealth.value, SCREEN_WIDTH-125, 5);
                         drawInfo("Coins: ", state.getCoins(), 5, 5);
-                        if (state.getTileTypeToPlace() == 1){
-                            tumDrawText("Selected Block: WALL", 5, SCREEN_HEIGHT-25, 0xFFFFFF);
-                        }else if(state.getTileTypeToPlace() == 2){
-                            tumDrawText("Selected Block: TOWER_LASER", 5, SCREEN_HEIGHT-25, 0xFFFFFF);
-                        }
+
+
+                        std::string text("Selected Block: ");
+                        text.append(getName(state.getTileTypeToPlace()));
+                        tumDrawText(strdup(text.c_str()), 5, SCREEN_HEIGHT-25, 0xFFFFFF);
 
                         game.getScreenLock().unlock();
                         game.getSwapBufferSignal().unlock();
@@ -317,6 +317,7 @@ namespace GameTasks {
         GameState &state = *static_cast<GameState*>(statePointer);
         auto &regMutex = state.getRegistry();
         Game &game = Game::get();
+        Map &map = state.getMap();
 
         auto lastWake = xTaskGetTickCount();
 
@@ -335,51 +336,34 @@ namespace GameTasks {
                                                                                                input->getMouseY(),
                                                                                                renderer);
                         if (tileOpt) {
-                            if(state.getTileTypeToPlace() == WALL){
-                                if(map.getTileType(*tileOpt, *registry) == TOWER_LASER) {
-                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, WALL,
-                                                              renderer);
-                                    state.setCoins(state.getCoins()+4);
-                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY && state.getWave().getRemainingEnemies()==0 && state.getCoins()>=1) {
-                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, WALL,
-                                                              renderer);
-                                    state.setCoins(state.getCoins()-1);
-                                }
-                            }else if(state.getTileTypeToPlace() == TOWER_LASER){
-                                if(map.getTileType(*tileOpt, *registry) == WALL && state.getCoins() >= 5 && state.getCoins()>=4) {
-                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER_LASER,
-                                                              renderer);
-                                    state.setCoins(state.getCoins()-4);
-                                } else if(map.getTileType(*tileOpt, *registry) == EMPTY && state.getWave().getRemainingEnemies()==0 && state.getCoins()>=5) {
-                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, TOWER_LASER,
-                                                              renderer);
-                                    state.setCoins(state.getCoins()-5);
-                                }
+                            TileType tileType = map.getTileType(*tileOpt, *registry);
+                            TileType typeToPlace = state.getTileTypeToPlace();
+                            int totalCost = getCostForType(typeToPlace) - getCostForType(tileType);
+                            if((tileType != EMPTY || state.getWave().isFinished()) && state.getCoins() >= totalCost && !isSpecial(tileType)) {
+                                map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, typeToPlace, renderer);
+                                state.removeCoins(totalCost);
                             }
-
                         }
 
-                    }else if(input->rightClickDown() && state.getWave().getRemainingEnemies()==0){
-                        Map &map = state.getMap();
-                        const std::optional<entt::entity> &tileOpt = map.getMapTileAtScreenPos(input->getMouseX(),
-                                                                                               input->getMouseY(),
-                                                                                               renderer);
+                    } else if(input->rightClickDown() && state.getWave().isFinished()){
+                        const std::optional<entt::entity> &tileOpt =
+                                map.getMapTileAtScreenPos(input->getMouseX(), input->getMouseY(),renderer);
                         if (tileOpt) {
-                            if(map.getTileType(*tileOpt, *registry) == WALL) {
-                                map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, EMPTY,
-                                                          renderer);
-                                state.setCoins(state.getCoins()+1);
-                            } else if(map.getTileType(*tileOpt, *registry) == TOWER_LASER) {
-                                map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, EMPTY,
-                                                          renderer);
-                                state.setCoins(state.getCoins()+5);
+                            TileType tileType = map.getTileType(*tileOpt, *registry);
+                            if(!isSpecial(tileType)) {
+                                map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, EMPTY,renderer);
+                                state.addCoins(getCostForType(tileType));
                             }
                         }
-                    }else if(input->buttonPressed(SDL_SCANCODE_1)) {
-                        state.setTileTypeToPlace(WALL);
-                    }else if(input->buttonPressed(SDL_SCANCODE_2)) {
-                        state.setTileTypeToPlace(TOWER_LASER);
                     }
+
+                    for (auto const& [scancode, tileType] : getScancodeMap()) {
+                        if(input->buttonPressed(scancode)) {
+                            state.setTileTypeToPlace(tileType);
+                            break;
+                        }
+                    }
+
                 }
             }
 

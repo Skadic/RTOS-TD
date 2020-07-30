@@ -121,16 +121,28 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
         registry.emplace_or_replace<Hitbox>(tile, TILE_SIZE, TILE_SIZE, false);
     }
 
-    if(type == TOWER_LASER) {
-        registry.emplace_or_replace<Range>(tile, 3 * TILE_SIZE);
-        registry.emplace_or_replace<Tower>(tile);
-        registry.emplace_or_replace<Damage>(tile, 8);
-        registry.emplace_or_replace<AIComponent>(tile, new ProjectileTowerAI(tile, 3));
-    } else {
-        registry.remove_if_exists<Range>(tile);
-        registry.remove_if_exists<Tower>(tile);
-        registry.remove_if_exists<Damage>(tile);
-        registry.remove_if_exists<AIComponent>(tile);
+
+    switch (type) {
+        case TOWER_PROJECTILE: {
+            registry.emplace_or_replace<Range>(tile, 4 * TILE_SIZE);
+            registry.emplace_or_replace<Tower>(tile);
+            registry.emplace_or_replace<Damage>(tile, 8);
+            registry.emplace_or_replace<AIComponent>(tile, new ProjectileTowerAI(tile, 3));
+            break;
+        }
+        case TOWER_LASER: {
+            registry.emplace_or_replace<Range>(tile, 2 * TILE_SIZE);
+            registry.emplace_or_replace<Tower>(tile);
+            registry.emplace_or_replace<Damage>(tile, 2);
+            registry.emplace_or_replace<AIComponent>(tile, new LaserTowerAI(tile, 1));
+            break;
+        }
+        default: {
+            registry.remove_if_exists<Range>(tile);
+            registry.remove_if_exists<Tower>(tile);
+            registry.remove_if_exists<Damage>(tile);
+            registry.remove_if_exists<AIComponent>(tile);
+        }
     }
 }
 

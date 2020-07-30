@@ -21,22 +21,25 @@ ProjectileTowerAI::ProjectileTowerAI(entt::entity self, double speed) : AI(), pr
 
 void ProjectileTowerAI::act(entt::registry &registry) {
 
+    // Check how much time has elapsed since the last time the tower fired
     auto now = high_resolution_clock::now();
     auto duration = duration_cast<std::chrono::milliseconds>(now - lastRun).count();
 
-    std::cout << duration << std::endl;
-
     Tower &towerData = registry.get<Tower>(self);
+    // Only continue if the tower has potential targets and enough time has passed since the last run
     if(towerData.hasPotentialTargets() && duration > 100) {
         TilePosition &tilePos =  registry.get<TilePosition>(self);
         Position pos =  tilePos.toPosition() + Position{ TILE_SIZE / 2, TILE_SIZE / 2} - Position{DEFAULT_PROJECTILE_SIZE / 2, DEFAULT_PROJECTILE_SIZE / 2};
         Damage &dmg = registry.get<Damage>(self);
 
+        // Spawn a projectile and determine the target which is the closest to the goal
         auto projectile = spawnProjectile(pos, registry);
         auto target = *closestTarget(towerData, registry);
 
+        // Give the projectile a damage value and its AI
         registry.emplace<Damage>(projectile, dmg.value);
         registry.emplace<AIComponent>(projectile, new SimpleProjectileAI(projectile, target, projectileSpeed));
+
         towerData.getPotentialTargets().clear();
         lastRun = high_resolution_clock::now();
     }

@@ -68,7 +68,7 @@ int GameState::getCoins() const {
 }
 
 void GameState::setCoins(int coins) {
-    GameState::coins = coins;
+    this->coins = coins;
 }
 
 TileType GameState::getTileTypeToPlace() const {
@@ -81,4 +81,12 @@ void GameState::setTileTypeToPlace(TileType tileTypeToPlace) {
 
 CollisionTable &GameState::getCollisionTable() {
     return collisionTable;
+}
+
+void GameState::addCoins(int coins) {
+    this->coins += coins;
+}
+
+void GameState::removeCoins(int coins) {
+    this->coins -= coins;
 }
