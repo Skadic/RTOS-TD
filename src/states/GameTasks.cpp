@@ -274,7 +274,7 @@ namespace GameTasks {
                 auto &registry = *regOpt;
 
                 // Refresh all collision data
-                state.getCollisionTable().refresh(*registry);
+                state.getCollisionTable().refreshTiles(*registry);
 
                 // Handle Collision with the map and displace Entities if needed.
                 auto entityView = registry->view<Position, Hitbox>();
@@ -290,7 +290,7 @@ namespace GameTasks {
                     TilePosition &tilePos = tileView.get<TilePosition>(tile);
                     Hitbox &tileHitbox = tileView.get<Hitbox>(tile);
                     // Get all entities, that are intersecting with the current tile
-                    auto &intersecting = state.getCollisionTable().getIntersecting(tilePos);
+                    auto &intersecting = state.getCollisionTable().getIntersectingEntities(tilePos);
 
                     // Check the collision with this tile for each of these entities
                     for (auto &entity : intersecting) {
@@ -500,6 +500,45 @@ namespace GameTasks {
         }
     }
 
+    void gameTowerTaskOld(void *statePointer) {
+        GameState &state = *static_cast<GameState*>(statePointer);
+        auto &regMutex = state.getRegistry();
+        auto lastWake = xTaskGetTickCount();
+
+        while(true) {
+            logCurrentTaskName();
+            if(auto regOpt = regMutex.lock()) {
+                auto &registry = *regOpt;
+
+                auto enemyView = registry->view<Enemy, Position, Hitbox>();
+                auto towerView = registry->view<TilePosition, Range, Tower>();
+
+                state.getCollisionTable().refreshRanges(*registry);
+
+                for(auto &tower : towerView) {
+
+                    std::vector<entt::entity> targets;
+                    TilePosition &towerTilePos = towerView.get<TilePosition>(tower);
+                    Position towerPos = Position{static_cast<float>(towerTilePos.x * TILE_SIZE + TILE_SIZE / 2), static_cast<float>(towerTilePos.y * TILE_SIZE + TILE_SIZE / 2)};
+                    Range &towerRange = towerView.get<Range>(tower);
+                    Tower &towerData = towerView.get<Tower>(tower);
+
+                    for (auto &enemy : enemyView) {
+                        Position &enemyPos = enemyView.get<Position>(enemy);
+                        Hitbox &enemyHitbox = enemyView.get<Hitbox>(enemy);
+
+                        if(intersectHitboxRange(towerPos, towerRange, enemyPos, enemyHitbox)) {
+                            targets.push_back(enemy);
+                        }
+                    }
+                    towerData.setTargets(targets);
+                }
+            }
+
+            vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+        }
+    }
+
     void gameTowerTask(void *statePointer) {
         GameState &state = *static_cast<GameState*>(statePointer);
         auto &regMutex = state.getRegistry();
@@ -513,14 +552,21 @@ namespace GameTasks {
                 auto enemyView = registry->view<Enemy, Position, Hitbox>();
                 auto towerView = registry->view<TilePosition, Range, Tower>();
 
-                for(auto &tower : towerView) {
+                state.getCollisionTable().refreshRanges(*registry);
+
+                for(auto tower : towerView) {
+
+                    auto approxInRange = state.getCollisionTable().getEnemiesInRangeApprox(tower);
+                    // If there aren't any targets even remotely in range, just continue with the next tower
+                    if(approxInRange.empty()) continue;
+
                     std::vector<entt::entity> targets;
                     TilePosition &towerTilePos = towerView.get<TilePosition>(tower);
                     Position towerPos = Position{static_cast<float>(towerTilePos.x * TILE_SIZE + TILE_SIZE / 2), static_cast<float>(towerTilePos.y * TILE_SIZE + TILE_SIZE / 2)};
                     Range &towerRange = towerView.get<Range>(tower);
                     Tower &towerData = towerView.get<Tower>(tower);
 
-                    for (auto &enemy : enemyView) {
+                    for (auto &enemy : approxInRange) {
                         Position &enemyPos = enemyView.get<Position>(enemy);
                         Hitbox &enemyHitbox = enemyView.get<Hitbox>(enemy);
 
@@ -563,7 +609,6 @@ namespace GameTasks {
 
                 for (auto &entity : toDelete) {
                     registry->destroy(entity);
-
                 }
             }
 

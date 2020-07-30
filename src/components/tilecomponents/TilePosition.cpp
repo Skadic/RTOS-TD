@@ -3,6 +3,7 @@
 //
 
 #include "TilePosition.h"
+#include "../../util/GlobalConsts.h"
 
 TilePosition TilePosition::neighbor(Direction dir) {
     switch (dir) {
@@ -24,4 +25,20 @@ bool TilePosition::operator==(TilePosition &a) {
 
 bool TilePosition::operator!=(TilePosition &a) {
     return !(*this == a);
+}
+
+bool TilePosition::operator<(const TilePosition &a) const {
+    auto thisDistSquare = x * x + y * y;
+    auto otherDistSquare = a.x * a.x + a.y * a.y;
+
+    if(thisDistSquare < otherDistSquare) return true;
+    if(thisDistSquare > otherDistSquare) return false;
+    if(x < a.x) return true;
+    if(x > a.x) return false;
+    if(y < a.y) return true;
+    return y > a.y;
+}
+
+Position TilePosition::toPosition() {
+    return {static_cast<float>(x * TILE_SIZE), static_cast<float>(y * TILE_SIZE)};
 }

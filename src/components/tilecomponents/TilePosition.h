@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../util/map/Direction.h"
+#include "../Position.h"
 
 struct TilePosition {
     short x;
@@ -10,4 +11,7 @@ struct TilePosition {
 
     bool operator==(TilePosition& a);
     bool operator!=(TilePosition& a);
+    bool operator<(const TilePosition& a) const;
+
+    Position toPosition();
 };

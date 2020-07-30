@@ -1,4 +1,4 @@
-#pragma oncevoid act(entt::registry &registry) override;
+#pragma once
 
 #include "AI.h"
 #include "../../states/GameState.h"
