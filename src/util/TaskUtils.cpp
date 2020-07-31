@@ -1,3 +1,4 @@
+#include <iostream>
 #include "TaskUtils.h"
 
 void suspendAll(const std::vector<TaskHandle_t> &tasks) {

@@ -27,5 +27,7 @@ public:
     void pushStack(State *state);
     void popStack();
 
+    bool empty();
+
     State& activeState();
 };

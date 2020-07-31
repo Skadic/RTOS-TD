@@ -39,6 +39,7 @@ void MainMenuTasks::renderTask(void *statePointer) {
     while(true) {
         if(game.getDrawSignal().lock(portMAX_DELAY)) {
             if(game.getScreenLock().lock(portMAX_DELAY)){
+                //std::cout << "RenderMenu" << std::endl;
                 tumDrawClear(0x000000);
 
                 for (const Button &b : state.getButtons()) {

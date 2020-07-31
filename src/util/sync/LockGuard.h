@@ -55,6 +55,10 @@ public:
         }
     };
 
+    void set(T val) {
+        value = val;
+    }
+
     T &operator *() {
         return value;
     };

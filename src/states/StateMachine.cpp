@@ -5,6 +5,7 @@
 #include "StateMachine.h"
 
 #include "State.h"
+#include "../Game.h"
 #include <iostream>
 
 StateMachine::StateMachine() : stateStack{std::stack<std::unique_ptr<State>>(), xSemaphoreCreateMutex()} {}
@@ -24,8 +25,9 @@ void StateMachine::popStack() {
             stack->pop();
             stack->top()->resumeTasks();
             std::cout << "Stack popped" << std::endl;
-        } else {
-            std::cout << "Stack not popped" << std::endl;
+        } else if (stack->size() == 1){
+            stack->pop();
+            std::cout << "Last stack element popped" << std::endl;
         }
     }
 }
@@ -35,8 +37,13 @@ void StateMachine::pushStack(State *state) {
         auto &stack = *stackOpt;
         if (!stack->empty()) stack->top()->suspendTasks();
         stack->push(std::unique_ptr<State>{state});
-        state->resumeTasks();
+        stack->top()->resumeTasks();
+        Game::get().getSwapBufferSignal().unlock();
     }
+}
+
+bool StateMachine::empty() {
+    return (**stateStack.lock()).empty();
 }
 
 

@@ -55,7 +55,6 @@ namespace GameTasks {
                     auto &registry = *regOpt;
 
                     if(game.getScreenLock().lock(portMAX_DELAY)){
-
                         tumDrawClear(0x000000);
 
 

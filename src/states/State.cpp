@@ -4,6 +4,7 @@
 
 #include "State.h"
 #include "../util/TaskUtils.h"
+#include "../Game.h"
 #include <iostream>
 
 void State::resumeTasks() {

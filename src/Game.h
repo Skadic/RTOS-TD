@@ -19,6 +19,8 @@ private:
     Semaphore swapBufferSignal;
     LockGuard<InputHandler> buttons;
     StateMachine stateMachine;
+    LockGuard<State*> stateToPush;
+    LockGuard<StateChange> stateOperation;
 
     Game();
     ~Game();
@@ -34,6 +36,12 @@ public:
     Semaphore &getDrawHitboxSignal();
     Semaphore &getSwapBufferSignal();
     StateMachine &getStateMachine();
+
+    LockGuard<State*> &getStateToPush();
+    LockGuard<StateChange> &getStateOperation();
+
+    void enqueueStatePush(State* state);
+    void enqueueStatePop();
 
     LockGuard<entt::registry> &getActiveStateRegistry();
     LockGuard<InputHandler> &getInput();

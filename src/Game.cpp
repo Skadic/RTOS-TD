@@ -6,6 +6,7 @@
 #include "states/GameState.h"
 #include "util/Log.h"
 #include "util/GlobalConsts.h"
+#include "states/MainMenuState.h"
 
 #include <iostream>
 #include <entity/registry.hpp>
@@ -22,7 +23,9 @@ Game::Game() :
     drawSignal{xSemaphoreCreateBinary()},
     drawHitboxSignal{xSemaphoreCreateBinary()},
     swapBufferSignal{xSemaphoreCreateBinary()},
-    buttons{InputHandler(), xSemaphoreCreateMutex()}
+    buttons{InputHandler(), xSemaphoreCreateMutex()},
+    stateToPush{nullptr, xSemaphoreCreateMutex()},
+    stateOperation{NONE, xSemaphoreCreateMutex()}
     {
     drawSignal.unlock();
 }
@@ -45,16 +48,21 @@ void Game::start(char *binPath) {
     TaskHandle_t input = nullptr;
     xTaskCreate(inputTask, "input", 0, nullptr, 2, &input);
 
+    TaskHandle_t states = nullptr;
+    xTaskCreate(stateMachineTask, "states", 0, nullptr, 2, &input);
+
     //GameState gameState(10, 10);
-    Game::getStateMachine().pushStack(new GameState("testmap.json"));
+    //Game::getStateMachine().pushStack(new GameState("testmap.json"));
+    Game::getStateMachine().pushStack(new MainMenuState());
 
     // Starts the task scheduler to start running the tasks
     vTaskStartScheduler();
 
     // Delete all tasks
     vTaskDelete(swap_buffer);
+    vTaskDelete(input);
+    vTaskDelete(states);
     tumEventExit();
-    tumSoundExit();
 }
 
 
@@ -89,6 +97,62 @@ Semaphore &Game::getSwapBufferSignal() {
 
 LockGuard<InputHandler> &Game::getInput() {
     return buttons;
+}
+
+void Game::enqueueStatePush(State *state) {
+    auto stateLock = *stateToPush.lock(portMAX_DELAY);
+    auto stateOpLock = *stateOperation.lock(portMAX_DELAY);
+    stateLock.set(state);
+    stateOpLock.set(PUSH);
+}
+
+void Game::enqueueStatePop() {
+    auto stateOpLock = *stateOperation.lock(portMAX_DELAY);
+    stateOpLock.set(POP);
+}
+
+LockGuard<State *> &Game::getStateToPush() {
+    return stateToPush;
+}
+
+LockGuard<StateChange> &Game::getStateOperation() {
+    return stateOperation;
+}
+
+
+void stateMachineTask(void *ptr) {
+    auto &game = Game::get();
+    auto &stateMachine = game.getStateMachine();
+
+    auto &stateToPushMutex = game.getStateToPush();
+    auto &stateOperationMutex = game.getStateOperation();
+
+    auto lastWake = xTaskGetTickCount();
+
+    while (true) {
+        if(stateMachine.empty()) vTaskEndScheduler();
+        // First see if some operation has been enqueued
+        if(std::optional<Resource<StateChange>> stateOperation = stateOperationMutex.lock()) {
+            switch (**stateOperation) {
+                // If a Pop operation has been enqueued, pop a state off the stack
+                case POP:
+                    stateMachine.popStack();
+                    (*stateOperation).set(NONE);
+                    break;
+                // If a Push operation has been enqueued, get the state to be pushed from the queue and push it
+                case PUSH:
+                    if(std::optional<Resource<State*>> stateToPush = stateToPushMutex.lock()) {
+                        stateMachine.pushStack(**stateToPush);
+                        (*stateToPush).set(nullptr);
+                        (*stateOperation).set(NONE);
+                    }
+                    break;
+                default: {}
+            }
+        }
+
+        vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+    }
 }
 
 void swapBufferTask(void *ptr) {
@@ -130,6 +194,9 @@ void inputTask(void *ptr) {
             // Update events (like keyboard and mouse input)
             tumEventFetchEvents();
             (*inputOpt)->update();
+            if ((*inputOpt)->buttonDown(SDL_SCANCODE_ESCAPE)) {
+                game.enqueueStatePop();
+            }
         }
         // Delay until the next frame
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);

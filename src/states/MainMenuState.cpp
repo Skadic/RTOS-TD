@@ -5,6 +5,8 @@
 #include "MainMenuState.h"
 #include "../util/GlobalConsts.h"
 #include "MainMenuTasks.h"
+#include "../Game.h"
+#include "GameState.h"
 #include <iostream>
 
 void MainMenuState::initTasks() {
@@ -15,8 +17,20 @@ void MainMenuState::initTasks() {
 
 
 MainMenuState::MainMenuState() : State() {
-    Button start = Button{"Start", 0, 0, 400, 100, [] () {std::cout << "Start" << std::endl;}};
+    static int buttonWidth = 400;
+    static int buttonHeight = 100;
+    Button start = Button{"Start", SCREEN_WIDTH / 2 - buttonWidth / 2, 200, buttonWidth, buttonHeight,
+                          [] () {
+        Game::get().enqueueStatePush(new GameState("testmap.json"));
+    }};
+
+    Button exit = Button{"Exit", SCREEN_WIDTH / 2 - buttonWidth / 2, 400, buttonWidth, buttonHeight,
+                          [] () {
+        Game::get().enqueueStatePop();
+    }};
+
     buttons.push_back(start);
+    buttons.push_back(exit);
 
     initTasks();
     suspendTasks();
