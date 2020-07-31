@@ -3,6 +3,8 @@ set(STATES_SOURCES
         GameTasks.cpp
         State.cpp
         StateMachine.cpp
-        RenderTasks.cpp)
+        RenderTasks.cpp
+        MainMenuState.cpp
+        MainMenuTasks.cpp)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${STATES_SOURCES})
