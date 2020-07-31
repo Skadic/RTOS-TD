@@ -324,6 +324,10 @@ image_handle_t tumDrawLoadImage(char *filename);
  */
 image_handle_t tumDrawLoadScaledImage(char *filename, float scale);
 
+image_handle_t tumDrawLoad2ColorImage(char *filename, unsigned int color1, unsigned int color2);
+
+image_handle_t tumDrawLoadScaled2ColorImage(char *filename, float scale, unsigned int color1, unsigned int color2);
+
 /**
  * @brief Closes a loaded image and frees all memory used by the image structure
  *

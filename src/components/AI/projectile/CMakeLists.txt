@@ -1,5 +1,5 @@
 set(PROJECTILE_SOURCES
-        SimpleProjectileAI.cpp)
+        TargetedSimpleProjectileAI.cpp)
 
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${PROJECTILE_SOURCES})

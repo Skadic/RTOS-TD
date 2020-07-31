@@ -802,7 +802,7 @@ int tumDrawInit(char *path) // Should be called from the Thread running main()
 #error "Unexpected value of HOST_OS!"
 #endif /* HOST_OS */
 #endif /* DOCKER */
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 
 	if (SDL_Init(SDL_INIT_EVERYTHING)) {
 		PRINT_SDL_ERROR("SDL_Init failed");
@@ -1214,6 +1214,72 @@ err_alloc:
 image_handle_t tumDrawLoadImage(char *filename)
 {
 	return tumDrawLoadScaledImage(filename, 1);
+}
+
+image_handle_t tumDrawLoadScaled2ColorImage(char *filename, float scale, unsigned int color1, unsigned int color2)
+{
+    loaded_image_t *ret = calloc(1, sizeof(loaded_image_t));
+    if (ret == NULL)
+        goto err_alloc;
+
+    ret->filename = strdup(filename);
+    if (ret->filename == NULL)
+        goto err_filename;
+
+    ret->file = fopen(filename, "r");
+    if (ret->file == NULL)
+        goto err_file_open;
+
+    ret->ops = SDL_RWFromFP(ret->file, SDL_TRUE);
+    if (ret->ops == NULL)
+        goto err_ops;
+
+
+    ret->surf = IMG_Load_RW(ret->ops, 0);
+    if (ret->surf == NULL)
+        goto err_surf;
+
+    SDL_Color c1 = {.r = RED_PORTION(color1) , .g = GREEN_PORTION(color1), .b = BLUE_PORTION(color1), .a = 0xFF};
+    SDL_Color c2 = {.r = RED_PORTION(color2) , .g = GREEN_PORTION(color2), .b = BLUE_PORTION(color2), .a = 0xFF};
+    ret->surf->format->palette->colors[0] = c1;
+    ret->surf->format->palette->colors[1] = c2;
+
+    ret->tex = SDL_CreateTextureFromSurface(renderer, ret->surf);
+    if (ret->tex == NULL)
+        goto err_tex;
+
+    SDL_QueryTexture(ret->tex, NULL, NULL, &ret->w, &ret->h);
+
+    ret->scale = scale;
+
+    pthread_mutex_lock(&loaded_images_lock);
+
+    loaded_image_t *iterator = &loaded_images_list;
+    for (; iterator->next; iterator = iterator->next)
+        ;
+    iterator->next = ret;
+
+    pthread_mutex_unlock(&loaded_images_lock);
+
+    return ret;
+
+    err_tex:
+    SDL_FreeSurface(ret->surf);
+    err_surf:
+    SDL_RWclose(ret->ops);
+    err_ops:
+    fclose(ret->file);
+    err_file_open:
+    free(ret->filename);
+    err_filename:
+    free(ret);
+    err_alloc:
+    return NULL;
+}
+
+image_handle_t tumDrawLoad2ColorImage(char *filename, unsigned int color1, unsigned int color2)
+{
+    return tumDrawLoadScaled2ColorImage(filename, 1, color1, color2);
 }
 
 int tumDrawFreeLoadedImage(image_handle_t *img)

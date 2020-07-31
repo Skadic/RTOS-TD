@@ -49,6 +49,7 @@ class SpriteComponent {
     std::shared_ptr<Sprite> sprite;
 
 public:
+    explicit SpriteComponent(std::shared_ptr<Sprite> &&sprite);
     explicit SpriteComponent(std::shared_ptr<Sprite> &sprite);
     explicit SpriteComponent(Sprite *sprite);
     std::shared_ptr<Sprite> &getSprite();

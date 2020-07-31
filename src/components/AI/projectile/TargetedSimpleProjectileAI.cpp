@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-#include "SimpleProjectileAI.h"
+#include "TargetedSimpleProjectileAI.h"
 #include "../../Position.h"
 #include "../../Velocity.h"
 #include "../../Hitbox.h"
@@ -11,11 +11,11 @@
 #include "../../Health.h"
 #include "../../Damage.h"
 
-SimpleProjectileAI::SimpleProjectileAI(entt::entity self, entt::entity target, double speed) : target{target}, speed{speed}, lifetime{0} {
+TargetedSimpleProjectileAI::TargetedSimpleProjectileAI(entt::entity self, entt::entity target, double speed) : target{target}, speed{speed}, lifetime{0} {
     this->self = self;
 }
 
-void SimpleProjectileAI::act(entt::registry &registry) {
+void TargetedSimpleProjectileAI::act(entt::registry &registry) {
     if(registry.valid(target)) {
         lifetime++;
         if(lifetime > 90) {
@@ -34,8 +34,6 @@ void SimpleProjectileAI::act(entt::registry &registry) {
         vel.towards(pos, targetPos, speed);
 
         if (intersectHitbox(pos, hitbox, targetPos, targetHitbox)) {
-            std::cout << "Target valid: " << registry.valid(target) << " Self valid: " << registry.valid(self)
-                      << std::endl;
             Health &targetHealth = registry.get<Health>(target);
             Damage &damage = registry.get<Damage>(self);
 

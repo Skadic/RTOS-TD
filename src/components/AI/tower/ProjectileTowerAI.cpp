@@ -10,7 +10,7 @@
 #include "../../Velocity.h"
 #include "../../tilecomponents/Tower.h"
 #include "../../../util/TowerUtil.h"
-#include "../projectile/SimpleProjectileAI.h"
+#include "../projectile/TargetedSimpleProjectileAI.h"
 #include <chrono>
 
 using namespace std::chrono;
@@ -38,7 +38,7 @@ void ProjectileTowerAI::act(entt::registry &registry) {
 
         // Give the projectile a damage value and its AI
         registry.emplace<Damage>(projectile, dmg.value);
-        registry.emplace<AIComponent>(projectile, new SimpleProjectileAI(projectile, target, projectileSpeed));
+        registry.emplace<AIComponent>(projectile, new TargetedSimpleProjectileAI(projectile, target, projectileSpeed));
 
         towerData.getPotentialTargets().clear();
         lastRun = high_resolution_clock::now();

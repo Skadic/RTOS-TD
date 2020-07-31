@@ -1,5 +1,9 @@
 #include "Sprites.h"
 #include <iostream>
+#include <random>
+
+
+std::random_device rd;
 
 SpriteComponent::SpriteComponent(Sprite *sprite) : sprite{std::shared_ptr<Sprite>(sprite)} {}
 
@@ -8,6 +12,8 @@ std::shared_ptr<Sprite> &SpriteComponent::getSprite() {
 }
 
 SpriteComponent::SpriteComponent(std::shared_ptr<Sprite> &sprite) : sprite{sprite} {}
+
+SpriteComponent::SpriteComponent(std::shared_ptr<Sprite> &&sprite) : sprite{sprite} {}
 
 void SpriteComponent::setSprite(std::shared_ptr<Sprite> &&s) {
     this->sprite = s;
