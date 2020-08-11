@@ -40,6 +40,8 @@ static Semaphore MOVE_SIGNAL = Semaphore{xSemaphoreCreateBinary()};
 
 namespace GameTasks {
 
+
+
     void gameRenderTask(void *statePointer) {
 
         GameState &state = *static_cast<GameState*>(statePointer);
@@ -62,6 +64,8 @@ namespace GameTasks {
                         renderMap(renderer, *registry, map);
                         renderEntities(renderer, *registry);
                         //renderRanges(renderer, *registry);
+
+                        renderHoveredRanges(renderer, *registry, map);
                         renderHealth(renderer, *registry);
                         renderTowerTargetConnections(renderer, *registry);
                         renderHUD(state, *registry);

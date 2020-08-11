@@ -8,6 +8,7 @@
 namespace GameTasks {
     void renderHealth(Renderer &renderer, entt::registry &registry);
     void renderRanges(Renderer &renderer, entt::registry &registry);
+    void renderHoveredRanges(Renderer &renderer, entt::registry &registry, Map &map);
     void renderTowerTargetConnections(Renderer &renderer, entt::registry &registry);
     void renderMap(Renderer &renderer, entt::registry &registry, Map &map);
     void renderEntities(Renderer &renderer, entt::registry &registry);

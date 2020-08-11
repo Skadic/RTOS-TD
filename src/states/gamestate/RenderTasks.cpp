@@ -11,6 +11,7 @@
 #include "../../util/Wave.h"
 #include "../../util/RenderUtils.h"
 #include "GameState.h"
+#include "../../Game.h"
 
 void GameTasks::renderEntities(Renderer &renderer, entt::registry &registry) {
     auto renderView = registry.view<Position, SpriteComponent>();
@@ -75,6 +76,25 @@ void GameTasks::renderRanges(Renderer &renderer, entt::registry &registry) {
         Range &range = rangeView.get<Range>(entity);
 
         renderer.drawCircle(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, range.radius, 0xFFFF00, false);
+    }
+}
+
+void GameTasks::renderHoveredRanges(Renderer &renderer, entt::registry &registry, Map &map) {
+    auto rangeView = registry.view<TilePosition, SpriteComponent, Range>();
+    if(auto inputOpt = Game::get().getInput().lock()) {
+        auto &input = *inputOpt;
+        if(auto tileOpt = map.getMapTileAtScreenPos(input->getMouseX(), input->getMouseY(), renderer)) {
+
+            if(registry.has<TilePosition, SpriteComponent, Range>(*tileOpt)) {
+                TilePosition &pos = rangeView.get<TilePosition>(*tileOpt);
+                SpriteComponent &sprite = rangeView.get<SpriteComponent>(*tileOpt);
+                Range &range = rangeView.get<Range>(*tileOpt);
+
+                renderer.drawCircle(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, range.radius, 0xFFFF00, false);
+                renderer.drawBox(pos.x, pos.y, TILE_SIZE, TILE_SIZE, 0xFFFF00, false);
+            }
+        }
+
     }
 }
 
