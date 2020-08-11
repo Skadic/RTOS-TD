@@ -3,10 +3,10 @@
 //
 
 #include "Game.h"
-#include "states/GameState.h"
+#include "states/gamestate/GameState.h"
 #include "util/Log.h"
 #include "util/GlobalConsts.h"
-#include "states/MainMenuState.h"
+#include "states/mainmenu/MainMenuState.h"
 
 #include <iostream>
 #include <entity/registry.hpp>
@@ -119,6 +119,11 @@ LockGuard<StateChange> &Game::getStateOperation() {
     return stateOperation;
 }
 
+void Game::enqueueStatePop2X() {
+    auto stateOpLock = *stateOperation.lock(portMAX_DELAY);
+    stateOpLock.set(POP2X);
+}
+
 
 void stateMachineTask(void *ptr) {
     auto &game = Game::get();
@@ -134,21 +139,27 @@ void stateMachineTask(void *ptr) {
         // First see if some operation has been enqueued
         if(std::optional<Resource<StateChange>> stateOperation = stateOperationMutex.lock()) {
             switch (**stateOperation) {
+                case NONE:
+                    break;
                 // If a Pop operation has been enqueued, pop a state off the stack
                 case POP:
                     stateMachine.popStack();
-                    (*stateOperation).set(NONE);
                     break;
                 // If a Push operation has been enqueued, get the state to be pushed from the queue and push it
                 case PUSH:
                     if(std::optional<Resource<State*>> stateToPush = stateToPushMutex.lock()) {
                         stateMachine.pushStack(**stateToPush);
                         (*stateToPush).set(nullptr);
-                        (*stateOperation).set(NONE);
                     }
+                    break;
+                // This is used for when the current state wants to remove itself and the state below it from the stack
+                // This is useful for example for a game over screen, that removes it self and the game state below it
+                case POP2X:
+                    stateMachine.popStack2X();
                     break;
                 default: {}
             }
+            (*stateOperation).set(NONE);
         }
 
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);

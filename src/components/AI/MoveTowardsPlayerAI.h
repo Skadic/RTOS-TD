@@ -1,7 +1,7 @@
 #pragma once
 
 #include "AI.h"
-#include "../../states/GameState.h"
+#include "../../states/gamestate/GameState.h"
 
 class MoveTowardsPlayerAI : public AI {
     State *state;

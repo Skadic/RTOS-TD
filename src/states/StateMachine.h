@@ -13,6 +13,7 @@ extern "C" {
 enum StateChange {
     PUSH,
     POP,
+    POP2X,
     NONE
 };
 
@@ -24,8 +25,9 @@ public:
     StateMachine();
     StateMachine(const StateMachine &) = delete;
 
-    void pushStack(State *state);
+    void pushStack(State* state);
     void popStack();
+    void popStack2X();
 
     bool empty();
 

@@ -15,7 +15,7 @@
 
 using namespace std::chrono;
 
-ProjectileTowerAI::ProjectileTowerAI(entt::entity self, double speed) : AI(), projectileSpeed{speed}, lastRun{high_resolution_clock::now()} {
+ProjectileTowerAI::ProjectileTowerAI(entt::entity self, double speed, double firingInterval) : AI(), projectileSpeed{speed}, firingInterval{firingInterval}, lastRun{high_resolution_clock::now()} {
     this->self = self;
 }
 
@@ -27,7 +27,7 @@ void ProjectileTowerAI::act(entt::registry &registry) {
 
     Tower &towerData = registry.get<Tower>(self);
     // Only continue if the tower has potential targets and enough time has passed since the last run
-    if(towerData.hasPotentialTargets() && duration > 100) {
+    if(towerData.hasPotentialTargets() && duration > firingInterval) {
         TilePosition &tilePos =  registry.get<TilePosition>(self);
         Position pos =  tilePos.toPosition() + Position{ TILE_SIZE / 2, TILE_SIZE / 2} - Position{DEFAULT_PROJECTILE_SIZE / 2, DEFAULT_PROJECTILE_SIZE / 2};
         Damage &dmg = registry.get<Damage>(self);

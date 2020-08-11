@@ -3,7 +3,7 @@
 #include "AI.h"
 #include "../../states/State.h"
 #include "../tilecomponents/TilePosition.h"
-#include "../../states/GameState.h"
+#include "../../states/gamestate/GameState.h"
 
 class PathfindToNexusAI : public AI {
     GameState *state;

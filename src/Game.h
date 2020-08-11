@@ -42,6 +42,7 @@ public:
 
     void enqueueStatePush(State* state);
     void enqueueStatePop();
+    void enqueueStatePop2X();
 
     LockGuard<entt::registry> &getActiveStateRegistry();
     LockGuard<InputHandler> &getInput();

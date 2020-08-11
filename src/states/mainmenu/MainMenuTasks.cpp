@@ -1,14 +1,14 @@
 //
-// Created by skadic on 31.07.20.
+// Created by skadic on 11.08.20.
 //
 
 #include "MainMenuTasks.h"
 #include "MainMenuState.h"
-#include "../Game.h"
-#include "../util/GlobalConsts.h"
+#include "../../Game.h"
+#include "../../util/GlobalConsts.h"
 
 
-void MainMenuTasks::inputTask(void *statePointer) {
+void MainMenuTasks::buttonClickTask(void *statePointer) {
     MainMenuState &state = *static_cast<MainMenuState*>(statePointer);
     Game &game = Game::get();
     auto lastWake = xTaskGetTickCount();
@@ -20,8 +20,8 @@ void MainMenuTasks::inputTask(void *statePointer) {
             auto &input = *inputOpt;
             for(auto &button : state.getButtons()) {
                 if(std::clamp(input->getMouseX(), button.x, (short) (button.x + button.w)) == input->getMouseX() &&
-                        std::clamp(input->getMouseY(), button.y, (short) (button.y + button.h)) == input->getMouseY()
-                        && input->leftClickDown()) {
+                   std::clamp(input->getMouseY(), button.y, (short) (button.y + button.h)) == input->getMouseY()
+                   && input->leftClickDown()) {
                     button.onClick();
                 }
             }
@@ -31,7 +31,7 @@ void MainMenuTasks::inputTask(void *statePointer) {
     }
 }
 
-void MainMenuTasks::renderTask(void *statePointer) {
+void MainMenuTasks::buttonRenderTask(void *statePointer) {
     MainMenuState &state = *static_cast<MainMenuState*>(statePointer);
     Game &game = Game::get();
     auto lastWake = xTaskGetTickCount();
@@ -46,6 +46,8 @@ void MainMenuTasks::renderTask(void *statePointer) {
                     state.getRenderer().drawBox(b.x, b.y, b.w, b.h, 0xFFFFFF, true);
                     state.getRenderer().drawText(const_cast<char*>(b.name.c_str()), b.x + b.w / 2 - b.name.length() * 3, b.y + b.h / 2 - 10, 0x000000);
                 }
+
+                state.render();
 
                 game.getScreenLock().unlock();
                 game.getSwapBufferSignal().unlock();

@@ -1,24 +1,26 @@
 
 #include "GameState.h"
-#include "../Game.h"
-#include "../util/Log.h"
-#include "../components/Position.h"
-#include "../util/GlobalConsts.h"
-#include "../components/Hitbox.h"
-#include "../components/Health.h"
-#include "../components/tilecomponents/Tower.h"
-#include "../components/Enemy.h"
-#include "../components/Velocity.h"
-#include "../components/tilecomponents/TileTypeComponent.h"
-#include "../components/tags/Player.h"
-#include "../util/spawn/EntitySpawn.h"
-#include "../components/AI/PathfindToNexusAI.h"
-#include "../util/StringUtils.h"
+#include "../../Game.h"
+#include "../../util/Log.h"
+#include "../../components/Position.h"
+#include "../../util/GlobalConsts.h"
+#include "../../components/Hitbox.h"
+#include "../../components/Health.h"
+#include "../../components/tilecomponents/Tower.h"
+#include "../../components/Enemy.h"
+#include "../../components/Velocity.h"
+#include "../../components/tilecomponents/TileTypeComponent.h"
+#include "../../components/tags/Player.h"
+#include "../../util/spawn/EntitySpawn.h"
+#include "../../components/AI/PathfindToNexusAI.h"
+#include "../../util/RenderUtils.h"
 #include "GameTasks.h"
 #include "RenderTasks.h"
-#include "../components/tags/Projectile.h"
-#include "../components/Damage.h"
-#include "../components/tags/Delete.h"
+#include "../../components/tags/Projectile.h"
+#include "../../components/Damage.h"
+#include "../../components/tags/Delete.h"
+#include "../../components/tags/Nexus.h"
+#include "../gameoverstate/GameOverState.h"
 
 extern "C" {
     #include <TUM_Sound.h>
@@ -57,34 +59,12 @@ namespace GameTasks {
                     if(game.getScreenLock().lock(portMAX_DELAY)){
                         tumDrawClear(0x000000);
 
-
                         renderMap(renderer, *registry, map);
                         renderEntities(renderer, *registry);
                         //renderRanges(renderer, *registry);
                         renderHealth(renderer, *registry);
                         renderTowerTargetConnections(renderer, *registry);
-
-                        Wave wave = state.getWave();
-                        TilePosition nexusPos = map.getNexusPosition();
-                        auto nexus = map.getMapTile(nexusPos.x, nexusPos.y);
-                        Health nexusHealth = registry->get<Health>(nexus);
-
-                        if (wave.isFinished()){
-                            tumDrawText("BUILDING PHASE", (SCREEN_WIDTH/2)-55, 25, 0xFFFFFF);
-                            drawInfo("Prepare yourself for Wave ", wave.getWaveNumber()+1, (SCREEN_WIDTH/2)-85, 5);
-                        }else{
-                            drawInfo("Wave: ", wave.getWaveNumber(), (SCREEN_WIDTH/2)-25, 5);
-                            drawInfo("Enemies remaining: ", wave.getRemainingEnemies(),(SCREEN_WIDTH/2)-70, 25);
-                            drawInfo("Coins per enemy: ", wave.getEnemyCoins(), SCREEN_WIDTH-155, SCREEN_HEIGHT-25);
-                            drawInfo("Enemies health: ", 100*wave.getEnemyHealthFactor(),SCREEN_WIDTH-155, SCREEN_HEIGHT-45);
-                        }
-                        drawInfo("Nexus Health: ", nexusHealth.value, SCREEN_WIDTH-125, 5);
-                        drawInfo("Coins: ", state.getCoins(), 5, 5);
-
-
-                        std::string text("Selected Block: ");
-                        text.append(getName(state.getTileTypeToPlace()));
-                        tumDrawText(strdup(text.c_str()), 5, SCREEN_HEIGHT-25, 0xFFFFFF);
+                        renderHUD(state, *registry);
 
                         game.getScreenLock().unlock();
                         game.getSwapBufferSignal().unlock();
@@ -381,10 +361,14 @@ namespace GameTasks {
                 auto &registry = *regOpt;
 
                 auto view = registry->view<AIComponent>();
+                auto deleteView = registry->view<Delete>();
 
                 for (auto &entity : view) {
-                    AIComponent &ai = view.get<AIComponent>(entity);
-                    ai.getAI()->act(*registry);
+                    // Only execute AI action if the entity is not flagged for deletion
+                    if(!deleteView.contains(entity)) {
+                        AIComponent &ai = view.get<AIComponent>(entity);
+                        ai.getAI()->act(*registry);
+                    }
                 }
             }
 
@@ -524,17 +508,31 @@ namespace GameTasks {
                 auto &registry = *regOpt;
 
                 auto view = registry->view<Delete>();
+                auto enemyView = registry->view<Enemy>();
+                auto nexusView = registry->view<Nexus>();
+
+
+                bool gameOver = false;
 
                 std::vector<entt::entity> toDelete;
                 for (auto &entity : view) {
-                    if(registry->has<Enemy>(entity)) {
+                    if(enemyView.contains(entity)) {
                         state.getWave().decrementRemainingEnemies();
                     }
+
+                    if(nexusView.contains(entity)) {
+                        gameOver = true;
+                    }
+
                     toDelete.push_back(entity);
                 }
 
                 for (auto &entity : toDelete) {
                     registry->destroy(entity);
+                }
+
+                if(gameOver) {
+                    Game::get().enqueueStatePush(new GameOverState());
                 }
             }
 

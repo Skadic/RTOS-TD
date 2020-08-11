@@ -3,11 +3,14 @@
 //
 
 #include "RenderTasks.h"
-#include "../util/GlobalConsts.h"
-#include "../components/Health.h"
-#include "../components/tilecomponents/Tower.h"
-#include "../components/Enemy.h"
-#include "../components/Hitbox.h"
+#include "../../util/GlobalConsts.h"
+#include "../../components/Health.h"
+#include "../../components/tilecomponents/Tower.h"
+#include "../../components/Enemy.h"
+#include "../../components/Hitbox.h"
+#include "../../util/Wave.h"
+#include "../../util/RenderUtils.h"
+#include "GameState.h"
 
 void GameTasks::renderEntities(Renderer &renderer, entt::registry &registry) {
     auto renderView = registry.view<Position, SpriteComponent>();
@@ -73,4 +76,38 @@ void GameTasks::renderRanges(Renderer &renderer, entt::registry &registry) {
 
         renderer.drawCircle(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, range.radius, 0xFFFF00, false);
     }
+}
+
+void GameTasks::renderHUD(GameState &state, entt::registry &registry) {
+    Map &map = state.getMap();
+    Wave wave = state.getWave();
+    TilePosition nexusPos = map.getNexusPosition();
+    auto nexus = map.getMapTile(nexusPos.x, nexusPos.y);
+    Health nexusHealth = registry.get<Health>(nexus);
+
+
+    // Draw UI Boxes
+    tumDrawFilledBox(0, 0, SCREEN_WIDTH, 50, UI_BG_COLOR);
+    tumDrawBox(-1, -1, SCREEN_WIDTH + 2, 51, UI_BORDER_COLOR);
+    tumDrawFilledBox(0, SCREEN_HEIGHT - 25, SCREEN_WIDTH, 26, UI_BG_COLOR);
+    tumDrawBox(-1, SCREEN_HEIGHT - 25, SCREEN_WIDTH + 2, 26, UI_BORDER_COLOR);
+
+
+    if (wave.isFinished()){
+        tumDrawText("BUILDING PHASE", (SCREEN_WIDTH/2)-55, 25, 0xFFFFFF);
+        drawInfo("Prepare yourself for Wave ", wave.getWaveNumber()+1, (SCREEN_WIDTH/2)-85, 5);
+    }else{
+        drawInfo("Wave: ", wave.getWaveNumber(), (SCREEN_WIDTH/2)-25, 5);
+        drawInfo("Enemies remaining: ", wave.getRemainingEnemies(),(SCREEN_WIDTH/2)-70, 25);
+        drawInfo("Coins per enemy: ", wave.getEnemyCoins(), SCREEN_WIDTH-155, SCREEN_HEIGHT-25);
+        drawInfo("Enemies health: ", 100 * wave.getEnemyHealthFactor() , SCREEN_WIDTH-155, SCREEN_HEIGHT-45);
+    }
+
+    drawInfo("Nexus Health: ", nexusHealth.value, SCREEN_WIDTH-125, 5);
+    drawInfo("Coins: ", state.getCoins(), 5, 5);
+
+
+    std::string text("Selected Block: ");
+    text.append(getName(state.getTileTypeToPlace()));
+    tumDrawText(strdup(text.c_str()), 5, SCREEN_HEIGHT-25, 0xFFFFFF);
 }

@@ -17,7 +17,9 @@ protected:
     std::vector<TaskHandle_t> tasks;
     Renderer renderer;
 
-    State() : registry{entt::registry(), xSemaphoreCreateMutex()}, tasks{std::vector<TaskHandle_t>()} {}
+    State() : registry{entt::registry(), xSemaphoreCreateMutex()}, tasks{std::vector<TaskHandle_t>()} {
+        std::cout << "Called" << std::endl;
+    }
 
 public:
     ~State();

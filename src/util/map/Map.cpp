@@ -18,6 +18,7 @@
 #include "../../components/AI/tower/LaserTowerAI.h"
 #include "../../components/Health.h"
 #include "../../components/AI/tower/ProjectileTowerAI.h"
+#include "../../components/tags/Nexus.h"
 #include <map>
 
 Map::Map(entt::registry &registry, int width, int height) : mapWidth{width}, mapHeight{height} {
@@ -72,7 +73,8 @@ Map::Map(entt::registry &registry, std::string path) {
             if(type != EMPTY) registry.emplace<Hitbox>(entity, TILE_SIZE, TILE_SIZE);
             if(type == GOAL) {
                 nexus = tilePos;
-                registry.emplace<Health>(entity, 20, 20);
+                registry.emplace<Health>(entity, NEXUS_HEALTH, NEXUS_HEALTH);
+                registry.emplace<Nexus>(entity);
             }
             if(type == ENEMY_SPAWN) spawn = tilePos;
             tiles[y][x] = entity;
@@ -126,8 +128,8 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
         case TOWER_PROJECTILE: {
             registry.emplace_or_replace<Range>(tile, 4 * TILE_SIZE);
             registry.emplace_or_replace<Tower>(tile);
-            registry.emplace_or_replace<Damage>(tile, 8);
-            registry.emplace_or_replace<AIComponent>(tile, new ProjectileTowerAI(tile, 3));
+            registry.emplace_or_replace<Damage>(tile, 20);
+            registry.emplace_or_replace<AIComponent>(tile, new ProjectileTowerAI(tile, 4, 400));
             break;
         }
         case TOWER_LASER: {

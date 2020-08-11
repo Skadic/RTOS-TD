@@ -2,8 +2,8 @@
 #include "GameState.h"
 
 #include "GameTasks.h"
-#include "../util/GlobalConsts.h"
-#include "../util/spawn/EntitySpawn.h"
+#include "../../util/GlobalConsts.h"
+#include "../../util/spawn/EntitySpawn.h"
 
 
 void GameState::initTasks() {

@@ -8,7 +8,6 @@
 #include <TUM_Draw.h>
 
 template<class T>
-
 void drawInfo(char* text, T number, int x, int y){
     std::stringstream ss;
     ss << std::noskipws << text;
@@ -18,3 +17,4 @@ void drawInfo(char* text, T number, int x, int y){
     const char *chars = s.c_str();
     tumDrawText(const_cast<char *>(chars), x, y, 0xFFFFFF);
 }
+

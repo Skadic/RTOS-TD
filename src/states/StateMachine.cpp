@@ -14,6 +14,24 @@ State &StateMachine::activeState() {
     return *(*stateStack.lock(portMAX_DELAY))->top();
 }
 
+void StateMachine::popStack2X() {
+
+    if (auto stackOpt = stateStack.lock(portMAX_DELAY)) {
+        auto &stack = *stackOpt;
+
+        if (stack->size() != 2) {
+            stack->top()->suspendTasks();
+            stack->pop();
+            stack->pop();
+            stack->top()->resumeTasks();
+            std::cout << "Stack popped" << std::endl;
+        } else if (stack->size() == 2){
+            stack->pop();
+            std::cout << "Last stack element popped" << std::endl;
+        }
+    }
+}
+
 void StateMachine::popStack() {
 
     if (auto stackOpt = stateStack.lock(portMAX_DELAY)) {
@@ -32,18 +50,18 @@ void StateMachine::popStack() {
     }
 }
 
-void StateMachine::pushStack(State *state) {
+bool StateMachine::empty() {
+    return (**stateStack.lock()).empty();
+}
+
+void StateMachine::pushStack(State* state) {
     if (auto stackOpt = stateStack.lock(portMAX_DELAY)) {
         auto &stack = *stackOpt;
         if (!stack->empty()) stack->top()->suspendTasks();
-        stack->push(std::unique_ptr<State>{state});
+        stack->push(std::unique_ptr<State>(state));
         stack->top()->resumeTasks();
         Game::get().getSwapBufferSignal().unlock();
     }
-}
-
-bool StateMachine::empty() {
-    return (**stateStack.lock()).empty();
 }
 
 

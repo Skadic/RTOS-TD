@@ -4,7 +4,6 @@ set(UTIL_SOURCES
         InputHandler.cpp
         Log.cpp
         Wave.cpp
-        StringUtils.cpp
         CollisionTable.cpp
         TowerUtil.cpp)
 

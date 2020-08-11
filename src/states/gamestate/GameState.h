@@ -1,9 +1,9 @@
 #pragma once
 
-#include "State.h"
-#include "../util/map/Map.h"
-#include "../util/Wave.h"
-#include "../util/CollisionTable.h"
+#include "../State.h"
+#include "../../util/map/Map.h"
+#include "../../util/Wave.h"
+#include "../../util/CollisionTable.h"
 #include <entity/registry.hpp>
 
 
