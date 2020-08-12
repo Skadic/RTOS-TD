@@ -15,7 +15,8 @@
 
 using namespace std::chrono;
 
-ProjectileTowerAI::ProjectileTowerAI(entt::entity self, double speed, double firingInterval) : AI(), projectileSpeed{speed}, firingInterval{firingInterval}, lastRun{high_resolution_clock::now()} {
+ProjectileTowerAI::ProjectileTowerAI(entt::entity self, double projectileSpeed, double firingInterval) : AI(),
+    projectileSpeed{projectileSpeed}, firingInterval{firingInterval}, lastRun{high_resolution_clock::now()} {
     this->self = self;
 }
 

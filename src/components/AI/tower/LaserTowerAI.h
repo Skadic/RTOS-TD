@@ -6,10 +6,8 @@
 #include <chrono>
 
 class LaserTowerAI : public AI {
-    int timeInterval;
-    std::chrono::time_point<std::chrono::high_resolution_clock> lastRun;
 
 public:
-    LaserTowerAI(entt::entity self, int timeInterval);
+    LaserTowerAI(entt::entity self);
     void act(entt::registry &registry) override;
 };

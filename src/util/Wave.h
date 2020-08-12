@@ -3,7 +3,7 @@
 
 class Wave {
     int waveNumber;
-    int enemyCount;
+    int remainingSpawns;
     int spawnLimit;
     double enemyHealthFactor;
     int enemyCoins;
@@ -12,24 +12,17 @@ public:
     explicit Wave(int spawnLimit, double enemyHealthFactor, int enemyCoins, int waveNumber);
 
     bool isFinished() const;
-
     int getWaveNumber() const;
-
-    int getEnemyCount() const;
-
+    int getRemainingSpawns() const;
     double getEnemyHealthFactor() const;
-
     int getEnemyCoins() const;
-
     int getWaveNumber();
-
     int getSpawnLimit() const;
-
-    void decreaseEnemyCount();
-
     int getRemainingEnemies() const;
 
+    void decreaseRemainingSpawns();
     void setRemainingEnemies(int remainingEnemies);
-
     void decrementRemainingEnemies();
+
+    Wave next();
 };

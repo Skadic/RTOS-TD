@@ -9,6 +9,6 @@ class ProjectileTowerAI : public AI {
 
     std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double>> lastRun;
 public:
-    ProjectileTowerAI(entt::entity self, double speed, double firingInterval);
+    ProjectileTowerAI(entt::entity self, double projectileSpeed, double firingInterval);
     void act(entt::registry &registry) override;
 };

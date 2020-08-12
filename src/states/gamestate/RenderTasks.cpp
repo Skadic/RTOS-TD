@@ -109,18 +109,18 @@ void GameTasks::renderHUD(GameState &state, entt::registry &registry) {
     // Draw UI Boxes
     tumDrawFilledBox(0, 0, SCREEN_WIDTH, 50, UI_BG_COLOR);
     tumDrawBox(-1, -1, SCREEN_WIDTH + 2, 51, UI_BORDER_COLOR);
-    tumDrawFilledBox(0, SCREEN_HEIGHT - 25, SCREEN_WIDTH, 26, UI_BG_COLOR);
-    tumDrawBox(-1, SCREEN_HEIGHT - 25, SCREEN_WIDTH + 2, 26, UI_BORDER_COLOR);
+    tumDrawFilledBox(0, SCREEN_HEIGHT - 50, SCREEN_WIDTH, 51, UI_BG_COLOR);
+    tumDrawBox(-1, SCREEN_HEIGHT - 50, SCREEN_WIDTH + 2, 51, UI_BORDER_COLOR);
 
 
     if (wave.isFinished()){
         tumDrawText("BUILDING PHASE", (SCREEN_WIDTH/2)-55, 25, 0xFFFFFF);
-        drawInfo("Prepare yourself for Wave ", wave.getWaveNumber()+1, (SCREEN_WIDTH/2)-85, 5);
+        drawInfo("Prepare yourself for Wave ", wave.getWaveNumber() + 1, (SCREEN_WIDTH/2)-85, 5);
     }else{
         drawInfo("Wave: ", wave.getWaveNumber(), (SCREEN_WIDTH/2)-25, 5);
         drawInfo("Enemies remaining: ", wave.getRemainingEnemies(),(SCREEN_WIDTH/2)-70, 25);
         drawInfo("Coins per enemy: ", wave.getEnemyCoins(), SCREEN_WIDTH-155, SCREEN_HEIGHT-25);
-        drawInfo("Enemies health: ", 100 * wave.getEnemyHealthFactor() , SCREEN_WIDTH-155, SCREEN_HEIGHT-45);
+        drawInfo("Enemies health: ", ENEMY_BASE_HEALTH * wave.getEnemyHealthFactor() , SCREEN_WIDTH-155, SCREEN_HEIGHT-45);
     }
 
     drawInfo("Nexus Health: ", nexusHealth.value, SCREEN_WIDTH-125, 5);

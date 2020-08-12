@@ -126,17 +126,17 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
 
     switch (type) {
         case TOWER_PROJECTILE: {
-            registry.emplace_or_replace<Range>(tile, 4 * TILE_SIZE);
+            registry.emplace_or_replace<Range>(tile, PROJECTILE_TOWER_RANGE);
             registry.emplace_or_replace<Tower>(tile);
-            registry.emplace_or_replace<Damage>(tile, 20);
-            registry.emplace_or_replace<AIComponent>(tile, new ProjectileTowerAI(tile, 4, 400));
+            registry.emplace_or_replace<Damage>(tile, PROJECTILE_TOWER_DAMAGE);
+            registry.emplace_or_replace<AIComponent>(tile, new ProjectileTowerAI(tile, DEFAULT_PROJECTILE_SPEED, PROJECTILE_FIRE_INTERVAL));
             break;
         }
         case TOWER_LASER: {
-            registry.emplace_or_replace<Range>(tile, 2 * TILE_SIZE);
+            registry.emplace_or_replace<Range>(tile, LASER_TOWER_RANGE);
             registry.emplace_or_replace<Tower>(tile);
-            registry.emplace_or_replace<Damage>(tile, 2);
-            registry.emplace_or_replace<AIComponent>(tile, new LaserTowerAI(tile, 1));
+            registry.emplace_or_replace<Damage>(tile, LASER_TOWER_DAMAGE);
+            registry.emplace_or_replace<AIComponent>(tile, new LaserTowerAI(tile));
             break;
         }
         default: {

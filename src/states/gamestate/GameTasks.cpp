@@ -390,11 +390,11 @@ namespace GameTasks {
             if(auto regOpt = regMutex.lock()) {
                 auto &registry = *regOpt;
                 Wave &wave = state.getWave();
-                if (wave.getEnemyCount()>0){
-                    auto enemy = spawnEnemy(state.getMap().getSpawn(), *registry, 100*state.getWave().getEnemyHealthFactor());
+                if (wave.getRemainingSpawns() > 0){
+                    auto enemy = spawnEnemy(state.getMap().getSpawn(), *registry, ENEMY_BASE_HEALTH * state.getWave().getEnemyHealthFactor());
                     registry->emplace<AIComponent>(enemy, new PathfindToNexusAI(&state, enemy, state.getMap().getPath()));
                     //tumSoundPlaySample(enemy_spawn);
-                    wave.decreaseEnemyCount();
+                    wave.decreaseRemainingSpawns();
                 }
             }
 
@@ -489,9 +489,7 @@ namespace GameTasks {
                     if(auto inputOpt = game.getInput().lock()) {
                         auto &input = *inputOpt;
                         if (input->buttonPressed(SDL_SCANCODE_SPACE)) {
-                            state.setWave(
-                                    Wave(wave.getSpawnLimit() + 3, wave.getEnemyHealthFactor() * 1.2,
-                                         wave.getEnemyCoins() + 1, wave.getWaveNumber() + 1));
+                            state.setWave(state.getWave().next());
                             state.getMap().updateEnemyPath(*registry);
                         }
                     }
