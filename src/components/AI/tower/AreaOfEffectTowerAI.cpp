@@ -10,9 +10,9 @@
 
 using namespace std::chrono;
 
-AreaOfEffectTowerAI::AreaOfEffectTowerAI(entt::entity self, int timeInterval, entt::registry &registry) :
+AreaOfEffectTowerAI::AreaOfEffectTowerAI(entt::entity self, int timeInterval) :
     timeInterval{timeInterval},
-    lastRun{std::chrono::high_resolution_clock::now()}{
+    lastRun{high_resolution_clock::now()}{
     this->self = self;
 }
 
@@ -20,9 +20,9 @@ void AreaOfEffectTowerAI::act(entt::registry &registry) {
 
     auto now = high_resolution_clock::now();
 
-    duration<double> time = duration_cast<duration<double>>(now - lastRun);
+    auto time = duration_cast<std::chrono::milliseconds >(now - lastRun).count();
 
-    if (time.count() * 1000 > timeInterval) {
+    if (time > timeInterval) {
         auto view = registry.view<Position, Enemy, Health>();
         Tower &towerData = registry.get<Tower>(this->self);
         Damage &damage = registry.get<Damage>(this->self);
@@ -30,9 +30,13 @@ void AreaOfEffectTowerAI::act(entt::registry &registry) {
         towerData.setActualTargets(towerData.getPotentialTargets());
 
         for (auto &target : towerData.getPotentialTargets()) {
-            Health &health = view.get<Health>(target);
-            health.value -= damage.value;
+            if(registry.valid(target)) {
+                Health &health = view.get<Health>(target);
+                health.value -= damage.value;
+            }
         }
+
+        towerData.getPotentialTargets().clear();
         lastRun = high_resolution_clock::now();
     }
 }

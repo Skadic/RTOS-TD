@@ -17,6 +17,9 @@ class CollisionTable {
 
     using entity_type = std::underlying_type_t<entt::entity>;
 
+
+    std::vector<std::vector<entt::entity>> boundaryBuckets;
+
     /**
      * Each position in this 2D-vector contains all entities with a Position component which intersect the tile at said position
      */
@@ -25,11 +28,6 @@ class CollisionTable {
      * Maps entities that contain ranges, to all the enemies in said range
      */
     std::map<entity_type, std::vector<entt::entity>> rangeBuckets;
-
-    /**
-     * Deletes the stored data
-     */
-    void resetAll();
 
     /**
      * Gets all tile positions that an entity with given position and hitbox would be intersecting
@@ -44,9 +42,16 @@ class CollisionTable {
     std::set<TilePosition> getIntersectingTilesApprox(Position pos, Range range);
 
     void resetRanges();
+
     void resetTiles();
 
+
 public:
+
+    /**
+     * Deletes the stored data
+     */
+    void resetAll();
 
     CollisionTable(int w, int h);
 

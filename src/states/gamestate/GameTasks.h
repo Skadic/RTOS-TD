@@ -26,7 +26,7 @@ namespace GameTasks {
      * Handles getting input related to controlling the player and moving the player accordingly
      * @param statePointer Pointer to the GameState object executing the task
      */
-    void gameControlPlayerTask(void *statePointer);
+    void gameKeyboardInputTask(void *statePointer);
 
     /**
      * Handles anything related to mouse input. At this point, it's just placing towers though

@@ -4,11 +4,13 @@
 
 #include "CollisionTable.h"
 #include "GlobalConsts.h"
+#include "map/TileType.h"
 
 const auto TILE_DIAGONAL = std::sqrt(2) * TILE_SIZE;
 
 
 CollisionTable::CollisionTable(int w, int h) : width{w}, height{h} {
+    boundaryBuckets.resize(Direction::LAST_DIRECTION);
     tileBuckets.resize(height);
     for (int i = 0; i < height; ++i) {
         tileBuckets[i].resize(width);
@@ -46,6 +48,11 @@ void CollisionTable::refreshTiles(entt::registry &registry) {
         auto intersecting = getIntersectingTiles(pos, hitbox);
 
         for(TilePosition tPos : intersecting) {
+            if(tPos.x < 0) boundaryBuckets[LEFT].push_back(entity);
+            else if(tPos.x >= width) boundaryBuckets[RIGHT].push_back(entity);
+            if(tPos.y < 0) boundaryBuckets[UP].push_back(entity);
+            else if(tPos.y >= height) boundaryBuckets[DOWN].push_back(entity);
+
             if (tPos.x >= 0 && tPos.x < width && tPos.y >= 0 && tPos.y < height) {
                 tileBuckets[tPos.y][tPos.x].push_back(entity);
             }
@@ -129,6 +136,11 @@ std::set<TilePosition> CollisionTable::getIntersectingTiles(Position pos, Hitbox
         }
     }
 
+    if(pos.x < 0) posSet.insert({-1, 0});
+    else if(pos.x > width * TILE_SIZE) posSet.insert({static_cast<short>(width), 0});
+    if(pos.y < 0) posSet.insert({0, -1});
+    else if(pos.y > height * TILE_SIZE) posSet.insert({0, static_cast<short>(height)});
+
     return posSet;
 }
 
@@ -139,6 +151,11 @@ std::set<TilePosition> CollisionTable::getIntersectingTilesApprox(Position pos, 
 }
 
 std::vector<entt::entity>& CollisionTable::getIntersectingEntities(int x, int y) {
+    if(x < 0) return boundaryBuckets[LEFT];
+    else if(x >= width) return boundaryBuckets[RIGHT];
+    if(y < 0) return boundaryBuckets[UP];
+    else if(y >= height) return boundaryBuckets[DOWN];
+
     return tileBuckets[y][x];
 }
 

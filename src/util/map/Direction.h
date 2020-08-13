@@ -4,7 +4,8 @@ enum Direction {
     UP,
     RIGHT,
     DOWN,
-    LEFT
+    LEFT,
+    LAST_DIRECTION
 };
 
 Direction nextRight(Direction dir);

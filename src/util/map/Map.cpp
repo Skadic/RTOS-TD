@@ -21,6 +21,7 @@
 #include "../../components/tags/Nexus.h"
 #include <map>
 
+
 Map::Map(entt::registry &registry, int width, int height) : mapWidth{width}, mapHeight{height} {
     tiles.resize(mapHeight);
     for (int y = 0; y < mapHeight; ++y) {
@@ -34,6 +35,8 @@ Map::Map(entt::registry &registry, int width, int height) : mapWidth{width}, map
             tiles[y][x] = entity;
         }
     }
+
+    initBoundaries(registry);
 }
 
 Map::Map(entt::registry &registry, std::string path) {
@@ -83,6 +86,7 @@ Map::Map(entt::registry &registry, std::string path) {
 
     Map::updateEnemyPath(registry);
     //enemyPath = AStar::pathfind(spawn, nexus, *this, registry);
+    initBoundaries(registry);
 }
 
 
@@ -139,6 +143,14 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
             registry.emplace_or_replace<AIComponent>(tile, new LaserTowerAI(tile));
             break;
         }
+        case TOWER_AOE: {
+                registry.emplace_or_replace<Range>(tile, AOE_TOWER_RANGE);
+                registry.emplace_or_replace<Tower>(tile);
+                registry.emplace_or_replace<Damage>(tile, AOE_TOWER_DAMAGE);
+                registry.emplace_or_replace<AIComponent>(tile, new AreaOfEffectTowerAI(tile, AOE_FIRE_INTERVAL));
+                break;
+        }
+
         default: {
             registry.remove_if_exists<Range>(tile);
             registry.remove_if_exists<Tower>(tile);
@@ -176,4 +188,22 @@ std::vector<TilePosition> &Map::getPath() {
 
 void Map::updateEnemyPath(entt::registry &registry) {
     enemyPath = AStar::pathfind(spawn, nexus, *this, registry);
+}
+
+void Map::initBoundaries(entt::registry &registry) {
+    entt::entity left = registry.create();
+    registry.emplace<TilePosition>(left, -1, 0);
+    registry.emplace<Hitbox>(left, TILE_SIZE, mapHeight * TILE_SIZE, true);
+
+    entt::entity top = registry.create();
+    registry.emplace<TilePosition>(top, 0, -1);
+    registry.emplace<Hitbox>(top, TILE_SIZE * mapWidth, TILE_SIZE, true);
+
+    entt::entity right = registry.create();
+    registry.emplace<TilePosition>(right, mapWidth, 0);
+    registry.emplace<Hitbox>(right, TILE_SIZE, TILE_SIZE * mapHeight, true);
+
+    entt::entity bottom = registry.create();
+    registry.emplace<TilePosition>(bottom, 0, mapHeight);
+    registry.emplace<Hitbox>(bottom, TILE_SIZE * mapWidth, TILE_SIZE, true);
 }

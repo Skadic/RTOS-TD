@@ -1239,10 +1239,20 @@ image_handle_t tumDrawLoadScaled2ColorImage(char *filename, float scale, unsigne
     if (ret->surf == NULL)
         goto err_surf;
 
-    SDL_Color c1 = {.r = RED_PORTION(color1) , .g = GREEN_PORTION(color1), .b = BLUE_PORTION(color1), .a = 0xFF};
+    /*SDL_Color c1 = {.r = RED_PORTION(color1) , .g = GREEN_PORTION(color1), .b = BLUE_PORTION(color1), .a = 0xFF};
     SDL_Color c2 = {.r = RED_PORTION(color2) , .g = GREEN_PORTION(color2), .b = BLUE_PORTION(color2), .a = 0xFF};
-    ret->surf->format->palette->colors[0] = c1;
-    ret->surf->format->palette->colors[1] = c2;
+
+
+    //printf("ncolors: %d", ret->surf->format->palette->ncolors);
+
+    int width = ret->surf->w;
+    int height = ret->surf->h;
+
+    SDL_SetColorKey(ret->surf, SDL_TRUE, 0x000000);
+    SDL_FillRect()
+
+
+    SDL_SetColorKey(ret->surf, SDL_TRUE, 0xFFFFFF);*/
 
     ret->tex = SDL_CreateTextureFromSurface(renderer, ret->surf);
     if (ret->tex == NULL)

@@ -10,7 +10,7 @@ void GameState::initTasks() {
     addTask(GameTasks::gameRenderTask, "render", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameMoveTask, "move", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameCollisionTask, "collide", DEFAULT_TASK_STACK_SIZE, 0);
-    addTask(GameTasks::gameControlPlayerTask, "control", DEFAULT_TASK_STACK_SIZE, 0);
+    addTask(GameTasks::gameKeyboardInputTask, "control", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameMouseInputTask, "mouse", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameAITask, "ai", DEFAULT_TASK_STACK_SIZE, 0);
     addTask(GameTasks::gameSpawnTask, "spawn", DEFAULT_TASK_STACK_SIZE, 0);
@@ -25,7 +25,7 @@ GameState::GameState(int mapWidth, int mapHeight) :
         State(),
         map{Map(**registry.lock(portMAX_DELAY), mapWidth, mapHeight)},
         wave(0,1,0, 0),
-        coins(25),
+        coins(INITIAL_COINS),
         tileTypeToPlace(WALL),
         collisionTable{map.getWidth(), map.getHeight()}
         {
@@ -40,11 +40,11 @@ GameState::GameState(std::string mapPath) :
         State(),
         map{Map(**registry.lock(portMAX_DELAY), mapPath)},
         wave(0,1,0, 0),
-        coins(25),
+        coins(INITIAL_COINS),
         tileTypeToPlace(WALL),
         collisionTable{map.getWidth(), map.getHeight()}
         {
-    renderer.setScale(2);
+    renderer.setScale(1.2);
 
     initTasks();
     spawnPlayer(TilePosition{map.getNexusPosition().x, static_cast<short>(map.getNexusPosition().y - 1)}, **registry.lock(portMAX_DELAY));

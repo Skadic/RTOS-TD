@@ -21,6 +21,8 @@ inline const auto DEFAULT_PROJECTILE_SPEED = 10;
 inline const auto UI_BG_COLOR = 0x202020;
 inline const auto UI_BORDER_COLOR = 0x909090;
 
+inline const auto INGAME_BG_COLOR = 0x240500;
+
 inline const auto MENU_BUTTON_WIDTH = SCREEN_WIDTH / 4;
 inline const auto MENU_BUTTON_HEIGHT = MENU_BUTTON_WIDTH / 3;
 
@@ -32,3 +34,9 @@ inline const auto LASER_TOWER_DAMAGE = 2;
 inline const auto PROJECTILE_TOWER_RANGE = 4 * TILE_SIZE;
 inline const auto PROJECTILE_TOWER_DAMAGE = 20;
 inline const auto PROJECTILE_FIRE_INTERVAL = 400;
+
+inline const auto AOE_TOWER_RANGE = 3 * TILE_SIZE;
+inline const auto AOE_TOWER_DAMAGE = 75;
+inline const auto AOE_FIRE_INTERVAL = 750;
+
+inline const auto INITIAL_COINS = 25;

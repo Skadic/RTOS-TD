@@ -41,7 +41,6 @@ static Semaphore MOVE_SIGNAL = Semaphore{xSemaphoreCreateBinary()};
 namespace GameTasks {
 
 
-
     void gameRenderTask(void *statePointer) {
 
         GameState &state = *static_cast<GameState*>(statePointer);
@@ -59,11 +58,14 @@ namespace GameTasks {
                     auto &registry = *regOpt;
 
                     if(game.getScreenLock().lock(portMAX_DELAY)){
-                        tumDrawClear(0x000000);
+                        tumDrawClear(INGAME_BG_COLOR);
 
                         renderMap(renderer, *registry, map);
                         renderEntities(renderer, *registry);
                         //renderRanges(renderer, *registry);
+                        if(state.getWave().isFinished()) {
+                            renderPath(renderer, map.getPath());
+                        }
 
                         renderHoveredRanges(renderer, *registry, map);
                         renderHealth(renderer, *registry);
@@ -87,6 +89,8 @@ namespace GameTasks {
         auto lastWake = xTaskGetTickCount();
         MOVE_SIGNAL.unlock();
 
+        static auto margin = TILE_SIZE / 2;
+
         while(true) {
             logCurrentTaskName();
 
@@ -107,11 +111,10 @@ namespace GameTasks {
                     pos.x += vel.dx;
                     pos.y += vel.dy;
 
-                    if(pos.x > map.getWidth() * TILE_SIZE || pos.x < 0 || pos.y > map.getHeight() * TILE_SIZE || pos.y < 0) {
+                    if(pos.x > map.getWidth() * TILE_SIZE + margin || pos.x < -margin || pos.y > map.getHeight() * TILE_SIZE + margin || pos.y < -margin) {
                         if(registry->valid(entity)) registry->emplace_or_replace<Delete>(entity);
                     }
                 }
-
 
                 // Signal the collision task to run
                 COLLISION_SIGNAL.unlock();
@@ -201,7 +204,7 @@ namespace GameTasks {
 
                 // Handle Collision with the map and displace Entities if needed.
                 auto entityView = registry->view<Position, Hitbox>();
-                auto tileView = registry->view<TilePosition, Hitbox, TileTypeComponent>();
+                auto tileView = registry->view<TilePosition, Hitbox>();
                 auto enemyView = registry->view<Enemy, Health, Position, Hitbox>();
 
                 for (auto &tile : tileView) {
@@ -217,13 +220,13 @@ namespace GameTasks {
 
                         // Handle collision of entities with Tiles
                         if(auto collision = intersectHitbox(tilePos, tileHitbox, entityPos, entityHitbox)) {
-                            auto type = registry->get<TileTypeComponent>(tile).type;
+
 
                             if(tileHitbox.solid && entityHitbox.solid) {
                                 auto displacementVec = *collision;
                                 entityPos.x += displacementVec.x;
                                 entityPos.y += displacementVec.y;
-                            } else if (type == GOAL) {
+                            } else if (registry->has<TileTypeComponent>(tile) && registry->get<TileTypeComponent>(tile).type == GOAL) {
                                 // If an enemy reaches the goal, they are flagged for deletion
                                 if(enemyView.contains(entity) && !registry->has<Delete>(entity)){
                                     registry->emplace<Delete>(entity);
@@ -243,7 +246,7 @@ namespace GameTasks {
         }
     }
 
-    void gameControlPlayerTask(void *statePointer) {
+    void gameKeyboardInputTask(void *statePointer) {
         GameState &state = *static_cast<GameState*>(statePointer);
         auto &regMutex = state.getRegistry();
         Game &game = Game::get();
@@ -285,8 +288,17 @@ namespace GameTasks {
                         vel.dx *= PLAYER_SPEED;
                         vel.dy *= PLAYER_SPEED;
 
-                        Position &pos = view.get<Position>(entity);
                         auto &renderer = state.getRenderer();
+
+                        if(input->buttonPressed(SDL_SCANCODE_KP_PLUS)) {
+                            renderer.setScale(std::min(renderer.getScale() * 1.01, 5.0));
+                        }
+
+                        if(input->buttonPressed(SDL_SCANCODE_KP_MINUS)) {
+                            renderer.setScale(std::max(renderer.getScale() / 1.01, 0.1));
+                        }
+
+                        Position &pos = view.get<Position>(entity);
                         renderer.setOffset((SCREEN_WIDTH / 2) / renderer.getScale() - pos.x - PLAYER_SIZE / 2, (SCREEN_HEIGHT / 2) / renderer.getScale() - pos.y - PLAYER_SIZE / 2);
                     }
                 }
@@ -325,6 +337,7 @@ namespace GameTasks {
                             if((tileType != EMPTY || state.getWave().isFinished()) && state.getCoins() >= totalCost && !isSpecial(tileType)) {
                                 map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, typeToPlace, renderer);
                                 state.removeCoins(totalCost);
+                                state.getMap().updateEnemyPath(*registry);
                             }
                         }
 
@@ -336,6 +349,7 @@ namespace GameTasks {
                             if(!isSpecial(tileType)) {
                                 map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, EMPTY,renderer);
                                 state.addCoins(getCostForType(tileType));
+                                state.getMap().updateEnemyPath(*registry);
                             }
                         }
                     }

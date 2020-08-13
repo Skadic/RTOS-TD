@@ -131,3 +131,25 @@ void GameTasks::renderHUD(GameState &state, entt::registry &registry) {
     text.append(getName(state.getTileTypeToPlace()));
     tumDrawText(strdup(text.c_str()), 5, SCREEN_HEIGHT-25, 0xFFFFFF);
 }
+
+void GameTasks::renderPath(Renderer &renderer, std::vector<TilePosition> &path) {
+    auto color = [path](int i) {
+        if(i < path.size() / 2) {
+            return 0xFF0000 + ((0xFF * i / (path.size() / 2)) << 8);
+        } else {
+            i -= path.size() / 2;
+            return 0x00FF00 + ((0xFF * (path.size() / 2 - i) / (path.size() / 2)) << 16);
+        }
+    };
+    for (int i = 0; i < path.size() - 1; ++i) {
+        TilePosition &tp1 = path[i];
+        TilePosition &tp2 = path[i + 1];
+        renderer.drawLine(
+                tp1.x * TILE_SIZE + TILE_SIZE / 2,
+                tp1.y * TILE_SIZE  + TILE_SIZE / 2,
+                tp2.x * TILE_SIZE + TILE_SIZE / 2,
+                tp2.y * TILE_SIZE + TILE_SIZE / 2,
+                2,
+                color(i));
+    }
+}

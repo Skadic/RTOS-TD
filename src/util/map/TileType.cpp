@@ -7,11 +7,12 @@
 std::map<TileType, std::shared_ptr<Sprite>> initTileSprites() {
     std::map<TileType, std::shared_ptr<Sprite>> map;
     map[EMPTY] = std::make_shared<EmptySprite>();
-    map[WALL] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0xFFFFFF, false);
-    map[TOWER_PROJECTILE] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FFFF, true);
+    map[WALL] = std::make_shared<TextureSprite>("wall.png");
+    map[TOWER_PROJECTILE] = std::make_shared<Texture2ColorSprite>("tower.png", 0x00FFFF, 0x00AAAA);
     map[TOWER_LASER] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x4000FF, true);
+    map[TOWER_AOE] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0xFF9000, true);
     map[GOAL] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FF00, true);
-    map[ENEMY_SPAWN] = std::make_shared<Texture2ColorSprite>("test.png", 0xFF0000, 0x00FF00);
+    map[ENEMY_SPAWN] = std::make_shared<TextureSprite>("enemy_spawn.png");
     return map;
 }
 
@@ -22,6 +23,7 @@ std::map<TileType, int> initCostMap() {
     map[WALL] = 1;
     map[TOWER_LASER] = 6;
     map[TOWER_PROJECTILE] = 5;
+    map[TOWER_AOE] = 10;
     return map;
 }
 
@@ -30,6 +32,7 @@ std::map<SDL_Scancode, TileType> initScancodeMap() {
     map[SDL_SCANCODE_1] = WALL;
     map[SDL_SCANCODE_2] = TOWER_PROJECTILE;
     map[SDL_SCANCODE_3] = TOWER_LASER;
+    map[SDL_SCANCODE_4] = TOWER_AOE;
     return map;
 }
 
@@ -38,6 +41,7 @@ std::map<TileType, char*> initNameMap() {
     map[WALL] = "Wall";
     map[TOWER_PROJECTILE] = "Gun Turret";
     map[TOWER_LASER] = "Laser Turret";
+    map[TOWER_AOE] = "AOE Turret";
     return map;
 }
 

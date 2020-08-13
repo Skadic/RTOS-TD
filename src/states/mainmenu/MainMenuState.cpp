@@ -41,7 +41,9 @@ MainMenuState::MainMenuState() : State() {
     suspendTasks();
 }
 
-void MainMenuState::render() {}
+void MainMenuState::render() {
+    renderer.drawText("CORONA DEFENSE", SCREEN_WIDTH / 2 - 60, 100, 0xFFFFFF);
+}
 
 const std::vector<Button> &MainMenuState::getButtons() const {
     return buttons;

@@ -12,5 +12,6 @@ namespace GameTasks {
     void renderTowerTargetConnections(Renderer &renderer, entt::registry &registry);
     void renderMap(Renderer &renderer, entt::registry &registry, Map &map);
     void renderEntities(Renderer &renderer, entt::registry &registry);
+    void renderPath(Renderer &renderer, std::vector<TilePosition> &path);
     void renderHUD(GameState &state, entt::registry &registry);
 }

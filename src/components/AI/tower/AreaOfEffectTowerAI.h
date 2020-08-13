@@ -7,9 +7,9 @@
 
 class AreaOfEffectTowerAI : public AI {
     int timeInterval;
-    std::chrono::time_point<std::chrono::high_resolution_clock> lastRun;
+    std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double>> lastRun;
 
 public:
-    AreaOfEffectTowerAI(entt::entity self, int timeInterval, entt::registry &registry);
+    AreaOfEffectTowerAI(entt::entity self, int timeInterval);
     void act(entt::registry &registry) override;
 };

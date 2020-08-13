@@ -14,7 +14,8 @@ enum TileType {
     ENEMY_SPAWN,
     TOWER_PROJECTILE,
     TOWER_LASER,
-    LAST // Constant, only used to initialize Arrays etc. Not to be used. Add new enum constants only BEFORE this one
+    TOWER_AOE,
+    LAST_TILE_TYPE // Constant, only used to initialize Arrays etc. Not to be used. Add new enum constants only BEFORE this one
 };
 
 
