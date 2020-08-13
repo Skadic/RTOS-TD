@@ -7,5 +7,6 @@ set(STATES_SOURCES
 add_subdirectory(gamestate)
 add_subdirectory(mainmenu)
 add_subdirectory(gameoverstate)
+add_subdirectory(tutorial)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE ${STATES_SOURCES})

@@ -7,20 +7,31 @@
 #include "../../Game.h"
 #include "../gamestate/GameState.h"
 #include "MainMenuTasks.h"
+#include "../tutorial/TutorialState.h"
 #include <iostream>
 
 MainMenuState::MainMenuState() : State() {
-    Button start = Button{"Start", SCREEN_WIDTH / 2 - MENU_BUTTON_WIDTH / 2, 200, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT,
+    auto offset = 200;
+    auto margin = 20;
+    auto totalHeight = margin + MENU_BUTTON_HEIGHT;
+
+    Button start = Button{"Start", SCREEN_WIDTH / 2 - MENU_BUTTON_WIDTH / 2, offset, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT,
                           [] () {
         Game::get().enqueueStatePush(new GameState("testmap.json"));
     }};
 
-    Button exit = Button{"Exit", SCREEN_WIDTH / 2 - MENU_BUTTON_WIDTH / 2, 400, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT,
+    Button tutorial = Button{"Tutorial", SCREEN_WIDTH / 2 - MENU_BUTTON_WIDTH / 2, offset + totalHeight, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT,
+                          [] () {
+                              Game::get().enqueueStatePush(new TutorialState());
+                          }};
+
+    Button exit = Button{"Exit", SCREEN_WIDTH / 2 - MENU_BUTTON_WIDTH / 2, offset + 2 * totalHeight, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT,
                           [] () {
         Game::get().enqueueStatePop();
     }};
 
     buttons.push_back(start);
+    buttons.push_back(tutorial);
     buttons.push_back(exit);
 
     tasks.push_back(nullptr); // Make space for another task handle

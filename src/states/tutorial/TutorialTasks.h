@@ -1,6 +1,6 @@
 #pragma once
 
-namespace MainMenuTasks {
+namespace TutorialTasks {
     void buttonClickTask(void *statePointer);
     void buttonRenderTask(void *statePointer);
 }
