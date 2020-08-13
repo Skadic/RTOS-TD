@@ -41,6 +41,20 @@ struct TextureSprite : public Sprite {
     void draw(short x, short y, float scale) override;
 };
 
+struct Texture2ColorSprite : public Sprite {
+    std::string path;
+    image_handle_t spriteHandle;
+    unsigned int color1;
+    unsigned int color2;
+
+    explicit Texture2ColorSprite(std::string path, unsigned int color1, unsigned int color2);
+
+    ~Texture2ColorSprite() override;
+
+    void draw(short x, short y, float scale) override;
+};
+
+
 struct EmptySprite : public Sprite {
     void draw(short x, short y, float scale) override;
 };

@@ -11,7 +11,7 @@ std::map<TileType, std::shared_ptr<Sprite>> initTileSprites() {
     map[TOWER_PROJECTILE] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FFFF, true);
     map[TOWER_LASER] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x4000FF, true);
     map[GOAL] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FF00, true);
-    map[ENEMY_SPAWN] = std::make_shared<TextureSprite>("test.png");
+    map[ENEMY_SPAWN] = std::make_shared<Texture2ColorSprite>("test.png", 0xFF0000, 0x00FF00);
     return map;
 }
 
@@ -20,8 +20,8 @@ std::map<TileType, int> initCostMap() {
     std::map<TileType, int> map;
     map[EMPTY] = 0;
     map[WALL] = 1;
-    map[TOWER_LASER] = 4;
-    map[TOWER_PROJECTILE] = 10;
+    map[TOWER_LASER] = 6;
+    map[TOWER_PROJECTILE] = 5;
     return map;
 }
 
