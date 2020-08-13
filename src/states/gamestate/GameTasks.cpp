@@ -502,7 +502,7 @@ namespace GameTasks {
                     auto &registry = *regOpt;
                     if(auto inputOpt = game.getInput().lock()) {
                         auto &input = *inputOpt;
-                        if (input->buttonPressed(SDL_SCANCODE_SPACE)) {
+                        if (!state.getMap().getPath().empty() && input->buttonPressed(SDL_SCANCODE_SPACE)) {
                             state.setWave(state.getWave().next());
                             state.getMap().updateEnemyPath(*registry);
                         }

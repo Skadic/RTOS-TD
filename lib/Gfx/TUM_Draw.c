@@ -1239,7 +1239,7 @@ image_handle_t tumDrawLoadScaled2ColorImage(char *filename, float scale, unsigne
     if (ret->surf == NULL)
         goto err_surf;
 
-    /*SDL_Color c1 = {.r = RED_PORTION(color1) , .g = GREEN_PORTION(color1), .b = BLUE_PORTION(color1), .a = 0xFF};
+    SDL_Color c1 = {.r = RED_PORTION(color1) , .g = GREEN_PORTION(color1), .b = BLUE_PORTION(color1), .a = 0xFF};
     SDL_Color c2 = {.r = RED_PORTION(color2) , .g = GREEN_PORTION(color2), .b = BLUE_PORTION(color2), .a = 0xFF};
 
 
@@ -1248,11 +1248,46 @@ image_handle_t tumDrawLoadScaled2ColorImage(char *filename, float scale, unsigne
     int width = ret->surf->w;
     int height = ret->surf->h;
 
-    SDL_SetColorKey(ret->surf, SDL_TRUE, 0x000000);
-    SDL_FillRect()
+    static SDL_Rect rect;
+    rect.x = 0;
+    rect.y = 0;
+    rect.w = width;
+    rect.h = height;
 
+    static Uint32 rmask, gmask, bmask, amask;
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
 
-    SDL_SetColorKey(ret->surf, SDL_TRUE, 0xFFFFFF);*/
+    SDL_BlendMode mode = SDL_ComposeCustomBlendMode(
+            SDL_BLENDFACTOR_ONE,
+            SDL_BLENDFACTOR_ZERO,
+            SDL_BLENDOPERATION_ADD,
+            SDL_BLENDFACTOR_ZERO,
+            SDL_BLENDFACTOR_ZERO,
+            SDL_BLENDOPERATION_ADD);
+
+    SDL_Surface* temp = SDL_CreateRGBSurface(0, width, height, 32, rmask, gmask, bmask, amask);
+    SDL_Surface* temp2 = SDL_CreateRGBSurface(0, width, height, 32, rmask, gmask, bmask, amask);
+
+    SDL_SetSurfaceBlendMode(ret->surf, SDL_BLENDMODE_NONE);
+    SDL_SetSurfaceBlendMode(temp, SDL_BLENDMODE_BLEND);
+    SDL_SetSurfaceBlendMode(temp2, SDL_BLENDMODE_NONE);
+
+    SDL_SetColorKey(ret->surf, SDL_TRUE, 0xFFFFFFFF);
+    SDL_BlitSurface(ret->surf, NULL, temp, NULL);
+    SDL_FillRect(temp2, NULL, SDL_MapRGBA(ret->surf->format, c1.r, c1.g, c1.b, c1.a));
+    SDL_BlitSurface(temp, NULL, temp2, NULL);
+    SDL_BlitSurface(temp2, NULL, ret->surf, NULL);
+
+    SDL_SetColorKey(ret->surf, SDL_TRUE, 0xFF000000);
+    SDL_SetColorKey(temp, SDL_TRUE, 0xFF000000);
+    SDL_BlitSurface(ret->surf, NULL, temp, NULL);
+    SDL_FillRect(temp2, NULL, SDL_MapRGBA(ret->surf->format, c2.r, c2.g, c2.b, c2.a));
+    SDL_BlitSurface(temp, NULL, temp2, NULL);
+    SDL_BlitSurface(temp2, NULL, ret->surf, NULL);
+
 
     ret->tex = SDL_CreateTextureFromSurface(renderer, ret->surf);
     if (ret->tex == NULL)

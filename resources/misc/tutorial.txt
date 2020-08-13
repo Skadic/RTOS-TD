@@ -5,6 +5,7 @@ To do this, you can place different structures on the map (left click), to rerou
 You can remove structures by right clicking.
 The structures you can build are:
 - Wall: Does nothing but block the enemies' path.
-- Gun turret: Attacks by shooting bullets at an enemy. Average range, Average damage.
+- Gun turret: Attacks by shooting bullets at an enemy. High range, Average damage.
 - Laser turret: Attacks by continuously shooting a laser at an enemy. Low range, high damage.
+- AoE Tower: Attacks all enemies in range, but does so slowly. Average range, Average Damage per enemy.
 

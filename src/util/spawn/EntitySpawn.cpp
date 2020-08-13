@@ -13,7 +13,7 @@
 #include "../../components/Health.h"
 #include "../../components/tags/Projectile.h"
 
-static std::shared_ptr<Sprite> ENEMY = std::make_shared<TextureSprite>("enemy.png");
+static std::shared_ptr<Sprite> ENEMY = std::make_shared<TextureSprite>("enemy_default_colors.png");
 static std::shared_ptr<Sprite> PLAYER = std::make_shared<TextureSprite>("player.png");
 
 static std::shared_ptr<Sprite> DEFAULT_PROJECTILE_SPRITE = std::make_shared<RectangleSprite>(DEFAULT_PROJECTILE_SIZE, DEFAULT_PROJECTILE_SIZE, 0xFF7000, true);

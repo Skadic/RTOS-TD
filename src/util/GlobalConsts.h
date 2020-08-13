@@ -22,6 +22,7 @@ inline const auto UI_BG_COLOR = 0x202020;
 inline const auto UI_BORDER_COLOR = 0x909090;
 
 inline const auto INGAME_BG_COLOR = 0x240500;
+//inline const auto INGAME_BG_COLOR = 0x777777;
 
 inline const auto MENU_BUTTON_WIDTH = SCREEN_WIDTH / 4;
 inline const auto MENU_BUTTON_HEIGHT = MENU_BUTTON_WIDTH / 3;

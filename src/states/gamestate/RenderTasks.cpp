@@ -133,6 +133,7 @@ void GameTasks::renderHUD(GameState &state, entt::registry &registry) {
 }
 
 void GameTasks::renderPath(Renderer &renderer, std::vector<TilePosition> &path) {
+    if (path.empty()) return;
     auto color = [path](int i) {
         if(i < path.size() / 2) {
             return 0xFF0000 + ((0xFF * i / (path.size() / 2)) << 8);
