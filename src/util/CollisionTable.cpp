@@ -27,6 +27,7 @@ void CollisionTable::resetTiles() {
         tileBuckets[i].clear();
         tileBuckets[i].resize(width);
     }
+    boundaryBuckets.clear();
 }
 
 void CollisionTable::resetRanges() {

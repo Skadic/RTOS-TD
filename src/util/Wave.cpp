@@ -30,7 +30,7 @@ int Wave::getEnemyCoins() const {
     return enemyCoins;
 }
 
-void Wave::decreaseRemainingSpawns() {
+void Wave::decrementRemainingSpawns() {
     remainingSpawns--;
 }
 

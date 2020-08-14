@@ -19,13 +19,13 @@ extern "C" {
 }
 
 Game::Game() :
-    screenLock{xSemaphoreCreateMutex()},
-    drawSignal{xSemaphoreCreateBinary()},
-    drawHitboxSignal{xSemaphoreCreateBinary()},
-    swapBufferSignal{xSemaphoreCreateBinary()},
-    buttons{InputHandler(), xSemaphoreCreateMutex()},
-    stateToPush{nullptr, xSemaphoreCreateMutex()},
-    stateOperation{NONE, xSemaphoreCreateMutex()}
+        screenLock{xSemaphoreCreateMutex()},
+        drawSignal{xSemaphoreCreateBinary()},
+        swapBufferSignal{xSemaphoreCreateBinary()},
+        stateOperationSignal{xSemaphoreCreateCounting(2, 0)},
+        input{InputHandler(), xSemaphoreCreateMutex()},
+        stateToPush{nullptr, xSemaphoreCreateMutex()},
+        stateOperation{NONE, xSemaphoreCreateMutex()}
     {
     drawSignal.unlock();
 }
@@ -79,9 +79,6 @@ Semaphore &Game::getDrawSignal() {
     return drawSignal;
 }
 
-Semaphore &Game::getDrawHitboxSignal() {
-    return drawHitboxSignal;
-}
 
 LockGuard<entt::registry> &Game::getActiveStateRegistry() {
     return stateMachine.activeState().getRegistry();
@@ -96,7 +93,7 @@ Semaphore &Game::getSwapBufferSignal() {
 }
 
 LockGuard<InputHandler> &Game::getInput() {
-    return buttons;
+    return input;
 }
 
 void Game::enqueueStatePush(State *state) {
@@ -104,11 +101,20 @@ void Game::enqueueStatePush(State *state) {
     auto stateOpLock = *stateOperation.lock(portMAX_DELAY);
     stateLock.set(state);
     stateOpLock.set(PUSH);
+    stateOperationSignal.unlock();
 }
 
 void Game::enqueueStatePop() {
     auto stateOpLock = *stateOperation.lock(portMAX_DELAY);
     stateOpLock.set(POP);
+    stateOperationSignal.unlock();
+}
+
+void Game::enqueueStatePop2X() {
+    auto stateOpLock = *stateOperation.lock(portMAX_DELAY);
+    stateOpLock.set(POP2X);
+    stateOperationSignal.unlock();
+    stateOperationSignal.unlock();
 }
 
 LockGuard<State *> &Game::getStateToPush() {
@@ -119,9 +125,8 @@ LockGuard<StateChange> &Game::getStateOperation() {
     return stateOperation;
 }
 
-void Game::enqueueStatePop2X() {
-    auto stateOpLock = *stateOperation.lock(portMAX_DELAY);
-    stateOpLock.set(POP2X);
+Semaphore &Game::getStateOperationSignal() {
+    return stateOperationSignal;
 }
 
 
@@ -135,36 +140,38 @@ void stateMachineTask(void *ptr) {
     auto lastWake = xTaskGetTickCount();
 
     while (true) {
-        if(stateMachine.empty()) vTaskEndScheduler();
-        // First see if some operation has been enqueued
-        if(std::optional<Resource<StateChange>> stateOperation = stateOperationMutex.lock()) {
-            switch (**stateOperation) {
-                case NONE:
-                    break;
-                // If a Pop operation has been enqueued, pop a state off the stack
-                case POP:
-                    stateMachine.popStack();
-                    (*game.getInput().lock(portMAX_DELAY))->resetPressedData();
-                    break;
-                // If a Push operation has been enqueued, get the state to be pushed from the queue and push it
-                case PUSH:
-                    if(std::optional<Resource<State*>> stateToPush = stateToPushMutex.lock()) {
-                        stateMachine.pushStack(**stateToPush);
-                        (*stateToPush).set(nullptr);
+        if(game.getStateOperationSignal().lock(0)) {
+            // First see if some operation has been enqueued
+            if(std::optional<Resource<StateChange>> stateOperation = stateOperationMutex.lock()) {
+                switch (**stateOperation) {
+                    case NONE:
+                        break;
+                        // If a Pop operation has been enqueued, pop a state off the stack
+                    case POP:
+                        stateMachine.popStack();
                         (*game.getInput().lock(portMAX_DELAY))->resetPressedData();
-                    }
-                    break;
-                // This is used for when the current state wants to remove itself and the state below it from the stack
-                // This is useful for example for a game over screen, that removes it self and the game state below it
-                case POP2X:
-                    stateMachine.popStack2X();
-                    (*game.getInput().lock(portMAX_DELAY))->resetPressedData();
-                    break;
-                default: {}
+                        break;
+                        // If a Push operation has been enqueued, get the state to be pushed from the queue and push it
+                    case PUSH:
+                        if(std::optional<Resource<State*>> stateToPush = stateToPushMutex.lock()) {
+                            stateMachine.pushStack(**stateToPush);
+                            (*stateToPush).set(nullptr);
+                            (*game.getInput().lock(portMAX_DELAY))->resetPressedData();
+                        }
+                        break;
+                        // This is used for when the current state wants to remove itself and the state below it from the stack
+                        // This is useful for example for a game over screen, that removes it self and the game state below it
+                    case POP2X:
+                        stateMachine.popStack2X();
+                        (*game.getInput().lock(portMAX_DELAY))->resetPressedData();
+                        break;
+                    default: {}
+                }
+                (*stateOperation).set(NONE);
             }
-            (*stateOperation).set(NONE);
         }
 
+        if(stateMachine.empty()) vTaskEndScheduler();
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
     }
 }
@@ -208,7 +215,7 @@ void inputTask(void *ptr) {
             // Update events (like keyboard and mouse input)
             tumEventFetchEvents();
             (*inputOpt)->update();
-            if ((*inputOpt)->buttonDown(SDL_SCANCODE_ESCAPE)) {
+            if ((*inputOpt)->keyDown(SDL_SCANCODE_ESCAPE)) {
                 game.enqueueStatePop();
             }
         }

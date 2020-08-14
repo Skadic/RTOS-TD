@@ -38,13 +38,16 @@ Map::Map(entt::registry &registry, int width, int height) : mapWidth{width}, map
     }
 
     // Add a enemy spawn in the top left corner
-    registry.replace<TileTypeComponent>(tiles[0][0], ENEMY_SPAWN);
-    registry.replace<SpriteComponent>(tiles[0][0], getSpriteForType(ENEMY_SPAWN));
+    spawn = TilePosition{0,0};
+    registry.replace<TileTypeComponent>(tiles[spawn.y][spawn.x], ENEMY_SPAWN);
+    registry.replace<SpriteComponent>(tiles[spawn.y][spawn.x], getSpriteForType(ENEMY_SPAWN));
 
     // Add an nexus in the bottom right corner
-    registry.replace<TileTypeComponent>(tiles[height - 1][height - 1], GOAL);
-    registry.replace<SpriteComponent>(tiles[height - 1][height - 1], getSpriteForType(GOAL));
-    registry.replace<Health>(tiles[height - 1][height - 1], NEXUS_HEALTH, NEXUS_HEALTH);
+    nexus = TilePosition{static_cast<short>(width - 1),static_cast<short>(height - 1)};
+    registry.replace<TileTypeComponent>(tiles[nexus.y][nexus.x], GOAL);
+    registry.replace<SpriteComponent>(tiles[nexus.y][nexus.x], getSpriteForType(GOAL));
+    registry.replace<Health>(tiles[nexus.y][nexus.x], NEXUS_HEALTH, NEXUS_HEALTH);
+
 
     initBoundaries(registry);
 }

@@ -269,18 +269,26 @@ namespace GameTasks {
                     for (auto &entity : view) {
                         Velocity &vel = view.get<Velocity>(entity);
                         // Set Horizontal speed
-                        if((input->buttonPressed(SDL_SCANCODE_LEFT) || input->buttonPressed(SDL_SCANCODE_A)) && (!input->buttonPressed(SDL_SCANCODE_RIGHT) && !input->buttonPressed(SDL_SCANCODE_D))) {
+                        if((input->keyPressed(SDL_SCANCODE_LEFT) || input->keyPressed(SDL_SCANCODE_A)) && (!input->keyPressed(
+                                SDL_SCANCODE_RIGHT) && !input->keyPressed(
+                                SDL_SCANCODE_D))) {
                             vel.dx = -vel.getCurrentMaxSpeed();
-                        } else if((input->buttonPressed(SDL_SCANCODE_RIGHT) || input->buttonPressed(SDL_SCANCODE_D)) && (!input->buttonPressed(SDL_SCANCODE_LEFT) && !input->buttonPressed(SDL_SCANCODE_A))) {
+                        } else if((input->keyPressed(SDL_SCANCODE_RIGHT) || input->keyPressed(SDL_SCANCODE_D)) && (!input->keyPressed(
+                                SDL_SCANCODE_LEFT) && !input->keyPressed(
+                                SDL_SCANCODE_A))) {
                             vel.dx = vel.getCurrentMaxSpeed();
                         } else {
                             vel.dx = 0;
                         }
 
                         // Set Vertical speed
-                        if((input->buttonPressed(SDL_SCANCODE_UP) || input->buttonPressed(SDL_SCANCODE_W)) && (!input->buttonPressed(SDL_SCANCODE_DOWN) && !input->buttonPressed(SDL_SCANCODE_S))) {
+                        if((input->keyPressed(SDL_SCANCODE_UP) || input->keyPressed(SDL_SCANCODE_W)) && (!input->keyPressed(
+                                SDL_SCANCODE_DOWN) && !input->keyPressed(
+                                SDL_SCANCODE_S))) {
                             vel.dy = -vel.getCurrentMaxSpeed();
-                        } else if((input->buttonPressed(SDL_SCANCODE_DOWN) || input->buttonPressed(SDL_SCANCODE_S)) && (!input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_W))) {
+                        } else if((input->keyPressed(SDL_SCANCODE_DOWN) || input->keyPressed(SDL_SCANCODE_S)) && (!input->keyPressed(
+                                SDL_SCANCODE_UP) && !input->keyPressed(
+                                SDL_SCANCODE_W))) {
                             vel.dy = vel.getCurrentMaxSpeed();
                         } else {
                             vel.dy = 0;
@@ -295,11 +303,11 @@ namespace GameTasks {
 
 
                         // Handle zooming in and zooming out with + and -
-                        if(input->buttonPressed(SDL_SCANCODE_KP_PLUS)) {
+                        if(input->keyPressed(SDL_SCANCODE_KP_PLUS)) {
                             renderer.setScale(std::min(renderer.getScale() * 1.01, 5.0));
                         }
 
-                        if(input->buttonPressed(SDL_SCANCODE_KP_MINUS)) {
+                        if(input->keyPressed(SDL_SCANCODE_KP_MINUS)) {
                             renderer.setScale(std::max(renderer.getScale() / 1.01, 0.5));
                         }
 
@@ -362,7 +370,7 @@ namespace GameTasks {
                     }
 
                     for (auto const& [scancode, tileType] : getScancodeMap()) {
-                        if(input->buttonPressed(scancode)) {
+                        if(input->keyPressed(scancode)) {
                             state.setTileTypeToPlace(tileType);
                             break;
                         }
@@ -416,7 +424,7 @@ namespace GameTasks {
                     auto enemy = spawnEnemy(state.getMap().getSpawnPosition(), *registry, ENEMY_BASE_HEALTH * state.getWave().getEnemyHealthFactor());
                     registry->emplace<AIComponent>(enemy, new WalkPathAI(enemy, state.getMap().getPath()));
                     tumSoundPlaySample(enemy_spawn);
-                    wave.decreaseRemainingSpawns();
+                    wave.decrementRemainingSpawns();
                 }
             }
             auto delayFactor = (double) rand() / RAND_MAX * 0.6 + 0.4;
@@ -511,7 +519,7 @@ namespace GameTasks {
                     auto &registry = *regOpt;
                     if(auto inputOpt = game.getInput().lock()) {
                         auto &input = *inputOpt;
-                        if (!state.getMap().getPath().empty() && input->buttonPressed(SDL_SCANCODE_SPACE)) {
+                        if (!state.getMap().getPath().empty() && input->keyPressed(SDL_SCANCODE_SPACE)) {
                             state.setWave(state.getWave().next());
                             state.getMap().updateEnemyPath(*registry);
                         }

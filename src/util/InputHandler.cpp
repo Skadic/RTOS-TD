@@ -24,15 +24,15 @@ InputHandler::InputHandler() :
     inputOld->resize(SDL_NUM_SCANCODES);
 };
 
-bool InputHandler::buttonPressed(SDL_Scancode sdlScancode) {
+bool InputHandler::keyPressed(SDL_Scancode sdlScancode) {
     return inputCurrent->at(sdlScancode);
 }
 
-bool InputHandler::buttonDown(SDL_Scancode sdlScancode) {
+bool InputHandler::keyDown(SDL_Scancode sdlScancode) {
     return inputCurrent->at(sdlScancode) && !inputOld->at(sdlScancode);
 }
 
-bool InputHandler::buttonUp(SDL_Scancode sdlScancode) {
+bool InputHandler::keyUp(SDL_Scancode sdlScancode) {
     return !inputCurrent->at(sdlScancode) && inputOld->at(sdlScancode);
 }
 

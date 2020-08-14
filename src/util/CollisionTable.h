@@ -11,13 +11,40 @@
 #include "../components/Hitbox.h"
 #include "../components/Enemy.h"
 
+/**
+ * This class handles broad phase collision detection.
+ * For a map with width `w` and height `h`, a CollisionTable of equal size should be created.
+ * Each entity is inserted into entries `tileBuckets[y][x]` if and only if the entity's hitbox intersects with the
+ * tile at the map coordinates (x,y). This creates a rough estimate of which entities might be colliding with each other.
+ *
+ * For the circular ranges, first all tiles that potentially intersect the range are calculated. This is done by calculating
+ * all tiles that intersect the square that surrounds the range. For each of these tiles, all previously calculated intersecting entities
+ * are retrieved from the `tileBuckets` vector, and added to the range's entry in `rangeBuckets`.
+ * This way, we have a mapping from entities with ranges, to all potentially intersecting entities.
+ */
 class CollisionTable {
+    /**
+     * The width of the map, this collision table is for
+     */
     int width;
+
+    /**
+     * The height of the map, this collision table is for
+     */
     int height;
 
+    /**
+     * The underlying type of entt::entities, used for maps
+     */
     using entity_type = std::underlying_type_t<entt::entity>;
 
 
+    /**
+     * Each of these buckets contains all entities which intersect which each of the respective map boundaries
+     * Each of those boundaries are single tiles which span their respective side of the map
+     * This vector should be indexed with the Direction enum to get the data related to the boundary of the particular side of the map
+     * e.g. `boundaryBuckets[RIGHT]` returns the vector of all entities, which intersect with the right boundary of the map
+     */
     std::vector<std::vector<entt::entity>> boundaryBuckets;
 
     /**
@@ -41,22 +68,39 @@ class CollisionTable {
      */
     std::set<TilePosition> getIntersectingTilesApprox(Position pos, Range range);
 
+    /**
+     * Clears all data related to ranges
+     */
     void resetRanges();
 
+    /**
+     * Clears all data related to tiles
+     */
     void resetTiles();
 
 
 public:
 
     /**
-     * Deletes the stored data
+     * Clears all stored data
      */
     void resetAll();
 
+    /**
+     * Creates an empty Collision table with the specified size
+     * @param w The width of the table
+     * @param h The height of the table
+     */
     CollisionTable(int w, int h);
 
+    /**
+     * The CollisionTable cannot be copied
+     */
     CollisionTable(CollisionTable const&) = delete;
 
+    /**
+     * The CollisionTable cannot be copied
+     */
     void operator=(CollisionTable const&) = delete;
 
     /**
@@ -83,7 +127,15 @@ public:
      */
     std::vector<entt::entity>& getIntersectingEntities(int x, int y);
 
+    /**
+     * Refreshes all data related to ranges
+     * @param registry The registry to pull data from
+     */
     void refreshRanges(entt::registry &registry);
 
+    /**
+     * Refreshes all data related to tiles
+     * @param registry The registry to pull data from
+     */
     void refreshTiles(entt::registry &registry);
 };
