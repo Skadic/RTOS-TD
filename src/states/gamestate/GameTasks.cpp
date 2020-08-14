@@ -60,12 +60,13 @@ namespace GameTasks {
                     if(game.getScreenLock().lock(portMAX_DELAY)){
                         tumDrawClear(INGAME_BG_COLOR);
 
-                        renderMap(renderer, *registry, map);
-                        renderEntities(renderer, *registry);
-                        //renderRanges(renderer, *registry);
                         if(state.getWave().isFinished()) {
                             renderPath(renderer, map.getPath());
                         }
+
+                        renderMap(renderer, *registry, map);
+                        renderEntities(renderer, *registry);
+                        //renderRanges(renderer, *registry);
 
                         renderHoveredRanges(renderer, *registry, map);
                         renderHealth(renderer, *registry);
@@ -267,35 +268,37 @@ namespace GameTasks {
                         Velocity &vel = view.get<Velocity>(entity);
                         // Set Horizontal speed
                         if((input->buttonPressed(SDL_SCANCODE_LEFT) || input->buttonPressed(SDL_SCANCODE_A)) && (!input->buttonPressed(SDL_SCANCODE_RIGHT) && !input->buttonPressed(SDL_SCANCODE_D))) {
-                            vel.dx = -PLAYER_SPEED;
+                            vel.dx = -vel.getCurrentMaxSpeed();
                         } else if((input->buttonPressed(SDL_SCANCODE_RIGHT) || input->buttonPressed(SDL_SCANCODE_D)) && (!input->buttonPressed(SDL_SCANCODE_LEFT) && !input->buttonPressed(SDL_SCANCODE_A))) {
-                            vel.dx = PLAYER_SPEED;
+                            vel.dx = vel.getCurrentMaxSpeed();
                         } else {
                             vel.dx = 0;
                         }
 
                         // Set Vertical speed
                         if((input->buttonPressed(SDL_SCANCODE_UP) || input->buttonPressed(SDL_SCANCODE_W)) && (!input->buttonPressed(SDL_SCANCODE_DOWN) && !input->buttonPressed(SDL_SCANCODE_S))) {
-                            vel.dy = -PLAYER_SPEED;
+                            vel.dy = -vel.getCurrentMaxSpeed();
                         } else if((input->buttonPressed(SDL_SCANCODE_DOWN) || input->buttonPressed(SDL_SCANCODE_S)) && (!input->buttonPressed(SDL_SCANCODE_UP) && !input->buttonPressed(SDL_SCANCODE_W))) {
-                            vel.dy = PLAYER_SPEED;
+                            vel.dy = vel.getCurrentMaxSpeed();
                         } else {
                             vel.dy = 0;
                         }
 
                         // Make the player have the same speed in every direction
                         vel.normalize();
-                        vel.dx *= PLAYER_SPEED;
-                        vel.dy *= PLAYER_SPEED;
+                        vel.dx *= vel.getCurrentMaxSpeed();
+                        vel.dy *= vel.getCurrentMaxSpeed();
 
                         auto &renderer = state.getRenderer();
 
+
+                        // Handle zooming in and zooming out with + and -
                         if(input->buttonPressed(SDL_SCANCODE_KP_PLUS)) {
                             renderer.setScale(std::min(renderer.getScale() * 1.01, 5.0));
                         }
 
                         if(input->buttonPressed(SDL_SCANCODE_KP_MINUS)) {
-                            renderer.setScale(std::max(renderer.getScale() / 1.01, 0.1));
+                            renderer.setScale(std::max(renderer.getScale() / 1.01, 0.5));
                         }
 
                         Position &pos = view.get<Position>(entity);

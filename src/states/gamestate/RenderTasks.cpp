@@ -91,7 +91,6 @@ void GameTasks::renderHoveredRanges(Renderer &renderer, entt::registry &registry
                 Range &range = rangeView.get<Range>(*tileOpt);
 
                 renderer.drawCircle(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2, range.radius, 0xFFFF00, false);
-                renderer.drawBox(pos.x, pos.y, TILE_SIZE, TILE_SIZE, 0xFFFF00, false);
             }
         }
 
@@ -104,7 +103,6 @@ void GameTasks::renderHUD(GameState &state, entt::registry &registry) {
     TilePosition nexusPos = map.getNexusPosition();
     auto nexus = map.getMapTile(nexusPos.x, nexusPos.y);
     Health nexusHealth = registry.get<Health>(nexus);
-
 
     // Draw UI Boxes
     tumDrawFilledBox(0, 0, SCREEN_WIDTH, 50, UI_BG_COLOR);
@@ -129,17 +127,21 @@ void GameTasks::renderHUD(GameState &state, entt::registry &registry) {
 
     std::string text("Selected Block: ");
     text.append(getName(state.getTileTypeToPlace()));
+    text.append(" (Cost ");
+    text.append(std::to_string(getCostForType(state.getTileTypeToPlace())));
+    text.append(")");
     tumDrawText(strdup(text.c_str()), 5, SCREEN_HEIGHT-25, 0xFFFFFF);
 }
 
 void GameTasks::renderPath(Renderer &renderer, std::vector<TilePosition> &path) {
+    static const int thickness = 3;
     if (path.empty()) return;
     auto color = [path](int i) {
         if(i < path.size() / 2) {
             return 0xFF0000 + ((0xFF * i / (path.size() / 2)) << 8);
         } else {
             i -= path.size() / 2;
-            return 0x00FF00 + ((0xFF * (path.size() / 2 - i) / (path.size() / 2)) << 16);
+            return 0xFFFF00 - ((0xFF * i / (path.size() / 2)) << 16);
         }
     };
     for (int i = 0; i < path.size() - 1; ++i) {
@@ -150,7 +152,7 @@ void GameTasks::renderPath(Renderer &renderer, std::vector<TilePosition> &path) 
                 tp1.y * TILE_SIZE  + TILE_SIZE / 2,
                 tp2.x * TILE_SIZE + TILE_SIZE / 2,
                 tp2.y * TILE_SIZE + TILE_SIZE / 2,
-                2,
+                thickness,
                 color(i));
     }
 }

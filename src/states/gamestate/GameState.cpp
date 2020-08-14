@@ -44,7 +44,7 @@ GameState::GameState(std::string mapPath) :
         tileTypeToPlace(WALL),
         collisionTable{map.getWidth(), map.getHeight()}
         {
-    renderer.setScale(1.2);
+    renderer.setScale(2);
 
     initTasks();
     spawnPlayer(TilePosition{map.getNexusPosition().x, static_cast<short>(map.getNexusPosition().y - 1)}, **registry.lock(portMAX_DELAY));
