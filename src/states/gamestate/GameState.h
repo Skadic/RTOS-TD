@@ -16,7 +16,11 @@ class GameState : public State {
 
 public:
 
-    // Initializes the game state with an empty map of the given size
+    /**
+     * Initializes the game state with an empty map of the given size
+     * @param mapWidth The width of the map
+     * @param mapHeight The height of the map
+     */
     GameState(int mapWidth, int mapHeight);
     // Initializes the game state with a map read from a file
     explicit GameState(std::string mapPath);

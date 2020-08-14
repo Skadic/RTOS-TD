@@ -19,12 +19,31 @@ class Map {
 
 
 public:
-    Map(entt::registry &regMutex, int width, int height);
-    Map(entt::registry &regMutex, std::string path);
+    /**
+     * Creates a map with empty tiles of the specified width
+     * @param registry The registry to which to add the entities
+     * @param width The width of the map
+     * @param height The height of the map
+     */
+    Map(entt::registry &registry, int width, int height);
+
+    /**
+     * Creates a map from a json file
+     * @param registry The registry to which to add the entities
+     * @param path The path to the json file
+     */
+    Map(entt::registry &registry, std::string path);
+
+
     int getWidth() const;
     int getHeight() const;
     TilePosition getNexusPosition() const;
-    TilePosition getSpawn() const;
+    TilePosition getSpawnPosition() const;
+
+    /**
+     * Gets the path from the enemy spawn to the nexus as a vector of tile positions
+     * If there is no such path, this should be empty
+     */
     std::vector<TilePosition> &getPath();
 
     std::optional<entt::entity> getMapTileAtScreenPos(short x, short y, Renderer &renderer);

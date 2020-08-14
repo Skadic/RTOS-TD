@@ -53,11 +53,7 @@ void InputHandler::update() {
     } else {
         inputCurrent.swap(inputOld);
         if(changeNextTick) {
-            leftClickOld = leftClickCurrent;
-            middleClickOld = middleClickCurrent;
-            rightClickOld = rightClickCurrent;
-
-            std::copy(inputCurrent->begin(), inputCurrent->end(), inputOld->begin());
+            resetPressedData();
             changeNextTick = false;
         }
     }
@@ -107,4 +103,12 @@ bool InputHandler::rightClickUp() {
 
 bool InputHandler::middleClickUp() {
     return !middleClickCurrent && middleClickOld;
+}
+
+void InputHandler::resetPressedData() {
+    leftClickOld = leftClickCurrent;
+    middleClickOld = middleClickCurrent;
+    rightClickOld = rightClickCurrent;
+
+    std::copy(inputCurrent->begin(), inputCurrent->end(), inputOld->begin());
 }

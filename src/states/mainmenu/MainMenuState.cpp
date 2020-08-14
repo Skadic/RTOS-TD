@@ -9,6 +9,10 @@
 #include "MainMenuTasks.h"
 #include "../tutorial/TutorialState.h"
 #include <iostream>
+extern "C" {
+#include <FreeRTOS.h>
+#include <TUM_Sound.h>
+}
 
 MainMenuState::MainMenuState() : State() {
     auto offset = 200;
@@ -17,16 +21,19 @@ MainMenuState::MainMenuState() : State() {
 
     Button start = Button{"Start", SCREEN_WIDTH / 2 - MENU_BUTTON_WIDTH / 2, offset, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT,
                           [] () {
+                              tumSoundPlaySample(click);
         Game::get().enqueueStatePush(new GameState("testmap.json"));
     }};
 
     Button tutorial = Button{"Tutorial", SCREEN_WIDTH / 2 - MENU_BUTTON_WIDTH / 2, offset + totalHeight, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT,
                           [] () {
-                              Game::get().enqueueStatePush(new TutorialState());
-                          }};
+        tumSoundPlaySample(click);
+        Game::get().enqueueStatePush(new TutorialState());
+    }};
 
     Button exit = Button{"Exit", SCREEN_WIDTH / 2 - MENU_BUTTON_WIDTH / 2, offset + 2 * totalHeight, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT,
                           [] () {
+        tumSoundPlaySample(click);
         Game::get().enqueueStatePop();
     }};
 

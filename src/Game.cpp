@@ -144,18 +144,21 @@ void stateMachineTask(void *ptr) {
                 // If a Pop operation has been enqueued, pop a state off the stack
                 case POP:
                     stateMachine.popStack();
+                    (*game.getInput().lock(portMAX_DELAY))->resetPressedData();
                     break;
                 // If a Push operation has been enqueued, get the state to be pushed from the queue and push it
                 case PUSH:
                     if(std::optional<Resource<State*>> stateToPush = stateToPushMutex.lock()) {
                         stateMachine.pushStack(**stateToPush);
                         (*stateToPush).set(nullptr);
+                        (*game.getInput().lock(portMAX_DELAY))->resetPressedData();
                     }
                     break;
                 // This is used for when the current state wants to remove itself and the state below it from the stack
                 // This is useful for example for a game over screen, that removes it self and the game state below it
                 case POP2X:
                     stateMachine.popStack2X();
+                    (*game.getInput().lock(portMAX_DELAY))->resetPressedData();
                     break;
                 default: {}
             }

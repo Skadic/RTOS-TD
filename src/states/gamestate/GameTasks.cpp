@@ -26,6 +26,7 @@ extern "C" {
     #include <TUM_Sound.h>
 }
 
+#include <time.h>
 #include <iostream>
 #include <sstream>
 #include <chrono>
@@ -231,6 +232,7 @@ namespace GameTasks {
                                 // If an enemy reaches the goal, they are flagged for deletion
                                 if(enemyView.contains(entity) && !registry->has<Delete>(entity)){
                                     registry->emplace<Delete>(entity);
+                                    tumSoundPlaySample(nexus_hit);
                                     Health &nexusHealth = registry->get<Health>(tile);
                                     nexusHealth.value--;
                                 }
@@ -337,9 +339,10 @@ namespace GameTasks {
                             TileType tileType = map.getTileType(*tileOpt, *registry);
                             TileType typeToPlace = state.getTileTypeToPlace();
                             int totalCost = getCostForType(typeToPlace) - getCostForType(tileType);
-                            if((tileType != EMPTY || state.getWave().isFinished()) && state.getCoins() >= totalCost && !isSpecial(tileType)) {
+                            if((tileType != EMPTY || state.getWave().isFinished()) && tileType != typeToPlace && state.getCoins() >= totalCost && !isSpecial(tileType)) {
                                 map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, typeToPlace, renderer);
                                 state.removeCoins(totalCost);
+                                tumSoundPlaySample(place);
                                 state.getMap().updateEnemyPath(*registry);
                             }
                         }
@@ -349,10 +352,11 @@ namespace GameTasks {
                                 map.getMapTileAtScreenPos(input->getMouseX(), input->getMouseY(),renderer);
                         if (tileOpt) {
                             TileType tileType = map.getTileType(*tileOpt, *registry);
-                            if(!isSpecial(tileType)) {
+                            if(!isSpecial(tileType) && tileType != EMPTY) {
                                 map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, EMPTY,renderer);
                                 state.addCoins(getCostForType(tileType));
                                 state.getMap().updateEnemyPath(*registry);
+                                tumSoundPlaySample(remove_tile);
                             }
                         }
                     }
@@ -401,6 +405,7 @@ namespace GameTasks {
         GameState &state = *static_cast<GameState*>(statePointer);
         auto &regMutex = state.getRegistry();
         auto lastWake = xTaskGetTickCount();
+        srand((unsigned) time(NULL));
 
         while(true) {
             logCurrentTaskName();
@@ -408,14 +413,14 @@ namespace GameTasks {
                 auto &registry = *regOpt;
                 Wave &wave = state.getWave();
                 if (wave.getRemainingSpawns() > 0){
-                    auto enemy = spawnEnemy(state.getMap().getSpawn(), *registry, ENEMY_BASE_HEALTH * state.getWave().getEnemyHealthFactor());
+                    auto enemy = spawnEnemy(state.getMap().getSpawnPosition(), *registry, ENEMY_BASE_HEALTH * state.getWave().getEnemyHealthFactor());
                     registry->emplace<AIComponent>(enemy, new PathfindToNexusAI(&state, enemy, state.getMap().getPath()));
-                    //tumSoundPlaySample(enemy_spawn);
+                    tumSoundPlaySample(enemy_spawn);
                     wave.decreaseRemainingSpawns();
                 }
             }
-
-            vTaskDelayUntil(&lastWake, FRAME_TIME_MS * TARGET_FPS);
+            auto delayFactor = (double) rand() / RAND_MAX * 0.6 + 0.4;
+            vTaskDelayUntil(&lastWake, FRAME_TIME_MS * TARGET_FPS * delayFactor);
         }
     }
 
@@ -481,6 +486,7 @@ namespace GameTasks {
                         registry->emplace_or_replace<Delete>(entity);
                         if(registry->has<Enemy>(entity)){
                             state.setCoins(state.getCoins()+state.getWave().getEnemyCoins());
+                            tumSoundPlaySample(enemy_death);
                         }
                         //tumSoundPlaySample(enemy_death);
                     }
@@ -551,6 +557,7 @@ namespace GameTasks {
                 }
 
                 if(gameOver) {
+                    tumSoundPlaySample(game_over);
                     Game::get().enqueueStatePush(new GameOverState());
                 }
             }

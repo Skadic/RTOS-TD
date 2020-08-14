@@ -22,7 +22,7 @@ public:
 
     void update();
 
-
+    void resetPressedData();
 
     short getMouseX();
     short getMouseY();

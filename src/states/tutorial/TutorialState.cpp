@@ -7,12 +7,17 @@
 #include "../../util/GlobalConsts.h"
 #include "../../Game.h"
 #include "TutorialTasks.h"
+extern "C" {
+#include <FreeRTOS.h>
+#include <TUM_Sound.h>
+}
 
 TutorialState::TutorialState() : State() {
     Button back = Button{"Back", SCREEN_WIDTH / 2 - MENU_BUTTON_WIDTH / 2, SCREEN_HEIGHT - 2 * MENU_BUTTON_HEIGHT, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT,
                          [] () {
-                             Game::get().enqueueStatePop();
-                         }};
+        tumSoundPlaySample(click);
+        Game::get().enqueueStatePop();
+    }};
 
     buttons.push_back(back);
 

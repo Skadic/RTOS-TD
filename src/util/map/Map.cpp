@@ -23,6 +23,7 @@
 
 
 Map::Map(entt::registry &registry, int width, int height) : mapWidth{width}, mapHeight{height} {
+    // Fill the map with empty tiles
     tiles.resize(mapHeight);
     for (int y = 0; y < mapHeight; ++y) {
         tiles[y].resize(mapWidth);
@@ -35,6 +36,15 @@ Map::Map(entt::registry &registry, int width, int height) : mapWidth{width}, map
             tiles[y][x] = entity;
         }
     }
+
+    // Add a enemy spawn in the top left corner
+    registry.replace<TileTypeComponent>(tiles[0][0], ENEMY_SPAWN);
+    registry.replace<SpriteComponent>(tiles[0][0], getSpriteForType(ENEMY_SPAWN));
+
+    // Add an nexus in the bottom right corner
+    registry.replace<TileTypeComponent>(tiles[height - 1][height - 1], GOAL);
+    registry.replace<SpriteComponent>(tiles[height - 1][height - 1], getSpriteForType(GOAL));
+    registry.replace<Health>(tiles[height - 1][height - 1], NEXUS_HEALTH, NEXUS_HEALTH);
 
     initBoundaries(registry);
 }
@@ -85,7 +95,6 @@ Map::Map(entt::registry &registry, std::string path) {
     }
 
     Map::updateEnemyPath(registry);
-    //enemyPath = AStar::pathfind(spawn, nexus, *this, registry);
     initBoundaries(registry);
 }
 
@@ -178,7 +187,7 @@ TileType Map::getTileType(entt::entity tile, entt::registry &registry) {
     return registry.get<TileTypeComponent>(tile).type;
 }
 
-TilePosition Map::getSpawn() const {
+TilePosition Map::getSpawnPosition() const {
     return spawn;
 }
 

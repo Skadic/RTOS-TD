@@ -3,7 +3,7 @@
 #include <random>
 
 
-std::random_device rd;
+inline const auto TEXTURE_PATH = "../resources/textures/";
 
 SpriteComponent::SpriteComponent(Sprite *sprite) : sprite{std::shared_ptr<Sprite>(sprite)} {}
 
@@ -41,7 +41,7 @@ void RectangleSprite::draw(short x, short y, float scale) {
 
 
 TextureSprite::TextureSprite(std::string path) {
-    path.insert(0, "../resources/");
+    path.insert(0, TEXTURE_PATH);
     std::cout << path << std::endl;
     this->path = path;
 }
@@ -76,7 +76,7 @@ Texture2ColorSprite::~Texture2ColorSprite() {
 }
 
 Texture2ColorSprite::Texture2ColorSprite(std::string path, unsigned int color1, unsigned int color2) : color1{color1}, color2{color2} {
-    path.insert(0, "../resources/");
+    path.insert(0, TEXTURE_PATH);
     std::cout << path << std::endl;
     this->path = path;
 }

@@ -44,6 +44,11 @@
 #define FOR_EACH_SAMPLE(SAMPLE)                                                \
     SAMPLE(enemy_death) \
     SAMPLE(enemy_spawn) \
+    SAMPLE(game_over) \
+    SAMPLE(place) \
+    SAMPLE(remove_tile) \
+    SAMPLE(click) \
+    SAMPLE(nexus_hit) \
     SAMPLE(COUNT)
 
 /**
