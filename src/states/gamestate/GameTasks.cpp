@@ -12,7 +12,7 @@
 #include "../../components/tilecomponents/TileTypeComponent.h"
 #include "../../components/tags/Player.h"
 #include "../../util/spawn/EntitySpawn.h"
-#include "../../components/AI/PathfindToNexusAI.h"
+#include "../../components/AI/WalkPathAI.h"
 #include "../../util/RenderUtils.h"
 #include "GameTasks.h"
 #include "RenderTasks.h"
@@ -414,7 +414,7 @@ namespace GameTasks {
                 Wave &wave = state.getWave();
                 if (wave.getRemainingSpawns() > 0){
                     auto enemy = spawnEnemy(state.getMap().getSpawnPosition(), *registry, ENEMY_BASE_HEALTH * state.getWave().getEnemyHealthFactor());
-                    registry->emplace<AIComponent>(enemy, new PathfindToNexusAI(&state, enemy, state.getMap().getPath()));
+                    registry->emplace<AIComponent>(enemy, new WalkPathAI(enemy, state.getMap().getPath()));
                     tumSoundPlaySample(enemy_spawn);
                     wave.decreaseRemainingSpawns();
                 }

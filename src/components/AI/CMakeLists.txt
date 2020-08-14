@@ -2,7 +2,7 @@ set(AI_SOURCES
         AI.cpp
         MoveTowardsPlayerAI.cpp
         AStar.cpp
-        PathfindToNexusAI.cpp)
+        WalkPathAI.cpp)
 
 add_subdirectory(tower)
 add_subdirectory(projectile)

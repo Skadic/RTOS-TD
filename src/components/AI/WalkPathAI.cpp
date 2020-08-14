@@ -2,7 +2,7 @@
 // Created by skadic on 24.06.20.
 //
 
-#include "PathfindToNexusAI.h"
+#include "WalkPathAI.h"
 #include "../tilecomponents/TilePosition.h"
 #include "AStar.h"
 #include "../../util/GlobalConsts.h"
@@ -10,20 +10,20 @@
 #include "../Hitbox.h"
 #include "../Enemy.h"
 
-PathfindToNexusAI::PathfindToNexusAI(GameState *state, entt::entity &entity, std::vector<TilePosition> &path) : state{state}, currentTile{0}, path{path}, remainingDistance{-1} {
+WalkPathAI::WalkPathAI(entt::entity &entity, std::vector<TilePosition> &path) : currentTile{0}, path{path}, remainingDistance{-1} {
     this->self = entity;
 }
 
-void PathfindToNexusAI::act(entt::registry &registry) {
+void WalkPathAI::act(entt::registry &registry) {
 
+    // If there is a path to walk and the end of the path has not been reached yet
     if(!path.empty() && currentTile < path.size()) {
         auto view = registry.view<Position, Velocity, AIComponent, Hitbox>();
         Position &pos = view.get<Position>(self);
 
         // The next tile the enemy should reach
         TilePosition &nextTile = path[currentTile];
-        auto nextTilePos = Position{static_cast<float>(nextTile.x * TILE_SIZE),
-                                    static_cast<float>(nextTile.y * TILE_SIZE)};
+        Position nextTilePos = nextTile.toPosition();
 
         // Modify the next tile position, so that the enemy aims for the center of the tile
         Hitbox &hitbox = view.get<Hitbox>(self);

@@ -13,8 +13,6 @@ std::shared_ptr<Sprite> &SpriteComponent::getSprite() {
 
 SpriteComponent::SpriteComponent(std::shared_ptr<Sprite> &sprite) : sprite{sprite} {}
 
-SpriteComponent::SpriteComponent(std::shared_ptr<Sprite> &&sprite) : sprite{sprite} {}
-
 void SpriteComponent::setSprite(std::shared_ptr<Sprite> &&s) {
     this->sprite = s;
 }
@@ -75,7 +73,7 @@ Texture2ColorSprite::~Texture2ColorSprite() {
     tumDrawFreeLoadedImage(&this->spriteHandle);
 }
 
-Texture2ColorSprite::Texture2ColorSprite(std::string path, unsigned int color1, unsigned int color2) : color1{color1}, color2{color2} {
+Texture2ColorSprite::Texture2ColorSprite(std::string path, unsigned int colorWhite, unsigned int colorBlack) : colorWhite{colorWhite}, colorBlack{colorBlack} {
     path.insert(0, TEXTURE_PATH);
     std::cout << path << std::endl;
     this->path = path;
@@ -88,7 +86,7 @@ void Texture2ColorSprite::draw(short x, short y, float scale) {
         auto chars = new char[path.size() + 1];
         std::copy(path.begin(), path.end(), chars);
         chars[path.size()] = '\0'; //0 Termination
-        this->spriteHandle = tumDrawLoad2ColorImage(chars, color1, color2);
+        this->spriteHandle = tumDrawLoad2ColorImage(chars, colorWhite, colorBlack);
         tumDrawGetLoadedImageSize(this->spriteHandle, &this->width, &this->height);
     }
     tumDrawSetLoadedImageScale(this->spriteHandle, scale);
