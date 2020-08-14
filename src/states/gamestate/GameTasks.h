@@ -23,7 +23,7 @@ namespace GameTasks {
     void gameCollisionTask(void *statePointer);
 
     /**
-     * Handles getting input related to controlling the player and moving the player accordingly
+     * Handles getting input from the keyboard
      * @param statePointer Pointer to the GameState object executing the task
      */
     void gameKeyboardInputTask(void *statePointer);
@@ -58,7 +58,17 @@ namespace GameTasks {
      */
     void gameKillTask(void *statePointer);
 
+    /**
+     * Handles whether a wave is finished and when to start a new wave
+     * @param statePointer Pointer to the GameState object executing the task
+     * @relates Wave
+     */
     void gameWaveTask(void *statePointer);
 
+    /**
+     * Handles deleting entities which are flagged for deletion with the Delete flag
+     * @param statePointer Pointer to the GameState object executing the task
+     * @relates Delete
+     */
     void gameDeleteTask(void *statePointer);
 }
