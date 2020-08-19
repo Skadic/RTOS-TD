@@ -21,6 +21,7 @@ void LaserTowerAI::act(entt::registry &registry) {
     Tower &towerData = registry.get<Tower>(this->self);
     Damage &damage = registry.get<Damage>(this->self);
 
+    // Calculate the enemy closest to the nexus, deal damage to it and set the actual target of this tower, to said enemy
     if (auto closest = closestTarget(towerData, registry)) {
         Health &health = view.get<Health>(*closest);
         health.value -= damage.value;

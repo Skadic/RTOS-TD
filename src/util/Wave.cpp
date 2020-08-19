@@ -6,9 +6,12 @@
 #include "Wave.h"
 
 
+
+// Constants used to determine the values of the next wave by scaling the values
+// using these constants
 inline const auto SPAWN_LIMIT_LINEAR_SCALING = 3.0;
 inline const auto SPAWN_LIMIT_MULT_SCALING = 1.2;
-inline const auto ENEMY_HEALTH_FACTOR_SCALING = 1.5;
+inline const auto ENEMY_HEALTH_FACTOR_SCALING = 1.2;
 inline const auto COIN_INCREASE_AFTER_ROUNDS = 5;
 
 

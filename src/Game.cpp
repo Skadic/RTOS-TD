@@ -30,7 +30,6 @@ Game::Game() :
     drawSignal.unlock();
 }
 
-Game::~Game() = default;
 
 void Game::start(char *binPath) {
     // Get the path of the folder which contains the binary running the program

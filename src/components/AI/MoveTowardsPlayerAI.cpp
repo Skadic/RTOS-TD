@@ -14,14 +14,17 @@ MoveTowardsPlayerAI::MoveTowardsPlayerAI(State *state, entt::entity &entity) : s
 }
 
 void MoveTowardsPlayerAI::act(entt::registry &registry) {
+
     auto playerView = registry.view<Player, Position>();
     auto selfView = registry.view<Position, Velocity, AIComponent>();
-    log("AI acting");
+
+    // There should only be 1 player, so playerView always contains 1 entity
     for(auto &player : playerView) {
         Velocity &vel = selfView.get<Velocity>(this->self);
         Position &pos = selfView.get<Position>(this->self);
         Position &playerPos = playerView.get<Position>(player);
 
+        // Make the entity's movement point towards the player
         vel.towards(pos, playerPos, ENEMY_SPEED);
     }
 }

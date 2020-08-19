@@ -49,7 +49,7 @@ MainMenuState::MainMenuState() : State() {
 }
 
 void MainMenuState::render() {
-    renderer.drawText("CORONA DEFENSE", SCREEN_WIDTH / 2 - 60, 100, 0xFFFFFF);
+    renderer.drawText("ANTIBODY", SCREEN_WIDTH / 2 - 40, 100, 0xFFFFFF);
 }
 
 const std::vector<Button> &MainMenuState::getButtons() const {

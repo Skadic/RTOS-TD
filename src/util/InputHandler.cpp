@@ -20,6 +20,7 @@ InputHandler::InputHandler() :
         rightClickOld{false},
         middleClickOld{false}
     {
+    // Resize the input vectors to be able to hold the necessary amount of Scancodes
     inputCurrent->resize(SDL_NUM_SCANCODES);
     inputOld->resize(SDL_NUM_SCANCODES);
 };

@@ -19,7 +19,6 @@ std::optional<glm::vec2> intersectHitbox(Position pos, Hitbox hitbox, Position o
         return std::optional<glm::vec2>{};
     }
 
-    // Determine which distance would the
     const auto leftLen = pos.x - (otherPos.x + otherHitbox.width);
     const auto upLen = pos.y - (otherPos.y + otherHitbox.height);
     const auto rightLen = pos.x + hitbox.width - otherPos.x;

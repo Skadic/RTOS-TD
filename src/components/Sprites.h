@@ -77,7 +77,8 @@ struct TextureSprite : public Sprite {
     std::string path;
 
     /**
-     * The image handle
+     * The image handle. This is loaded on the first draw call. This cannot be loaded statically,
+     * as the SDL Renderer will not have been initialized by that point
      */
     image_handle_t spriteHandle;
 
@@ -107,7 +108,8 @@ struct Texture2ColorSprite : public Sprite {
     std::string path;
 
     /**
-     * The image handle
+     * The image handle. This cannot be loaded statically,
+     * as the SDL Renderer will not have been initialized by that point
      */
     image_handle_t spriteHandle;
 

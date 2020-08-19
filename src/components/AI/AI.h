@@ -31,5 +31,10 @@ class AIComponent {
 
 public:
     explicit AIComponent(AI *ai);
+
+    /**
+     * Get the underlying AI object
+     * @return A reference to the unique pointer to the AI object
+     */
     std::unique_ptr<AI> &getAI();
 };

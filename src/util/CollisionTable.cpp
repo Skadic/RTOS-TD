@@ -46,15 +46,19 @@ void CollisionTable::refreshTiles(entt::registry &registry) {
     for(auto &entity : view) {
         Position &pos = view.get<Position>(entity);
         Hitbox &hitbox = view.get<Hitbox>(entity);
+
+        // Get all tiles that are intersecting with the hitbox of the current entity
         auto intersecting = getIntersectingTiles(pos, hitbox);
 
+
         for(TilePosition tPos : intersecting) {
+            // The boundaries have special tile positions outside of the map.
+            // If that is the case, check them and insert the current entity into the respective bucket
             if(tPos.x < 0) boundaryBuckets[LEFT].push_back(entity);
             else if(tPos.x >= width) boundaryBuckets[RIGHT].push_back(entity);
             if(tPos.y < 0) boundaryBuckets[UP].push_back(entity);
             else if(tPos.y >= height) boundaryBuckets[DOWN].push_back(entity);
-
-            if (tPos.x >= 0 && tPos.x < width && tPos.y >= 0 && tPos.y < height) {
+            else { // If the tile position is on the map, insert the entity into the respective bucket
                 tileBuckets[tPos.y][tPos.x].push_back(entity);
             }
         }
@@ -126,9 +130,11 @@ void CollisionTable::refreshRanges(entt::registry &registry) {
 std::set<TilePosition> CollisionTable::getIntersectingTiles(Position pos, Hitbox hitbox) {
     std::set<TilePosition> posSet;
 
+    // Calculate the tiles on which the top left corner and the bottom right corner sit respectively
     TilePosition topLeft = {static_cast<short>(pos.x / TILE_SIZE), static_cast<short>(pos.y / TILE_SIZE)};
     TilePosition bottomRight = {static_cast<short>((pos.x + hitbox.width) / TILE_SIZE), static_cast<short>((pos.y + hitbox.height) / TILE_SIZE)};
 
+    // Each tile in the rectangle defined by the two tile positions is intersected by the hitbox
     for (short y = topLeft.y; y <= bottomRight.y; ++y) {
         for (short x = topLeft.x; x <= bottomRight.x; ++x) {
             if (x >= 0 && x < width && y >= 0 && y < height) {
@@ -137,26 +143,32 @@ std::set<TilePosition> CollisionTable::getIntersectingTiles(Position pos, Hitbox
         }
     }
 
-    if(pos.x < 0) posSet.insert({-1, 0});
-    else if(pos.x > width * TILE_SIZE) posSet.insert({static_cast<short>(width), 0});
-    if(pos.y < 0) posSet.insert({0, -1});
-    else if(pos.y > height * TILE_SIZE) posSet.insert({0, static_cast<short>(height)});
+    // Handle the boundaries
+    if(pos.x < 0) posSet.insert({-1, 0}); // Left boundary
+    else if(pos.x > width * TILE_SIZE) posSet.insert({static_cast<short>(width), 0}); // Right boundary
+    if(pos.y < 0) posSet.insert({0, -1}); // Top boundary
+    else if(pos.y > height * TILE_SIZE) posSet.insert({0, static_cast<short>(height)}); // Bottom boundary
 
     return posSet;
 }
 
 std::set<TilePosition> CollisionTable::getIntersectingTilesApprox(Position pos, Range range) {
+    // Rough approximation. The approximate intersecting tiles are calculated, by calculating the tiles
+    // which are intersected by the square surrounding the (circular) range
     Position newPos = {pos.x - range.radius, pos.y - range.radius};
     Hitbox box = {range.radius * 2, range.radius * 2};
     return getIntersectingTiles(newPos, box);
 }
 
+
 std::vector<entt::entity>& CollisionTable::getIntersectingEntities(int x, int y) {
+    // Handle the boundaries, which use out-of-bounds coordinates to be addressed
     if(x < 0) return boundaryBuckets[LEFT];
     else if(x >= width) return boundaryBuckets[RIGHT];
     if(y < 0) return boundaryBuckets[UP];
     else if(y >= height) return boundaryBuckets[DOWN];
 
+    // Otherwise just return the contents of the respective buckets
     return tileBuckets[y][x];
 }
 

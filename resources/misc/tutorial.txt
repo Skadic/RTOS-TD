@@ -1,4 +1,4 @@
-Welcome to RTOS-TD!
+Welcome to Antibody!
 
 In this game, your objective is to protect the Nexus from the arriving enemies.
 To do this, you can place different structures on the map (left click), to reroute their path, and defeat them.

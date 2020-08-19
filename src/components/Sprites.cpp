@@ -45,6 +45,7 @@ TextureSprite::TextureSprite(std::string path) {
 }
 
 void TextureSprite::draw(short x, short y, float scale) {
+    // If the sprite is not loaded yet, load it
     if(!spriteHandle) {
         // Because we need a non-const char* and there's no better way to get that
         // We're loading this lazily, because images cannot be loaded when the SDL Renderer is not initialized yet
@@ -80,6 +81,7 @@ Texture2ColorSprite::Texture2ColorSprite(std::string path, unsigned int colorWhi
 }
 
 void Texture2ColorSprite::draw(short x, short y, float scale) {
+    // If the sprite is not loaded yet, load it
     if(!spriteHandle) {
         // Because we need a non-const char* and there's no better way to get that
         // We're loading this lazily, because images cannot be loaded when the SDL Renderer is not initialized yet
