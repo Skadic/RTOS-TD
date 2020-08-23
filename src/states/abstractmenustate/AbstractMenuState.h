@@ -4,6 +4,13 @@
 #include "../../util/ui/Button.h"
 #include <set>
 
+
+/**
+ * A state used for menus. An instance of the state will automatically render the buttons added to its "buttons" vector
+ * and handle their on-click events. For all other rendering please override the render method.
+ *
+ * However, nothing prohibits a user from adding additional tasks etc. to this type of state.
+ */
 class AbstractMenuState : public State {
 
 protected:
