@@ -38,21 +38,17 @@ void RectangleSprite::draw(short x, short y, float scale) {
 }
 
 
-TextureSprite::TextureSprite(std::string path) {
+TextureSprite::TextureSprite(std::string path) : spriteHandle{nullptr} {
     path.insert(0, TEXTURE_PATH);
-    std::cout << path << std::endl;
     this->path = path;
 }
 
 void TextureSprite::draw(short x, short y, float scale) {
     // If the sprite is not loaded yet, load it
     if(!spriteHandle) {
-        // Because we need a non-const char* and there's no better way to get that
+        std::cout << "Loading image:" << path << std::endl;
         // We're loading this lazily, because images cannot be loaded when the SDL Renderer is not initialized yet
-        auto chars = new char[path.size() + 1];
-        std::copy(path.begin(), path.end(), chars);
-        chars[path.size()] = '\0'; //0 Termination
-        this->spriteHandle = tumDrawLoadImage(chars);
+        this->spriteHandle = tumDrawLoadImage(const_cast<char*>(path.c_str()));
         tumDrawGetLoadedImageSize(this->spriteHandle, &this->width, &this->height);
     }
     tumDrawSetLoadedImageScale(this->spriteHandle, scale);
@@ -61,34 +57,25 @@ void TextureSprite::draw(short x, short y, float scale) {
     };
 }
 
-// Unload the Image upon Destruction
 TextureSprite::~TextureSprite() {
     std::cout << "Unloading image " << path << std::endl;
-    tumDrawFreeLoadedImage(&this->spriteHandle);
+    // If the Image is not loaded yet, it does not need to be freed either
+    if(isLoaded()) tumDrawFreeLoadedImage(&this->spriteHandle);
 }
 
-void EmptySprite::draw(short x, short y, float scale) {}
-
-Texture2ColorSprite::~Texture2ColorSprite() {
-    std::cout << "Unloading image " << path << std::endl;
-    tumDrawFreeLoadedImage(&this->spriteHandle);
+bool TextureSprite::isLoaded() const {
+    return spriteHandle != nullptr;
 }
 
-Texture2ColorSprite::Texture2ColorSprite(std::string path, unsigned int colorWhite, unsigned int colorBlack) : colorWhite{colorWhite}, colorBlack{colorBlack} {
-    path.insert(0, TEXTURE_PATH);
-    std::cout << path << std::endl;
-    this->path = path;
-}
+Texture2ColorSprite::Texture2ColorSprite(std::string path, unsigned int colorWhite, unsigned int colorBlack) :
+    TextureSprite(path), colorWhite{colorWhite}, colorBlack{colorBlack} {}
+
 
 void Texture2ColorSprite::draw(short x, short y, float scale) {
     // If the sprite is not loaded yet, load it
     if(!spriteHandle) {
-        // Because we need a non-const char* and there's no better way to get that
         // We're loading this lazily, because images cannot be loaded when the SDL Renderer is not initialized yet
-        auto chars = new char[path.size() + 1];
-        std::copy(path.begin(), path.end(), chars);
-        chars[path.size()] = '\0'; //0 Termination
-        this->spriteHandle = tumDrawLoad2ColorImage(chars, colorWhite, colorBlack);
+        this->spriteHandle = tumDrawLoad2ColorImage(const_cast<char*>(path.c_str()), colorWhite, colorBlack);
         tumDrawGetLoadedImageSize(this->spriteHandle, &this->width, &this->height);
     }
     tumDrawSetLoadedImageScale(this->spriteHandle, scale);

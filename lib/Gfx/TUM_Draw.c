@@ -1242,9 +1242,6 @@ image_handle_t tumDrawLoadScaled2ColorImage(char *filename, float scale, unsigne
     SDL_Color c1 = {.r = RED_PORTION(color1) , .g = GREEN_PORTION(color1), .b = BLUE_PORTION(color1), .a = 0xFF};
     SDL_Color c2 = {.r = RED_PORTION(color2) , .g = GREEN_PORTION(color2), .b = BLUE_PORTION(color2), .a = 0xFF};
 
-
-    //printf("ncolors: %d", ret->surf->format->palette->ncolors);
-
     int width = ret->surf->w;
     int height = ret->surf->h;
 
@@ -1259,14 +1256,6 @@ image_handle_t tumDrawLoadScaled2ColorImage(char *filename, float scale, unsigne
     gmask = 0x0000ff00;
     bmask = 0x00ff0000;
     amask = 0xff000000;
-
-    SDL_BlendMode mode = SDL_ComposeCustomBlendMode(
-            SDL_BLENDFACTOR_ONE,
-            SDL_BLENDFACTOR_ZERO,
-            SDL_BLENDOPERATION_ADD,
-            SDL_BLENDFACTOR_ZERO,
-            SDL_BLENDFACTOR_ZERO,
-            SDL_BLENDOPERATION_ADD);
 
     SDL_Surface* temp = SDL_CreateRGBSurface(0, width, height, 32, rmask, gmask, bmask, amask);
     SDL_Surface* temp2 = SDL_CreateRGBSurface(0, width, height, 32, rmask, gmask, bmask, amask);

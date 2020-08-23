@@ -94,6 +94,13 @@ struct TextureSprite : public Sprite {
      */
     ~TextureSprite() override;
 
+    /**
+     * Checks whether the corresponding image has been loaded yet. This is not always the case as the image is only loaded
+     * at the first draw call
+     * @return True, if the image is already loaded, false otherwise
+     */
+    bool isLoaded() const;
+
     void draw(short x, short y, float scale) override;
 };
 
@@ -101,17 +108,7 @@ struct TextureSprite : public Sprite {
  * A sprite which takes an image and replaces white and black with 2 given colors.
  * This sprite does not support transparency!
  */
-struct Texture2ColorSprite : public Sprite {
-    /**
-     * The path to the image
-     */
-    std::string path;
-
-    /**
-     * The image handle. This cannot be loaded statically,
-     * as the SDL Renderer will not have been initialized by that point
-     */
-    image_handle_t spriteHandle;
+struct Texture2ColorSprite : public TextureSprite {
 
     /**
      * The color which white will be replaced by
@@ -133,11 +130,6 @@ struct Texture2ColorSprite : public Sprite {
      */
     explicit Texture2ColorSprite(std::string path, unsigned int colorWhite, unsigned int colorBlack);
 
-    /**
-     * This needs to be overridden, because the image needs to be freed
-     */
-    ~Texture2ColorSprite() override;
-
     void draw(short x, short y, float scale) override;
 };
 
@@ -146,7 +138,7 @@ struct Texture2ColorSprite : public Sprite {
  * An empty sprite, which does not render anything
  */
 struct EmptySprite : public Sprite {
-    void draw(short x, short y, float scale) override;
+    void draw(short x, short y, float scale) override {};
 };
 
 /**
