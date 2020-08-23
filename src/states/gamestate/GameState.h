@@ -6,7 +6,10 @@
 #include "../../util/CollisionTable.h"
 #include <entity/registry.hpp>
 
-
+/**
+ * The main state of the game
+ * All in-game happenings are handled here and within GameTasks, which are used by the GameState
+ */
 class GameState : public State {
     /**
      * The map which the game takes place on

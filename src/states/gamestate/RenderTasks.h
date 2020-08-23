@@ -14,13 +14,6 @@ namespace GameTasks {
     void renderHealth(Renderer &renderer, entt::registry &registry);
 
     /**
-     * Renders the ranges of all towers
-     * @param renderer The renderer of the state
-     * @param registry The registry of the state
-     */
-    void renderRanges(Renderer &renderer, entt::registry &registry);
-
-    /**
      * Renders the range of the tower hovered over with the mouse
      * @param renderer The renderer of the state
      * @param registry The registry of the state
@@ -36,7 +29,7 @@ namespace GameTasks {
     void renderTowerTargetConnections(Renderer &renderer, entt::registry &registry);
 
     /**
-     * Renders the contents of the map
+     * Renders all entities with a tile position and a sprite (which is basically the contents of the map)
      * @param renderer The renderer of the state
      * @param registry The registry of the state
      * @param map The map to render

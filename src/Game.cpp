@@ -184,7 +184,6 @@ void swapBufferTask(void *ptr) {
     // Get Draw access for this thread
     tumDrawBindThread();
     while (true) {
-        logCurrentTaskName();
         if(game.getSwapBufferSignal().lock(portMAX_DELAY)) {
             // Take exclusive access to the screen
             if (game.getScreenLock().lock(portMAX_DELAY)) {
@@ -208,7 +207,6 @@ void inputTask(void *ptr) {
 
     auto lastWake = xTaskGetTickCount();
     while (true) {
-        logCurrentTaskName();
         // Update input
         if(auto inputOpt = input.lock()) {
             // Update events (like keyboard and mouse input)

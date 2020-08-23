@@ -43,42 +43,54 @@ namespace GameTasks {
 
 
     void gameRenderTask(void *statePointer) {
-
+        // Extract the game state from the void pointer
         GameState &state = *static_cast<GameState*>(statePointer);
+        // Get the state's registry, locked behind a mutex
         auto &regMutex = state.getRegistry();
-        Game &game = Game::get();
         Renderer &renderer = state.getRenderer();
         Map &map = state.getMap();
+        Game &game = Game::get();
 
         auto lastWake = xTaskGetTickCount();
 
         while(true) {
-            logCurrentTaskName();
-            if(game.getDrawSignal().lock(portMAX_DELAY)) {
-                if(auto regOpt = regMutex.lock()) {
-                    auto &registry = *regOpt;
 
-                    if(game.getScreenLock().lock(portMAX_DELAY)){
-                        tumDrawClear(INGAME_BG_COLOR);
-
-                        if(state.getWave().isFinished()) {
-                            renderPath(renderer, map.getPath());
-                        }
-
-                        renderMap(renderer, *registry, map);
-                        renderEntities(renderer, *registry);
-                        //renderRanges(renderer, *registry);
-
-                        renderHoveredRanges(renderer, *registry, map);
-                        renderHealth(renderer, *registry);
-                        renderTowerTargetConnections(renderer, *registry);
-                        renderHUD(state, *registry);
-
-                        game.getScreenLock().unlock();
-                        game.getSwapBufferSignal().unlock();
-                    }
-                }
+            // If the draw signal is not given, do not render
+            if(!game.getDrawSignal().lock()) {
+                vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+                continue;
             }
+
+            // Only render if the registry can be unlocked
+            if(auto regOpt = regMutex.lock()) {
+                auto &registry = *regOpt;
+
+                // If the screen lock can't be unlocked (= the screen is used by something else), do not render
+                if (!game.getScreenLock().lock(portMAX_DELAY)) {
+                    vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
+                    continue;
+                }
+
+                // Clear the screen, setting everything to the background color
+                tumDrawClear(INGAME_BG_COLOR);
+
+                // Render the path the enemies will take, but only if there is no wave currently active
+                if (state.getWave().isFinished()) {
+                    renderPath(renderer, map.getPath());
+                }
+
+                renderMap(renderer, *registry, map);
+                renderEntities(renderer, *registry);
+                renderHoveredRanges(renderer, *registry, map);
+                renderHealth(renderer, *registry);
+                renderTowerTargetConnections(renderer, *registry);
+                renderHUD(state, *registry);
+
+                // Unlock the screen and signal the swap buffer task to do its job
+                game.getScreenLock().unlock();
+                game.getSwapBufferSignal().unlock();
+            }
+            // Delay the task until the next frame
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }
@@ -89,12 +101,12 @@ namespace GameTasks {
         Map &map = state.getMap();
 
         auto lastWake = xTaskGetTickCount();
+        // When the tasks are initialized this allowed for the move task to run first
         MOVE_SIGNAL.unlock();
 
         static auto margin = TILE_SIZE / 2;
 
         while(true) {
-            logCurrentTaskName();
 
             // Wait for the Signal to run the task
             if(!MOVE_SIGNAL.lock(portMAX_DELAY)) {
@@ -102,17 +114,22 @@ namespace GameTasks {
                 continue;
             }
 
+            // Lock the registry's mutex
             if(auto regOpt = regMutex.lock()) {
+                // Extract the registry from the std::optional
                 auto &registry = *regOpt;
 
+                // Get all entities with a Position and Velocity
                 auto view = registry->view<Position, Velocity>();
 
+                // For each of these entities, add their velocity value to their Position to move them
                 for (auto &entity : view) {
                     Position &pos = view.get<Position>(entity);
                     Velocity &vel = view.get<Velocity>(entity);
                     pos.x += vel.dx;
                     pos.y += vel.dy;
 
+                    // If an entity moves out of the map, it is flagged for deletion
                     if(pos.x > map.getWidth() * TILE_SIZE + margin || pos.x < -margin || pos.y > map.getHeight() * TILE_SIZE + margin || pos.y < -margin) {
                         if(registry->valid(entity)) registry->emplace_or_replace<Delete>(entity);
                     }
@@ -121,64 +138,7 @@ namespace GameTasks {
                 // Signal the collision task to run
                 COLLISION_SIGNAL.unlock();
             }
-            vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
-        }
-    }
-
-    void gameCollisionTaskOld(void *statePointer) {
-        GameState &state = *static_cast<GameState*>(statePointer);
-        auto &regMutex = state.getRegistry();
-
-        auto lastWake = xTaskGetTickCount();
-
-        while(true) {
-            logCurrentTaskName();
-
-            // Wait for the Signal to run the task
-            if(!COLLISION_SIGNAL.lock(portMAX_DELAY)) {
-                vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
-                continue;
-            }
-
-            if(auto regOpt = regMutex.lock()) {
-                auto &registry = *regOpt;
-
-                // Handle Collision with the map and displace Entities if needed.
-                auto entityView = registry->view<Position, Hitbox, Velocity>();
-                auto tileView = registry->view<TilePosition, Hitbox, TileTypeComponent>();
-
-                for (auto &entity : entityView) {
-                    for (auto &tile : tileView) {
-                        Position &entityPos = entityView.get<Position>(entity);
-                        Hitbox &entityHitbox = entityView.get<Hitbox>(entity);
-                        TilePosition &tilePos = tileView.get<TilePosition>(tile);
-                        Hitbox &tileHitbox = tileView.get<Hitbox>(tile);
-
-                        if(auto collision = intersectHitbox(tilePos, tileHitbox, entityPos, entityHitbox)) {
-                            auto type = registry->get<TileTypeComponent>(tile).type;
-
-                            if(tileHitbox.solid && entityHitbox.solid) {
-                                auto displacementVec = *collision;
-                                entityPos.x += displacementVec.x;
-                                entityPos.y += displacementVec.y;
-                            } else if (type == GOAL) {
-                                // If an enemy reaches the goal, they are flagged for deletion
-                                if(registry->has<Enemy>(entity) && registry->has<Health>(entity)){
-                                    registry->emplace<Delete>(entity);
-                                    registry->remove<Enemy>(entity);
-                                    Health &nexusHealth = registry->get<Health>(tile);
-                                    nexusHealth.value--;
-                                }
-
-                            }
-                        }
-                    }
-                }
-
-                // Signal the move task to run
-                MOVE_SIGNAL.unlock();
-            }
-
+            // Delay the task until the next frame
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }
@@ -190,7 +150,6 @@ namespace GameTasks {
         auto lastWake = xTaskGetTickCount();
 
         while(true) {
-            logCurrentTaskName();
 
             // Wait for the Signal to run the task
             if(!COLLISION_SIGNAL.lock(portMAX_DELAY)) {
@@ -201,13 +160,12 @@ namespace GameTasks {
             if(auto regOpt = regMutex.lock()) {
                 auto &registry = *regOpt;
 
-                // Refresh all collision data as broad phase collision detection
+                // Refresh all collision data related to tiles as broad phase collision detection
                 state.getCollisionTable().refreshTiles(*registry);
 
-                // Handle Collision with the map and displace Entities if needed.
-                auto entityView = registry->view<Position, Hitbox>();
-                auto tileView = registry->view<TilePosition, Hitbox>();
-                auto enemyView = registry->view<Enemy, Health, Position, Hitbox>();
+                auto entityView = registry->view<Position, Hitbox>(); // All entities with a position and a hitbox
+                auto tileView = registry->view<TilePosition, Hitbox>(); // All tiles with a hitbox
+                auto enemyView = registry->view<Enemy, Health, Position, Hitbox>(); // All enemies with health position and a hitbox
 
                 for (auto &tile : tileView) {
                     TilePosition &tilePos = tileView.get<TilePosition>(tile);
@@ -223,7 +181,7 @@ namespace GameTasks {
                         // Handle collision of entities with Tiles
                         if(auto collision = intersectHitbox(tilePos, tileHitbox, entityPos, entityHitbox)) {
 
-
+                            // If the tile's and the entity's hitbox are solid, displace the entity accordingly
                             if(tileHitbox.solid && entityHitbox.solid) {
                                 auto displacementVec = *collision;
                                 entityPos.x += displacementVec.x;
@@ -233,6 +191,7 @@ namespace GameTasks {
                                 if(enemyView.contains(entity) && !registry->has<Delete>(entity)){
                                     registry->emplace<Delete>(entity);
                                     tumSoundPlaySample(nexus_hit);
+                                    // Damage the nexus accordingly
                                     Health &nexusHealth = registry->get<Health>(tile);
                                     nexusHealth.value--;
                                 }
@@ -244,44 +203,48 @@ namespace GameTasks {
                 // Signal the Move task to run
                 MOVE_SIGNAL.unlock();
             }
-
+            // Delay the task until the next frame
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }
 
     void gameKeyboardInputTask(void *statePointer) {
         GameState &state = *static_cast<GameState*>(statePointer);
+        // Get the state's registry locked behind a mutex
         auto &regMutex = state.getRegistry();
         Game &game = Game::get();
 
         auto lastWake = xTaskGetTickCount();
 
         while(true) {
-            logCurrentTaskName();
+            // Try locking the mutex
             if(auto regOpt = regMutex.lock()) {
+                // Extract the registry from the optional
                 auto &registry = *regOpt;
 
+                // Get a view only containing the player (the other 2 components are just here for safety)
                 auto view = registry->view<Position, Velocity, Player>();
 
+                // Try locking the input handler
                 if(auto inputOpt = game.getInput().lock()) {
+                    // Extract the input handler from the std::optional
                     auto &input = *inputOpt;
 
-                    for (auto &entity : view) {
-                        Velocity &vel = view.get<Velocity>(entity);
-                        // Set Horizontal speed
-                        if((input->keyPressed(SDL_SCANCODE_LEFT) || input->keyPressed(SDL_SCANCODE_A)) && (!input->keyPressed(
-                                SDL_SCANCODE_RIGHT) && !input->keyPressed(
-                                SDL_SCANCODE_D))) {
+                    // The only entity in the view is the player
+                    for (auto &player : view) {
+                        Velocity &vel = view.get<Velocity>(player);
+                        // Set Horizontal speed if Left/A, or Right/D are pressed
+                        if((input->keyPressed(SDL_SCANCODE_LEFT) || input->keyPressed(SDL_SCANCODE_A)) &&
+                        !(input->keyPressed(SDL_SCANCODE_RIGHT) || input->keyPressed(SDL_SCANCODE_D))) {
                             vel.dx = -vel.getCurrentMaxSpeed();
-                        } else if((input->keyPressed(SDL_SCANCODE_RIGHT) || input->keyPressed(SDL_SCANCODE_D)) && (!input->keyPressed(
-                                SDL_SCANCODE_LEFT) && !input->keyPressed(
-                                SDL_SCANCODE_A))) {
+                        } else if((input->keyPressed(SDL_SCANCODE_RIGHT) || input->keyPressed(SDL_SCANCODE_D)) &&
+                        !(input->keyPressed(SDL_SCANCODE_LEFT) || input->keyPressed(SDL_SCANCODE_A))) {
                             vel.dx = vel.getCurrentMaxSpeed();
-                        } else {
+                        } else { // If nothing is pressed, stop horizontal movement
                             vel.dx = 0;
                         }
 
-                        // Set Vertical speed
+                        // Set Vertical speed if Left/A, or Right/D are pressed
                         if((input->keyPressed(SDL_SCANCODE_UP) || input->keyPressed(SDL_SCANCODE_W)) && (!input->keyPressed(
                                 SDL_SCANCODE_DOWN) && !input->keyPressed(
                                 SDL_SCANCODE_S))) {
@@ -290,7 +253,7 @@ namespace GameTasks {
                                 SDL_SCANCODE_UP) && !input->keyPressed(
                                 SDL_SCANCODE_W))) {
                             vel.dy = vel.getCurrentMaxSpeed();
-                        } else {
+                        } else { // If nothing is pressed, stop vertical movement
                             vel.dy = 0;
                         }
 
@@ -299,9 +262,7 @@ namespace GameTasks {
                         vel.dx *= vel.getCurrentMaxSpeed();
                         vel.dy *= vel.getCurrentMaxSpeed();
 
-                        auto &renderer = state.getRenderer();
-
-
+                        Renderer &renderer = state.getRenderer();
                         // Handle zooming in and zooming out with + and -
                         if(input->keyPressed(SDL_SCANCODE_KP_PLUS)) {
                             renderer.setScale(std::min(renderer.getScale() * 1.01, 5.0));
@@ -311,12 +272,13 @@ namespace GameTasks {
                             renderer.setScale(std::max(renderer.getScale() / 1.01, 0.5));
                         }
 
-                        Position &pos = view.get<Position>(entity);
+                        // Center the camera on the player
+                        Position &pos = view.get<Position>(player);
                         renderer.setOffset((SCREEN_WIDTH / 2) / renderer.getScale() - pos.x - PLAYER_SIZE / 2, (SCREEN_HEIGHT / 2) / renderer.getScale() - pos.y - PLAYER_SIZE / 2);
                     }
                 }
             }
-
+            // Delay the task until the next frame
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }
@@ -328,47 +290,62 @@ namespace GameTasks {
         Map &map = state.getMap();
 
         auto lastWake = xTaskGetTickCount();
+        auto &renderer = state.getRenderer();
 
         while(true) {
-            logCurrentTaskName();
+            // Try locking the mutex
             if(auto regOpt = regMutex.lock()) {
+                // Extract the registry from the optional
                 auto &registry = *regOpt;
 
+                // Try locking the input handler
                 if(auto inputOpt = game.getInput().lock()) {
+                    // Extract the input handler from the std::optional
                     auto &input = *inputOpt;
-                    auto &renderer = state.getRenderer();
 
                     if(input->leftClickDown()) {
-                        Map &map = state.getMap();
-                        const std::optional<entt::entity> &tileOpt = map.getMapTileAtScreenPos(input->getMouseX(),
-                                                                                               input->getMouseY(),
-                                                                                               renderer);
-                        if (tileOpt) {
+                        // Check if the mouse is currently pointing at a tile
+                        if (auto tileOpt = map.getMapTileAtScreenPos(input->getMouseX(), input->getMouseY(),renderer)) {
+                            // Get the type of the tile the mouse is pointing at and the tile to be placed
                             TileType tileType = map.getTileType(*tileOpt, *registry);
                             TileType typeToPlace = state.getTileTypeToPlace();
+
+                            // Calculate the cost of placing down the specific tile
                             int totalCost = getCostForType(typeToPlace) - getCostForType(tileType);
+                            // You can only place tiles on empty space while a wave isn't active. Also you have to have enough coins
+                            // In addition, you cannot build on special tiles like the nexus or the enemy spawn
                             if((tileType != EMPTY || state.getWave().isFinished()) && tileType != typeToPlace && state.getCoins() >= totalCost && !isSpecial(tileType)) {
                                 map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, typeToPlace, renderer);
+                                // Pay the cost for the operation
                                 state.removeCoins(totalCost);
                                 tumSoundPlaySample(place);
-                                state.getMap().updateEnemyPath(*registry);
+                                // If the tile was empty before, we need to update the enemy path, as it might have to change
+                                if (tileType == EMPTY) state.getMap().updateEnemyPath(*registry);
                             }
                         }
 
+                    // Check if a right click has happened and there is no wave active
                     } else if(input->rightClickDown() && state.getWave().isFinished()){
-                        const std::optional<entt::entity> &tileOpt =
-                                map.getMapTileAtScreenPos(input->getMouseX(), input->getMouseY(),renderer);
-                        if (tileOpt) {
+                        // Check if the mouse is currently pointing at a tile
+                        if (auto tileOpt = map.getMapTileAtScreenPos(input->getMouseX(), input->getMouseY(),renderer)) {
+                            // Get the type of the tile the mouse is pointing at
                             TileType tileType = map.getTileType(*tileOpt, *registry);
+
+                            // You can't remove special tiles (spawn and nexus) and trying to remove empty tiles is redundant
                             if(!isSpecial(tileType) && tileType != EMPTY) {
+                                // Remove the tile
                                 map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, EMPTY,renderer);
+                                // Refund the cost of the removed tile
                                 state.addCoins(getCostForType(tileType));
+                                // Removing a tile might change the enemies' path, so it must be recalculated
                                 state.getMap().updateEnemyPath(*registry);
                                 tumSoundPlaySample(remove_tile);
                             }
                         }
                     }
 
+                    // Check for one of the keys, tasked with selecting a tile to place, have been pressed
+                    // If so, set the type to place, to that type and exit the loop
                     for (auto const& [scancode, tileType] : getScancodeMap()) {
                         if(input->keyPressed(scancode)) {
                             state.setTileTypeToPlace(tileType);
@@ -378,7 +355,7 @@ namespace GameTasks {
 
                 }
             }
-
+            // Delay the task until the next frame
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }
@@ -389,8 +366,9 @@ namespace GameTasks {
         auto lastWake = xTaskGetTickCount();
 
         while(true) {
-            logCurrentTaskName();
+            // Try locking the mutex
             if(auto regOpt = regMutex.lock()) {
+                // Extract the registry from the std::optional
                 auto &registry = *regOpt;
 
                 auto view = registry->view<AIComponent>();
@@ -400,11 +378,12 @@ namespace GameTasks {
                     // Only execute AI action if the entity is not flagged for deletion
                     if(!deleteView.contains(entity)) {
                         AIComponent &ai = view.get<AIComponent>(entity);
+                        // Execute a step of the entity's AI
                         ai.getAI()->act(*registry);
                     }
                 }
             }
-
+            // Delay the task until the next frame
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }
@@ -413,13 +392,17 @@ namespace GameTasks {
         GameState &state = *static_cast<GameState*>(statePointer);
         auto &regMutex = state.getRegistry();
         auto lastWake = xTaskGetTickCount();
+
+        // Initialize a random number generator
         srand((unsigned) time(NULL));
 
         while(true) {
-            logCurrentTaskName();
+            // Try locking the mutex
             if(auto regOpt = regMutex.lock()) {
+                // Extract the registry from the std::optional
                 auto &registry = *regOpt;
                 Wave &wave = state.getWave();
+                // If there are enemies left to spawn, spawn an enemy, give them an AI, that walks the path from the spawn to the map
                 if (wave.getRemainingSpawns() > 0){
                     auto enemy = spawnEnemy(state.getMap().getSpawnPosition(), *registry, ENEMY_BASE_HEALTH * state.getWave().getEnemyHealthFactor());
                     registry->emplace<AIComponent>(enemy, new WalkPathAI(enemy, state.getMap().getPath()));
@@ -427,7 +410,9 @@ namespace GameTasks {
                     wave.decrementRemainingSpawns();
                 }
             }
+            // A random number between 0.4 and 1
             auto delayFactor = (double) rand() / RAND_MAX * 0.6 + 0.4;
+            // Delay the task by "delayFactor" seconds
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS * TARGET_FPS * delayFactor);
         }
     }
@@ -438,27 +423,34 @@ namespace GameTasks {
         auto lastWake = xTaskGetTickCount();
 
         while(true) {
-            logCurrentTaskName();
+            // Try locking the mutex
             if(auto regOpt = regMutex.lock()) {
+                // Extract the registry from the std::optional
                 auto &registry = *regOpt;
 
                 auto enemyView = registry->view<Enemy, Position, Hitbox>();
                 auto towerView = registry->view<TilePosition, Range, Tower>();
 
+                // Refresh the data in the Collision table related to ranges for a broad phase collision detection
                 state.getCollisionTable().refreshRanges(*registry);
 
-                for(auto tower : towerView) {
 
+                for(auto tower : towerView) {
+                    // Get entities that are approximately in the tower's range
                     auto approxInRange = state.getCollisionTable().getEnemiesInRangeApprox(tower);
-                    // If there aren't any potentialTargets even remotely in range, just continue with the next tower
+                    // If there aren't any potential targets even remotely in range, just continue with the next tower
                     if(approxInRange.empty()) continue;
 
+                    // A set to hold potential targets of the tower
                     std::set<entt::entity> targets;
                     TilePosition &towerTilePos = towerView.get<TilePosition>(tower);
+                    // The position of the center point of the tower
                     Position towerPos = towerTilePos.toPosition() + Position{TILE_SIZE / 2, TILE_SIZE / 2};
                     Range &towerRange = towerView.get<Range>(tower);
                     Tower &towerData = towerView.get<Tower>(tower);
 
+                    // For each enemy that is potentially in range, do an exact collision detection with the range of the tower
+                    // If the range and the enemy's hitbox intersect, add them to the targets set
                     for (auto &enemy : approxInRange) {
                         Position &enemyPos = enemyView.get<Position>(enemy);
                         Hitbox &enemyHitbox = enemyView.get<Hitbox>(enemy);
@@ -468,10 +460,11 @@ namespace GameTasks {
                         }
                     }
 
+                    // Set the determined enemies as the potential targets of the tower
                     towerData.setPotentialTargets(targets);
                 }
             }
-
+            // Delay the task until the next frame
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }
@@ -482,50 +475,52 @@ namespace GameTasks {
         auto lastWake = xTaskGetTickCount();
 
         while(true) {
-            logCurrentTaskName();
+            // Try locking the mutex
             if(auto regOpt = regMutex.lock()) {
+                // Extract the registry from the std::optional
                 auto &registry = *regOpt;
 
                 auto view = registry->view<Health>();
 
+                // If an entity's health drops to or below 0, flag it for deletion
                 for (auto &entity : view) {
                     Health &health = view.get<Health>(entity);
                     if(health.value <= 0) {
                         registry->emplace_or_replace<Delete>(entity);
+                        // If said entity is an enemy, then reward the appropriate coins
                         if(registry->has<Enemy>(entity)){
-                            state.setCoins(state.getCoins()+state.getWave().getEnemyCoins());
+                            state.addCoins(state.getWave().getEnemyCoins());
                             tumSoundPlaySample(enemy_death);
                         }
-                        //tumSoundPlaySample(enemy_death);
+
                     }
                 }
             }
-
+            // Delay the task until the next frame
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }
 
     void gameWaveTask(void *statePointer) {
         GameState &state = *static_cast<GameState*>(statePointer);
-        auto &regMutex = state.getRegistry();
         auto lastWake = xTaskGetTickCount();
         Game &game = Game::get();
 
         while(true) {
-            logCurrentTaskName();
             Wave &wave = state.getWave();
+            // If the wave is finished try locking the registry and input
             if(wave.isFinished()){
-                if(auto regOpt = regMutex.lock()) {
-                    auto &registry = *regOpt;
-                    if(auto inputOpt = game.getInput().lock()) {
-                        auto &input = *inputOpt;
-                        if (!state.getMap().getPath().empty() && input->keyPressed(SDL_SCANCODE_SPACE)) {
-                            state.setWave(state.getWave().next());
-                            state.getMap().updateEnemyPath(*registry);
-                        }
+                // Try locking the input handler
+                if(auto inputOpt = game.getInput().lock()) {
+                    // Extract the input handler from the std::optional
+                    auto &input = *inputOpt;
+                    // If there is a path to the goal, and space is pressed, start a new wave and update
+                    if (!state.getMap().getPath().empty() && input->keyPressed(SDL_SCANCODE_SPACE)) {
+                        state.setWave(state.getWave().next());
                     }
                 }
             }
+            // Delay the task until the next frame
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }
@@ -536,40 +531,47 @@ namespace GameTasks {
         auto lastWake = xTaskGetTickCount();
 
         while(true) {
-            logCurrentTaskName();
+            // Try locking the mutex
             if(auto regOpt = regMutex.lock()) {
+                // Extract the registry from the std::optional
                 auto &registry = *regOpt;
 
                 auto view = registry->view<Delete>();
                 auto enemyView = registry->view<Enemy>();
                 auto nexusView = registry->view<Nexus>();
 
-
+                // This boolean is used to determine if the nexus has been destroyed. If so, this triggers the game over state
                 bool gameOver = false;
 
+                // The entities to delete. These cannot be deleted in the for loop, as that would mess with the view
                 std::vector<entt::entity> toDelete;
+
                 for (auto &entity : view) {
+                    // If the deleted entity is an enemy, decrement the amount of enemies still alive
                     if(enemyView.contains(entity)) {
                         state.getWave().decrementRemainingEnemies();
                     }
-
+                    // If the nexus is to be deleted, set the game over boolean to true
                     if(nexusView.contains(entity)) {
                         gameOver = true;
                     }
 
+                    // Put the entity to be deleted in the set.
                     toDelete.push_back(entity);
                 }
 
+                // Delete the entities
                 for (auto &entity : toDelete) {
                     registry->destroy(entity);
                 }
 
+                // If a game over occurs, the game over state is pushed to the stack
                 if(gameOver) {
                     tumSoundPlaySample(game_over);
                     Game::get().enqueueStatePush(new GameOverState());
                 }
             }
-
+            // Delay the task until the next frame
             vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
         }
     }

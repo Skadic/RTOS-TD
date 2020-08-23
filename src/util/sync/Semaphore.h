@@ -34,7 +34,7 @@ public:
      * @param timeout The time to wait for the Semaphore to become free
      * @return true, if locking was successful, false otherwise
      */
-    bool lock(TickType_t timeout = 10000);
+    bool lock(TickType_t timeout = 1000);
 
     /**
      * Unlocks this semaphore
