@@ -44,5 +44,6 @@ public:
      * Creates a button with the specified data.
      */
     Button(std::string name, short x, short y, short w, short h, std::function<void()> onClick);
+
 };
 

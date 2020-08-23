@@ -1,15 +1,14 @@
 //
-// Created by skadic on 11.08.20.
+// Created by skadic on 23.08.20.
 //
 
-#include "MainMenuTasks.h"
-#include "MainMenuState.h"
 #include "../../Game.h"
 #include "../../util/GlobalConsts.h"
+#include "AbstractMenuTasks.h"
+#include "AbstractMenuState.h"
 
-
-void MainMenuTasks::buttonClickTask(void *statePointer) {
-    MainMenuState &state = *static_cast<MainMenuState*>(statePointer);
+void AbstractMenuTasks::buttonClickTask(void *statePointer) {
+    AbstractMenuState &state = *static_cast<AbstractMenuState*>(statePointer);
     Game &game = Game::get();
     auto lastWake = xTaskGetTickCount();
     auto &inputMutex = game.getInput();
@@ -31,8 +30,8 @@ void MainMenuTasks::buttonClickTask(void *statePointer) {
     }
 }
 
-void MainMenuTasks::buttonRenderTask(void *statePointer) {
-    MainMenuState &state = *static_cast<MainMenuState*>(statePointer);
+void AbstractMenuTasks::stateRenderTask(void *statePointer) {
+    AbstractMenuState &state = *static_cast<AbstractMenuState*>(statePointer);
     Game &game = Game::get();
     auto lastWake = xTaskGetTickCount();
 
@@ -41,8 +40,8 @@ void MainMenuTasks::buttonRenderTask(void *statePointer) {
             if(game.getScreenLock().lock(portMAX_DELAY)){
                 //std::cout << "RenderMenu" << std::endl;
                 tumDrawClear(0x000000);
-
-                for (const Button &b : state.getButtons()) {
+                auto &buttons = state.getButtons();
+                for (const Button &b : buttons) {
                     state.getRenderer().drawBox(b.x, b.y, b.w, b.h, 0xFFFFFF, true);
                     state.getRenderer().drawText(const_cast<char*>(b.name.c_str()), b.x + b.w / 2 - b.name.length() * 3, b.y + b.h / 2 - 10, 0x000000);
                 }

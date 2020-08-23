@@ -6,7 +6,6 @@
 #include "../../util/GlobalConsts.h"
 #include "../../Game.h"
 #include "../gamestate/GameState.h"
-#include "MainMenuTasks.h"
 #include "../tutorial/TutorialState.h"
 #include <iostream>
 extern "C" {
@@ -14,7 +13,7 @@ extern "C" {
 #include <TUM_Sound.h>
 }
 
-MainMenuState::MainMenuState() : State() {
+MainMenuState::MainMenuState() : AbstractMenuState() {
     auto offset = 200;
     auto margin = 20;
     auto totalHeight = margin + MENU_BUTTON_HEIGHT;
@@ -40,18 +39,8 @@ MainMenuState::MainMenuState() : State() {
     buttons.push_back(start);
     buttons.push_back(tutorial);
     buttons.push_back(exit);
-
-    tasks.push_back(nullptr); // Make space for another task handle
-    xTaskCreate(MainMenuTasks::buttonRenderTask, "button_render", DEFAULT_TASK_STACK_SIZE, this, 0, &tasks.back());
-    tasks.push_back(nullptr); // Make space for another task handle
-    xTaskCreate(MainMenuTasks::buttonClickTask, "button_click", DEFAULT_TASK_STACK_SIZE, this, 0, &tasks.back());
-    suspendTasks();
 }
 
 void MainMenuState::render() {
     renderer.drawText("ANTIBODY", SCREEN_WIDTH / 2 - 40, 100, 0xFFFFFF);
-}
-
-const std::vector<Button> &MainMenuState::getButtons() const {
-    return buttons;
 }

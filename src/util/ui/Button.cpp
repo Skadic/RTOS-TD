@@ -8,3 +8,6 @@
 
 Button::Button(std::string name, short x, short y, short w, short h, std::function<void ()> onClick) : name{name}, x(x), y(y), w(w), h(h),
                                                                                               onClick(std::move(onClick)) {}
+
+
+

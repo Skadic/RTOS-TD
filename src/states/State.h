@@ -43,7 +43,7 @@ public:
     /**
      * On deletion all of this state's tasks must be deleted
      */
-    ~State();
+    virtual ~State();
 
     /**
      * States cannot be copied
