@@ -62,6 +62,7 @@ void Wave::decrementRemainingEnemies() {
 }
 
 Wave Wave::next() {
+     //Scales the waves values to create the next wave's values
     return Wave(std::max(spawnLimit + SPAWN_LIMIT_LINEAR_SCALING, spawnLimit * SPAWN_LIMIT_MULT_SCALING),
             enemyHealthFactor * ENEMY_HEALTH_FACTOR_SCALING,
                 1 + (waveNumber / COIN_INCREASE_AFTER_ROUNDS),

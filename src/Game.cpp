@@ -22,7 +22,7 @@ Game::Game() :
         screenLock{xSemaphoreCreateMutex()},
         drawSignal{xSemaphoreCreateBinary()},
         swapBufferSignal{xSemaphoreCreateBinary()},
-        stateOperationSignal{xSemaphoreCreateCounting(2, 0)},
+        stateOperationSignal{xSemaphoreCreateBinary()},
         input{InputHandler(), xSemaphoreCreateMutex()},
         stateToPush{nullptr, xSemaphoreCreateMutex()},
         stateOperation{NONE, xSemaphoreCreateMutex()}
@@ -44,14 +44,21 @@ void Game::start(char *binPath) {
     TaskHandle_t swap_buffer = nullptr;
     xTaskCreate(swapBufferTask, "swap_buffer", 0, nullptr, 2, &swap_buffer);
 
+    // Spawn the task that will handle input
     TaskHandle_t input = nullptr;
     xTaskCreate(inputTask, "input", 0, nullptr, 2, &input);
 
+    // Spawn the task that will handle enqueued pushing and popping operations in the state machine
     TaskHandle_t states = nullptr;
     xTaskCreate(stateMachineTask, "states", 0, nullptr, 2, &input);
 
-    //GameState gameState(10, 10);
-    //Game::getStateMachine().pushStack(new GameState("testmap.json"));
+    /*
+     * Push the main menu state to the stack
+     * Do not (!) use the state machine's methods (pushStack and popStack) directly when operating from a task
+     * of the state that will be pushed over or popped.
+     * Rather use the enqueue methods in Game. This does not work here because the task handling the state push and pop
+     * operations is not running yet
+     */
     Game::getStateMachine().pushStack(new MainMenuState());
 
     // Starts the task scheduler to start running the tasks
@@ -66,6 +73,7 @@ void Game::start(char *binPath) {
 
 
 Game& Game::get() {
+    // The singleton game instance
     static Game instance;
     return instance;
 }
@@ -96,23 +104,36 @@ LockGuard<InputHandler> &Game::getInput() {
 }
 
 void Game::enqueueStatePush(State *state) {
-    auto stateLock = *stateToPush.lock(portMAX_DELAY);
-    auto stateOpLock = *stateOperation.lock(portMAX_DELAY);
-    stateLock.set(state);
-    stateOpLock.set(PUSH);
+
+    auto stateOperationResource = *stateOperation.lock(portMAX_DELAY);
+    auto stateToPushResource = *stateToPush.lock(portMAX_DELAY);
+
+    // Set the operation to be executed to "Push"
+    stateOperationResource.set(PUSH);
+    // Set the state to be pushed to the given state
+    stateToPushResource.set(state);
+
+    // Signal the state machine task to handle a state operation
     stateOperationSignal.unlock();
 }
 
 void Game::enqueueStatePop() {
     auto stateOpLock = *stateOperation.lock(portMAX_DELAY);
+
+    // Set the operation to be executed to "Pop"
     stateOpLock.set(POP);
+
+    // Signal the state machine task to handle a state operation
     stateOperationSignal.unlock();
 }
 
 void Game::enqueueStatePop2X() {
     auto stateOpLock = *stateOperation.lock(portMAX_DELAY);
+
+    // Set the operation to be executed to "Pop twice"
     stateOpLock.set(POP2X);
-    stateOperationSignal.unlock();
+
+    // Signal the state machine task to handle a state operation
     stateOperationSignal.unlock();
 }
 
@@ -139,28 +160,25 @@ void stateMachineTask(void *ptr) {
     auto lastWake = xTaskGetTickCount();
 
     while (true) {
+        // Check if a state operation should be handled by locking the semaphore representing the signal to handle an operation
         if(game.getStateOperationSignal().lock(0)) {
             // First see if some operation has been enqueued
             if(std::optional<Resource<StateChange>> stateOperation = stateOperationMutex.lock()) {
                 switch (**stateOperation) {
                     case NONE:
                         break;
-                        // If a Pop operation has been enqueued, pop a state off the stack
-                    case POP:
+                    case POP: // If a Pop operation has been enqueued, pop a state off the stack
                         stateMachine.popStack();
                         (*game.getInput().lock(portMAX_DELAY))->resetPressedData();
                         break;
-                        // If a Push operation has been enqueued, get the state to be pushed from the queue and push it
-                    case PUSH:
+                    case PUSH: // If a Push operation has been enqueued, get the state to be pushed from the queue and push it
                         if(std::optional<Resource<State*>> stateToPush = stateToPushMutex.lock()) {
                             stateMachine.pushStack(**stateToPush);
                             (*stateToPush).set(nullptr);
                             (*game.getInput().lock(portMAX_DELAY))->resetPressedData();
                         }
                         break;
-                        // This is used for when the current state wants to remove itself and the state below it from the stack
-                        // This is useful for example for a game over screen, that removes it self and the game state below it
-                    case POP2X:
+                    case POP2X: // This is used for when the current state wants to remove itself and the state below it from the stack
                         stateMachine.popStack2X();
                         (*game.getInput().lock(portMAX_DELAY))->resetPressedData();
                         break;
@@ -170,13 +188,15 @@ void stateMachineTask(void *ptr) {
             }
         }
 
+        // If there are no states left, the task scheduler should stop and the program should close
         if(stateMachine.empty()) vTaskEndScheduler();
+
+        // Delay the task until the next frame
         vTaskDelayUntil(&lastWake, FRAME_TIME_MS);
     }
 }
 
 void swapBufferTask(void *ptr) {
-
     Game& game = Game::get();
 
     auto lastWake = xTaskGetTickCount();

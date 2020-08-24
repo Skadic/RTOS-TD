@@ -5,7 +5,7 @@
 #include <glm.hpp>
 
 /**
- * Spawns an enemy at the specified tile position without an AI
+ * Spawns an enemy at the specified tile position without an AI.
  * @param spawnPos The position at which the enemy should spawn
  * @param registry The registry in which to insert the entity representing the enemy
  * @param health The enemy's health

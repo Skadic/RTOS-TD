@@ -11,7 +11,7 @@ std::map<TileType, std::shared_ptr<Sprite>> initTileSprites() {
     map[TOWER_PROJECTILE] = std::make_shared<Texture2ColorSprite>("tower.png", 0x00CCCC, 0x006666);
     map[TOWER_LASER] = std::make_shared<Texture2ColorSprite>("tower.png", 0x4000FF, 0x200088);
     map[TOWER_AOE] = std::make_shared<Texture2ColorSprite>("tower.png", 0xFF9000, 0x884000);
-    map[GOAL] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FF00, true);
+    map[NEXUS] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FF00, true);
     map[ENEMY_SPAWN] = std::make_shared<TextureSprite>("enemy_spawn.png");
     return map;
 }
@@ -61,11 +61,11 @@ std::shared_ptr<Sprite> &getSpriteForType(TileType type) {
 }
 
 bool isSolid(TileType type) {
-    return type != EMPTY && type != GOAL && type != ENEMY_SPAWN;
+    return type != EMPTY && type != NEXUS && type != ENEMY_SPAWN;
 }
 
 bool isSpecial(TileType type) {
-    return type == GOAL || type == ENEMY_SPAWN;
+    return type == NEXUS || type == ENEMY_SPAWN;
 }
 
 const std::map<SDL_Scancode, TileType> &getScancodeMap() {

@@ -10,7 +10,7 @@
 enum TileType {
     EMPTY,
     WALL,
-    GOAL,
+    NEXUS,
     ENEMY_SPAWN,
     TOWER_PROJECTILE,
     TOWER_LASER,

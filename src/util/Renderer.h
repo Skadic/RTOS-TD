@@ -26,6 +26,7 @@ class Renderer {
      * The scale to render at
      */
     float scale;
+
 public:
 
     /**
@@ -136,4 +137,35 @@ public:
      * @return The position of the given screen y position in the game world.
      */
     short getGameY(short screenY);
+
+private:
+
+    /**
+     * Checks if the described box (in in-game coordinates) is outside of the bounds of the screen and therefore not visible
+     * @param x The in-game x coordinate of the box
+     * @param y The in-game y coordinate of the box
+     * @param width The width of the box
+     * @param height The height of the box
+     * @return true, if the box is outside of the bounds of the screen, false otherwise.
+     */
+    bool boxOutOfBounds(short x, short y, short width, short height);
+
+    /**
+     * Checks if the described circle (in in-game coordinates) is outside of the bounds of the screen and therefore not visible
+     * @param x The in-game x coordinate of the circle
+     * @param y The in-game x coordinate of the circle
+     * @param radius The circle's radius
+     * @return true, if the circle is outside of the bounds of the screen, false otherwise.
+     */
+    bool circleOutOfBounds(short x, short y, short radius);
+
+    /**
+     * Checks if the described line (in in-game coordinates) is outside of the bounds of the screen and therefore not visible
+     * @param x1 The in-game x coordinate of the start point of the line
+     * @param y1 The in-game y coordinate of the start point of the line
+     * @param x2 The in-game x coordinate of the end point of the line
+     * @param y2 The in-game y coordinate of the end point of the line
+     * @return true, if the line is outside of the bounds of the screen, false otherwise.
+     */
+    bool lineOutOfBounds(short x1, short y1, short x2, short y2);
 };

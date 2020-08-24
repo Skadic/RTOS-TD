@@ -124,7 +124,7 @@ public:
      * @param registry The registry to retrieve data from
      * @return The type of the given tile
      */
-    TileType getTileType(entt::entity tile, entt::registry &registry);
+    static TileType getTileType(entt::entity tile, entt::registry &registry);
 
     /**
      * Recalculates the path through the map from the spawn to the nexus using the A* algorithm.

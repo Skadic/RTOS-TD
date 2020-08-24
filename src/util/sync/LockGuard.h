@@ -62,6 +62,7 @@ public:
      * @relates Resource
      */
     std::optional<Resource<T>> lock(TickType_t timeout = 10000) {
+        // Tries to lock the mutex. If successful, returns a new resource object containing the value
         if(mutex.lock(timeout)) {
             return std::make_optional<Resource<T>>(value, mutex);
         } else {

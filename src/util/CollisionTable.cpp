@@ -70,7 +70,7 @@ void CollisionTable::refreshRanges(entt::registry &registry) {
 
     auto enemyView = registry.view<Enemy>();
 
-    // For non-tile entities
+    // Handling non-tiles with ranges
     auto posRangeView = registry.view<Position, Range>();
 
     for(auto &entity : posRangeView) {
@@ -99,13 +99,15 @@ void CollisionTable::refreshRanges(entt::registry &registry) {
     }
 
 
-    // For tiles
+    // Handling Tiles with Ranges
+
     auto tileposRangeView = registry.view<TilePosition, Range>();
 
     for(auto &entity : tileposRangeView) {
         Position pos = tileposRangeView.get<TilePosition>(entity).toPosition();
         Range &range = tileposRangeView.get<Range>(entity);
-        // If there is no vector yet to hold the enemies that intersect this range, insert one
+
+        // If there is no vector yet to hold the enemies that intersect this range, create one
         if(rangeBuckets.find(entt::to_integral(entity)) != rangeBuckets.end()) {
             rangeBuckets[entt::to_integral(entity)] = std::vector<entt::entity>();
         }

@@ -8,14 +8,33 @@
 #include <TUM_Draw.h>
 
 
+bool Renderer::boxOutOfBounds(short x, short y, short width, short height) {
+    return !(getScreenX(x) < SCREEN_WIDTH && getScreenY(y) < SCREEN_HEIGHT &&
+           getScreenX(x + width) > 0 && getScreenY(y + height) > 0);
+}
+
+bool Renderer::circleOutOfBounds(short x, short y, short radius) {
+    float transX = getScreenX(x);
+    float transY = getScreenY(y);
+    float scaledRadius = radius * scale;
+
+    return !intersectHitboxRange({transX, transY}, {scaledRadius}, {0, 0}, {SCREEN_WIDTH, SCREEN_HEIGHT});
+}
+
+bool Renderer::lineOutOfBounds(short x1, short y1, short x2, short y2) {
+    float transX1 = getScreenX(x1);
+    float transY1 = getScreenY(y1);
+    float transX2 = getScreenX(x2);
+    float transY2 = getScreenY(y2);
+
+    return !intersectLineRect({transX1, transY1},{transX2, transY2},{0, 0},{SCREEN_WIDTH, SCREEN_HEIGHT});
+}
+
 Renderer::Renderer(short xOffset, short yOffset, float scale) : xOffset{xOffset}, yOffset{yOffset}, scale{scale} {}
 
 void Renderer::drawBox(short x, short y, short width, short height, unsigned int color, bool filled) {
-    if(
-            getScreenX(x) < SCREEN_WIDTH &&
-                    getScreenY(y) < SCREEN_HEIGHT &&
-                    getScreenX(x + width) > 0 &&
-                    getScreenY(y + height) > 0) {
+    // Check if the box is visible on screen and if so, draw it
+    if(!boxOutOfBounds(x, y, width, height)) {
         if(filled) {
             tumDrawFilledBox(getScreenX(x), getScreenY(y), width * scale, height * scale, color);
         } else {
@@ -26,11 +45,7 @@ void Renderer::drawBox(short x, short y, short width, short height, unsigned int
 
 void Renderer::drawSprite(Sprite &sprite, short x, short y) {
     // Only draw the sprite if any part of it is visible on screen
-    if(
-            getScreenX(x) < SCREEN_WIDTH &&
-                    getScreenY(y) < SCREEN_HEIGHT &&
-                    getScreenX(x + sprite.width) > 0 &&
-                    getScreenY(y + sprite.height) > 0) {
+    if(!boxOutOfBounds(x, y, sprite.width, sprite.height)) {
         sprite.draw(getScreenX(x), getScreenY(y), this->scale);
     }
 }
@@ -94,26 +109,23 @@ short Renderer::getXOffset() {
 }
 
 void Renderer::drawLine(short x1, short y1, short x2, short y2, unsigned char thickness, unsigned int color) {
-    float transX1 = getScreenX(x1);
-    float transY1 = getScreenY(y1);
-    float transX2 = getScreenX(x2);
-    float transY2 = getScreenY(y2);
-    if(intersectLineRect(
-            {transX1, transY1},
-            {transX2, transY2},
-            {0, 0},
-            {SCREEN_WIDTH, SCREEN_HEIGHT})) {
+    // Check if the line is in bounds and draw it if so
+    if(!lineOutOfBounds(x1, y1, x2, y2)) {
+        float transX1 = getScreenX(x1);
+        float transY1 = getScreenY(y1);
+        float transX2 = getScreenX(x2);
+        float transY2 = getScreenY(y2);
         tumDrawLine(transX1, transY1, transX2, transY2, thickness, color);
     }
 }
 
 void Renderer::drawCircle(short x, short y, short radius, unsigned int color, bool filled) {
+    // Check if the circle is in bounds and draw it if so
+    if (!circleOutOfBounds(x, y, radius)) {
+        float transX = getScreenX(x);
+        float transY = getScreenY(y);
+        float scaledRadius = radius * scale;
 
-    float transX = getScreenX(x);
-    float transY = getScreenY(y);
-    float scaledRadius = radius * scale;
-
-    if (intersectHitboxRange({transX, transY}, {scaledRadius}, {0, 0}, {SCREEN_WIDTH, SCREEN_HEIGHT})) {
         if (filled) {
             tumDrawCircle(transX, transY, scaledRadius, color);
         } else {
@@ -123,11 +135,13 @@ void Renderer::drawCircle(short x, short y, short radius, unsigned int color, bo
 }
 
 void Renderer::drawPie(short x, short y, short radius, short start, short end, unsigned int color, bool filled) {
-    float transX = getScreenX(x);
-    float transY = getScreenY(y);
-    float scaledRadius = radius * scale;
 
-    if (intersectHitboxRange({transX, transY}, {scaledRadius}, {0, 0}, {SCREEN_WIDTH, SCREEN_HEIGHT})) {
+    // Check if the pie is in bounds and draw it if so
+    if (!circleOutOfBounds(x, y, radius)) {
+        float transX = getScreenX(x);
+        float transY = getScreenY(y);
+        float scaledRadius = radius * scale;
+
         if (filled) {
             tumDrawPieFilled(transX, transY, scaledRadius, start, end, color);
         } else {

@@ -63,10 +63,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master
+CMAKE_SOURCE_DIR = /home/skadic/Dokumente/Uni/FP/RTOS-TD
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build
+CMAKE_BINARY_DIR = /home/skadic/Dokumente/Uni/FP/RTOS-TD/build
 
 # Utility rule file for commit.
 
@@ -74,7 +74,7 @@ CMAKE_BINARY_DIR = /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build
 include CMakeFiles/commit.dir/progress.make
 
 CMakeFiles/commit:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Running git check"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Running git check"
 	echo
 	/usr/bin/git diff --check HEAD^
 
@@ -93,6 +93,6 @@ CMakeFiles/commit.dir/clean:
 .PHONY : CMakeFiles/commit.dir/clean
 
 CMakeFiles/commit.dir/depend:
-	cd /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build/CMakeFiles/commit.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/skadic/Dokumente/Uni/FP/RTOS-TD/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/skadic/Dokumente/Uni/FP/RTOS-TD /home/skadic/Dokumente/Uni/FP/RTOS-TD /home/skadic/Dokumente/Uni/FP/RTOS-TD/build /home/skadic/Dokumente/Uni/FP/RTOS-TD/build /home/skadic/Dokumente/Uni/FP/RTOS-TD/build/CMakeFiles/commit.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/commit.dir/depend
 

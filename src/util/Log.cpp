@@ -27,6 +27,8 @@ std::string levelName(LogLevel level) {
  * @param level The logging level
  */
 void log(std::string msg, LogLevel level) {
+    // The message should only be logged if logs are not turned off
+    // and if the log level of the message is of higher priority (lower numeric values are higher priorities). See the enum
     if(LOG_LEVEL != OFF && LOG_LEVEL >= level) {
         std::cout << "[thread-"<< std::this_thread::get_id() << "] " << levelName(level) << ": " << msg << std::endl;
     }

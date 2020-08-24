@@ -1,77 +1,272 @@
 [
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/src/main.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/src/main.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/src/main.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include  -g   -Wall -O0 -o CMakeFiles/async.dir/AsyncIO/AsyncIO.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/AsyncIO.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/AsyncIO.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/croutine.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/croutine.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/croutine.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/usr/include/SDL2  -g   -Wall -O0 -o CMakeFiles/gfx.dir/Gfx/TUM_Ball.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Ball.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Ball.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/list.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/list.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/list.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/usr/include/SDL2  -g   -Wall -O0 -o CMakeFiles/gfx.dir/Gfx/TUM_Draw.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Draw.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Draw.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/usr/include/SDL2  -g   -Wall -O0 -o CMakeFiles/gfx.dir/Gfx/TUM_Event.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Event.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Event.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/usr/include/SDL2  -g   -Wall -O0 -o CMakeFiles/gfx.dir/Gfx/TUM_Font.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Font.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Font.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/queue.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/queue.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/queue.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/usr/include/SDL2  -g   -Wall -O0 -o CMakeFiles/gfx.dir/Gfx/TUM_Sound.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Sound.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Sound.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/tasks.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/tasks.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/tasks.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/usr/include/SDL2  -g   -Wall -O0 -o CMakeFiles/gfx.dir/Gfx/TUM_Utils.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Utils.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/TUM_Utils.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/timers.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/timers.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/timers.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include  -g   -Wall -O0 -o CMakeFiles/freertos.dir/FreeRTOS_Kernel/croutine.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/croutine.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/croutine.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Ball.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Ball.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Ball.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include  -g   -Wall -O0 -o CMakeFiles/freertos.dir/FreeRTOS_Kernel/list.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/list.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/list.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Draw.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Draw.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Draw.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include  -g   -Wall -O0 -o CMakeFiles/freertos.dir/FreeRTOS_Kernel/portable/GCC/Posix/port.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Event.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Event.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Event.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include  -g   -Wall -O0 -o CMakeFiles/freertos.dir/FreeRTOS_Kernel/portable/MemMang/heap_3.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Font.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Font.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Font.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include  -g   -Wall -O0 -o CMakeFiles/freertos.dir/FreeRTOS_Kernel/queue.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/queue.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/queue.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Sound.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Sound.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Sound.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include  -g   -Wall -O0 -o CMakeFiles/freertos.dir/FreeRTOS_Kernel/tasks.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/tasks.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/tasks.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Utils.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Utils.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/TUM_Utils.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/lib",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include  -g   -Wall -O0 -o CMakeFiles/freertos.dir/FreeRTOS_Kernel/timers.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/timers.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/timers.c"
 },
 {
-  "directory": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build",
-  "command": "/usr/bin/cc  -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/Gfx/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/tracer/include  -g   -Wall -O0 -o CMakeFiles/FreeRTOS_Emulator.dir/lib/AsyncIO/AsyncIO.c.o   -c /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/AsyncIO.c",
-  "file": "/home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/lib/AsyncIO/AsyncIO.c"
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/clang-10  -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -o CMakeFiles/RTOS_TD.dir/main.c.o   -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/main.c",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/main.c"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/Main.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/Main.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/Main.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/Game.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/Game.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/Game.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/AI/tower/AreaOfEffectTowerAI.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/tower/AreaOfEffectTowerAI.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/tower/AreaOfEffectTowerAI.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/AI/tower/LaserTowerAI.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/tower/LaserTowerAI.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/tower/LaserTowerAI.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/AI/tower/ProjectileTowerAI.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/tower/ProjectileTowerAI.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/tower/ProjectileTowerAI.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/AI/projectile/TargetedSimpleProjectileAI.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/projectile/TargetedSimpleProjectileAI.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/projectile/TargetedSimpleProjectileAI.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/AI/AI.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/AI.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/AI.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/AI/MoveTowardsPlayerAI.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/MoveTowardsPlayerAI.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/MoveTowardsPlayerAI.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/AI/AStar.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/AStar.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/AStar.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/AI/WalkPathAI.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/WalkPathAI.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/AI/WalkPathAI.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/tilecomponents/TilePosition.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/tilecomponents/TilePosition.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/tilecomponents/TilePosition.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/tilecomponents/Tower.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/tilecomponents/Tower.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/tilecomponents/Tower.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/Hitbox.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/Hitbox.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/Hitbox.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/Position.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/Position.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/Position.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/Sprites.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/Sprites.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/Sprites.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/components/Velocity.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/Velocity.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/components/Velocity.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/states/gamestate/GameState.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/gamestate/GameState.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/gamestate/GameState.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/states/gamestate/GameTasks.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/gamestate/GameTasks.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/gamestate/GameTasks.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/states/gamestate/RenderTasks.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/gamestate/RenderTasks.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/gamestate/RenderTasks.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/states/mainmenu/MainMenuState.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/mainmenu/MainMenuState.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/mainmenu/MainMenuState.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/states/gameoverstate/GameOverState.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/gameoverstate/GameOverState.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/gameoverstate/GameOverState.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/states/tutorial/TutorialState.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/tutorial/TutorialState.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/tutorial/TutorialState.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/states/abstractmenustate/AbstractMenuState.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/abstractmenustate/AbstractMenuState.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/abstractmenustate/AbstractMenuState.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/states/abstractmenustate/AbstractMenuTasks.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/abstractmenustate/AbstractMenuTasks.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/abstractmenustate/AbstractMenuTasks.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/states/State.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/State.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/State.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/states/StateMachine.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/StateMachine.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/states/StateMachine.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/spawn/EntitySpawn.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/spawn/EntitySpawn.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/spawn/EntitySpawn.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/sync/Semaphore.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/sync/Semaphore.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/sync/Semaphore.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/map/Direction.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/map/Direction.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/map/Direction.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/map/Map.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/map/Map.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/map/Map.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/map/TileType.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/map/TileType.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/map/TileType.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/ui/Button.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/ui/Button.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/ui/Button.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/TaskUtils.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/TaskUtils.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/TaskUtils.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/Renderer.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/Renderer.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/Renderer.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/InputHandler.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/InputHandler.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/InputHandler.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/Log.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/Log.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/Log.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/Wave.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/Wave.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/Wave.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/CollisionTable.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/CollisionTable.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/CollisionTable.cpp"
+},
+{
+  "directory": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/build/src",
+  "command": "/usr/bin/c++   -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/FreeRTOS_Kernel/portable/GCC/Posix -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/Gfx/include -I/usr/include/SDL2 -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/AsyncIO/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/tracer/include -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/entt -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/glm/ext -I/home/skadic/Dokumente/Uni/FP/RTOS-TD/lib/json/include  -g   -Wall -O0 -std=c++17 -o CMakeFiles/RTOS_TD.dir/util/TowerUtil.cpp.o -c /home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/TowerUtil.cpp",
+  "file": "/home/skadic/Dokumente/Uni/FP/RTOS-TD/src/util/TowerUtil.cpp"
 }
 ]

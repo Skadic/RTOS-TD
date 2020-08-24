@@ -21,12 +21,12 @@
  */
 template<class T>
 void drawInfo(char* text, T data, int x, int y){
+    // Use a stringstream to append the data to the text
     std::stringstream ss;
-    ss << std::noskipws << text;
-    ss << data;
-    std::string s;
-    std::getline(ss, s);
-    const char *chars = s.c_str();
-    tumDrawText(const_cast<char *>(chars), x, y, 0xFFFFFF);
+    // Instruct the stringstream not to skip whitespace
+    ss << std::noskipws << text << data;
+
+    // Get the string result from the string stream, convert it to a char*, and draw it
+    tumDrawText(const_cast<char *>(ss.str().c_str()), x, y, 0xFFFFFF);
 }
 

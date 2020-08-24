@@ -8,9 +8,16 @@
  * Handles input from the TUM library
  */
 class InputHandler {
-    short mouseX;
-    short mouseY;
 
+    /**
+     * The mouse X position
+     */
+    short mouseX;
+
+    /**
+     * The mouse Y position
+     */
+    short mouseY;
 
     /**
      * The current keyboard input

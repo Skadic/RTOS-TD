@@ -1,10 +1,11 @@
 #include "Sprites.h"
 #include "../util/Log.h"
+#include "../util/GlobalConsts.h"
 #include <iostream>
 #include <random>
 
 
-inline const auto TEXTURE_PATH = "../resources/textures/";
+inline const auto TEXTURE_DIR = RESOURCE_DIR + "textures/";
 
 SpriteComponent::SpriteComponent(Sprite *sprite) : sprite{std::shared_ptr<Sprite>(sprite)} {}
 
@@ -40,7 +41,7 @@ void RectangleSprite::draw(short x, short y, float scale) {
 
 
 TextureSprite::TextureSprite(std::string path) : spriteHandle{nullptr} {
-    path.insert(0, TEXTURE_PATH);
+    path.insert(0, TEXTURE_DIR);
     this->path = path;
 }
 

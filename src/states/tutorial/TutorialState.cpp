@@ -13,6 +13,8 @@ extern "C" {
 #include <TUM_Sound.h>
 }
 
+inline const auto MISC_DIR = RESOURCE_DIR + "misc/";
+
 TutorialState::TutorialState() : AbstractMenuState() {
 
     // A button that takes you back to the main menu
@@ -32,7 +34,7 @@ void TutorialState::render() {
     // if the tutorial text has not been loaded yet, load it from the tutorial.txt file
     if(tutorialText.empty()) {
         // Open an input stream
-        std::ifstream tutorialIn("../resources/misc/tutorial.txt");
+        std::ifstream tutorialIn(MISC_DIR + "tutorial.txt");
         if(tutorialIn.is_open()) {
             // Read each line and append it to the tutorialText string
             std::string line;

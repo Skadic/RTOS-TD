@@ -30,34 +30,41 @@ bool InputHandler::keyPressed(SDL_Scancode sdlScancode) {
 }
 
 bool InputHandler::keyDown(SDL_Scancode sdlScancode) {
+    // The key has just been pressed if the key is pressed right now, and was not pressed before
     return inputCurrent->at(sdlScancode) && !inputOld->at(sdlScancode);
 }
 
 bool InputHandler::keyUp(SDL_Scancode sdlScancode) {
+    // The key has just been released if the key is not pressed right now, but was pressed before
     return !inputCurrent->at(sdlScancode) && inputOld->at(sdlScancode);
 }
 
 void InputHandler::update() {
     static bool changeNextTick = false;
 
-    inputCurrent.swap(inputOld);
-    if (xQueueReceive(buttonInputQueue, this->inputCurrent->data(), 0)) {
+    // See if there is been new input. If so, put the new data in the old vector and swap the contents of the vectors
+    if (xQueueReceive(buttonInputQueue, this->inputOld->data(), 0)) {
+        inputCurrent.swap(inputOld);
+
+        // Swap the new and old input values
         std::swap(leftClickCurrent, leftClickOld);
         std::swap(rightClickCurrent, rightClickOld);
         std::swap(middleClickCurrent, middleClickOld);
 
+        // Overwrite the new input values (which are currently occupied by the actual old values)
         leftClickCurrent = tumEventGetMouseLeft();
         rightClickCurrent = tumEventGetMouseRight();
         middleClickCurrent = tumEventGetMouseMiddle();
 
         changeNextTick = true;
     } else {
-        inputCurrent.swap(inputOld);
         if(changeNextTick) {
             resetPressedData();
             changeNextTick = false;
         }
     }
+
+    // Retrieve the mouse X and Y position from the tum library
     mouseX = tumEventGetMouseX();
     mouseY = tumEventGetMouseY();
 }

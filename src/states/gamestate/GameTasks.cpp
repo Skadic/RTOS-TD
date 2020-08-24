@@ -186,7 +186,7 @@ namespace GameTasks {
                                 auto displacementVec = *collision;
                                 entityPos.x += displacementVec.x;
                                 entityPos.y += displacementVec.y;
-                            } else if (registry->has<TileTypeComponent>(tile) && registry->get<TileTypeComponent>(tile).type == GOAL) {
+                            } else if (registry->has<TileTypeComponent>(tile) && registry->get<TileTypeComponent>(tile).type == NEXUS) {
                                 // If an enemy reaches the goal, they are flagged for deletion
                                 if(enemyView.contains(entity) && !registry->has<Delete>(entity)){
                                     registry->emplace<Delete>(entity);

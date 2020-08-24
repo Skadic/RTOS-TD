@@ -68,10 +68,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master
+CMAKE_SOURCE_DIR = /home/skadic/Dokumente/Uni/FP/RTOS-TD
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build
+CMAKE_BINARY_DIR = /home/skadic/Dokumente/Uni/FP/RTOS-TD/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -100,9 +100,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build/CMakeFiles /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/skadic/Dokumente/Uni/FP/RTOS-TD/build/CMakeFiles /home/skadic/Dokumente/Uni/FP/RTOS-TD/build/CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/skadic/Dokumente/Uni/FP/FreeRTOS-Emulator-master/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/skadic/Dokumente/Uni/FP/RTOS-TD/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -144,422 +144,56 @@ commit/fast:
 .PHONY : commit/fast
 
 #=============================================================================
-# Target rules for targets named FreeRTOS_Emulator
+# Target rules for targets named async
 
 # Build rule for target.
-FreeRTOS_Emulator: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 FreeRTOS_Emulator
-.PHONY : FreeRTOS_Emulator
+async: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 async
+.PHONY : async
 
 # fast build rule for target.
-FreeRTOS_Emulator/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/build
-.PHONY : FreeRTOS_Emulator/fast
-
-lib/AsyncIO/AsyncIO.o: lib/AsyncIO/AsyncIO.c.o
-
-.PHONY : lib/AsyncIO/AsyncIO.o
-
-# target to build an object file
-lib/AsyncIO/AsyncIO.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/AsyncIO/AsyncIO.c.o
-.PHONY : lib/AsyncIO/AsyncIO.c.o
-
-lib/AsyncIO/AsyncIO.i: lib/AsyncIO/AsyncIO.c.i
-
-.PHONY : lib/AsyncIO/AsyncIO.i
-
-# target to preprocess a source file
-lib/AsyncIO/AsyncIO.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/AsyncIO/AsyncIO.c.i
-.PHONY : lib/AsyncIO/AsyncIO.c.i
-
-lib/AsyncIO/AsyncIO.s: lib/AsyncIO/AsyncIO.c.s
-
-.PHONY : lib/AsyncIO/AsyncIO.s
-
-# target to generate assembly for a file
-lib/AsyncIO/AsyncIO.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/AsyncIO/AsyncIO.c.s
-.PHONY : lib/AsyncIO/AsyncIO.c.s
-
-lib/FreeRTOS_Kernel/croutine.o: lib/FreeRTOS_Kernel/croutine.c.o
-
-.PHONY : lib/FreeRTOS_Kernel/croutine.o
-
-# target to build an object file
-lib/FreeRTOS_Kernel/croutine.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/croutine.c.o
-.PHONY : lib/FreeRTOS_Kernel/croutine.c.o
-
-lib/FreeRTOS_Kernel/croutine.i: lib/FreeRTOS_Kernel/croutine.c.i
-
-.PHONY : lib/FreeRTOS_Kernel/croutine.i
-
-# target to preprocess a source file
-lib/FreeRTOS_Kernel/croutine.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/croutine.c.i
-.PHONY : lib/FreeRTOS_Kernel/croutine.c.i
-
-lib/FreeRTOS_Kernel/croutine.s: lib/FreeRTOS_Kernel/croutine.c.s
-
-.PHONY : lib/FreeRTOS_Kernel/croutine.s
-
-# target to generate assembly for a file
-lib/FreeRTOS_Kernel/croutine.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/croutine.c.s
-.PHONY : lib/FreeRTOS_Kernel/croutine.c.s
-
-lib/FreeRTOS_Kernel/list.o: lib/FreeRTOS_Kernel/list.c.o
-
-.PHONY : lib/FreeRTOS_Kernel/list.o
-
-# target to build an object file
-lib/FreeRTOS_Kernel/list.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/list.c.o
-.PHONY : lib/FreeRTOS_Kernel/list.c.o
-
-lib/FreeRTOS_Kernel/list.i: lib/FreeRTOS_Kernel/list.c.i
-
-.PHONY : lib/FreeRTOS_Kernel/list.i
-
-# target to preprocess a source file
-lib/FreeRTOS_Kernel/list.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/list.c.i
-.PHONY : lib/FreeRTOS_Kernel/list.c.i
-
-lib/FreeRTOS_Kernel/list.s: lib/FreeRTOS_Kernel/list.c.s
-
-.PHONY : lib/FreeRTOS_Kernel/list.s
-
-# target to generate assembly for a file
-lib/FreeRTOS_Kernel/list.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/list.c.s
-.PHONY : lib/FreeRTOS_Kernel/list.c.s
-
-lib/FreeRTOS_Kernel/portable/GCC/Posix/port.o: lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.o
-
-.PHONY : lib/FreeRTOS_Kernel/portable/GCC/Posix/port.o
-
-# target to build an object file
-lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.o
-.PHONY : lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.o
-
-lib/FreeRTOS_Kernel/portable/GCC/Posix/port.i: lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.i
-
-.PHONY : lib/FreeRTOS_Kernel/portable/GCC/Posix/port.i
-
-# target to preprocess a source file
-lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.i
-.PHONY : lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.i
-
-lib/FreeRTOS_Kernel/portable/GCC/Posix/port.s: lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.s
-
-.PHONY : lib/FreeRTOS_Kernel/portable/GCC/Posix/port.s
-
-# target to generate assembly for a file
-lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.s
-.PHONY : lib/FreeRTOS_Kernel/portable/GCC/Posix/port.c.s
-
-lib/FreeRTOS_Kernel/portable/MemMang/heap_3.o: lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.o
-
-.PHONY : lib/FreeRTOS_Kernel/portable/MemMang/heap_3.o
-
-# target to build an object file
-lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.o
-.PHONY : lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.o
-
-lib/FreeRTOS_Kernel/portable/MemMang/heap_3.i: lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.i
-
-.PHONY : lib/FreeRTOS_Kernel/portable/MemMang/heap_3.i
-
-# target to preprocess a source file
-lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.i
-.PHONY : lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.i
-
-lib/FreeRTOS_Kernel/portable/MemMang/heap_3.s: lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.s
-
-.PHONY : lib/FreeRTOS_Kernel/portable/MemMang/heap_3.s
-
-# target to generate assembly for a file
-lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.s
-.PHONY : lib/FreeRTOS_Kernel/portable/MemMang/heap_3.c.s
-
-lib/FreeRTOS_Kernel/queue.o: lib/FreeRTOS_Kernel/queue.c.o
-
-.PHONY : lib/FreeRTOS_Kernel/queue.o
-
-# target to build an object file
-lib/FreeRTOS_Kernel/queue.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/queue.c.o
-.PHONY : lib/FreeRTOS_Kernel/queue.c.o
-
-lib/FreeRTOS_Kernel/queue.i: lib/FreeRTOS_Kernel/queue.c.i
-
-.PHONY : lib/FreeRTOS_Kernel/queue.i
-
-# target to preprocess a source file
-lib/FreeRTOS_Kernel/queue.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/queue.c.i
-.PHONY : lib/FreeRTOS_Kernel/queue.c.i
-
-lib/FreeRTOS_Kernel/queue.s: lib/FreeRTOS_Kernel/queue.c.s
-
-.PHONY : lib/FreeRTOS_Kernel/queue.s
-
-# target to generate assembly for a file
-lib/FreeRTOS_Kernel/queue.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/queue.c.s
-.PHONY : lib/FreeRTOS_Kernel/queue.c.s
-
-lib/FreeRTOS_Kernel/tasks.o: lib/FreeRTOS_Kernel/tasks.c.o
-
-.PHONY : lib/FreeRTOS_Kernel/tasks.o
-
-# target to build an object file
-lib/FreeRTOS_Kernel/tasks.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/tasks.c.o
-.PHONY : lib/FreeRTOS_Kernel/tasks.c.o
-
-lib/FreeRTOS_Kernel/tasks.i: lib/FreeRTOS_Kernel/tasks.c.i
-
-.PHONY : lib/FreeRTOS_Kernel/tasks.i
-
-# target to preprocess a source file
-lib/FreeRTOS_Kernel/tasks.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/tasks.c.i
-.PHONY : lib/FreeRTOS_Kernel/tasks.c.i
-
-lib/FreeRTOS_Kernel/tasks.s: lib/FreeRTOS_Kernel/tasks.c.s
-
-.PHONY : lib/FreeRTOS_Kernel/tasks.s
-
-# target to generate assembly for a file
-lib/FreeRTOS_Kernel/tasks.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/tasks.c.s
-.PHONY : lib/FreeRTOS_Kernel/tasks.c.s
-
-lib/FreeRTOS_Kernel/timers.o: lib/FreeRTOS_Kernel/timers.c.o
-
-.PHONY : lib/FreeRTOS_Kernel/timers.o
-
-# target to build an object file
-lib/FreeRTOS_Kernel/timers.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/timers.c.o
-.PHONY : lib/FreeRTOS_Kernel/timers.c.o
-
-lib/FreeRTOS_Kernel/timers.i: lib/FreeRTOS_Kernel/timers.c.i
-
-.PHONY : lib/FreeRTOS_Kernel/timers.i
-
-# target to preprocess a source file
-lib/FreeRTOS_Kernel/timers.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/timers.c.i
-.PHONY : lib/FreeRTOS_Kernel/timers.c.i
-
-lib/FreeRTOS_Kernel/timers.s: lib/FreeRTOS_Kernel/timers.c.s
-
-.PHONY : lib/FreeRTOS_Kernel/timers.s
-
-# target to generate assembly for a file
-lib/FreeRTOS_Kernel/timers.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/FreeRTOS_Kernel/timers.c.s
-.PHONY : lib/FreeRTOS_Kernel/timers.c.s
-
-lib/Gfx/TUM_Ball.o: lib/Gfx/TUM_Ball.c.o
-
-.PHONY : lib/Gfx/TUM_Ball.o
-
-# target to build an object file
-lib/Gfx/TUM_Ball.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Ball.c.o
-.PHONY : lib/Gfx/TUM_Ball.c.o
-
-lib/Gfx/TUM_Ball.i: lib/Gfx/TUM_Ball.c.i
-
-.PHONY : lib/Gfx/TUM_Ball.i
-
-# target to preprocess a source file
-lib/Gfx/TUM_Ball.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Ball.c.i
-.PHONY : lib/Gfx/TUM_Ball.c.i
-
-lib/Gfx/TUM_Ball.s: lib/Gfx/TUM_Ball.c.s
-
-.PHONY : lib/Gfx/TUM_Ball.s
-
-# target to generate assembly for a file
-lib/Gfx/TUM_Ball.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Ball.c.s
-.PHONY : lib/Gfx/TUM_Ball.c.s
-
-lib/Gfx/TUM_Draw.o: lib/Gfx/TUM_Draw.c.o
-
-.PHONY : lib/Gfx/TUM_Draw.o
-
-# target to build an object file
-lib/Gfx/TUM_Draw.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Draw.c.o
-.PHONY : lib/Gfx/TUM_Draw.c.o
-
-lib/Gfx/TUM_Draw.i: lib/Gfx/TUM_Draw.c.i
-
-.PHONY : lib/Gfx/TUM_Draw.i
-
-# target to preprocess a source file
-lib/Gfx/TUM_Draw.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Draw.c.i
-.PHONY : lib/Gfx/TUM_Draw.c.i
-
-lib/Gfx/TUM_Draw.s: lib/Gfx/TUM_Draw.c.s
-
-.PHONY : lib/Gfx/TUM_Draw.s
-
-# target to generate assembly for a file
-lib/Gfx/TUM_Draw.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Draw.c.s
-.PHONY : lib/Gfx/TUM_Draw.c.s
-
-lib/Gfx/TUM_Event.o: lib/Gfx/TUM_Event.c.o
-
-.PHONY : lib/Gfx/TUM_Event.o
-
-# target to build an object file
-lib/Gfx/TUM_Event.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Event.c.o
-.PHONY : lib/Gfx/TUM_Event.c.o
-
-lib/Gfx/TUM_Event.i: lib/Gfx/TUM_Event.c.i
-
-.PHONY : lib/Gfx/TUM_Event.i
-
-# target to preprocess a source file
-lib/Gfx/TUM_Event.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Event.c.i
-.PHONY : lib/Gfx/TUM_Event.c.i
-
-lib/Gfx/TUM_Event.s: lib/Gfx/TUM_Event.c.s
-
-.PHONY : lib/Gfx/TUM_Event.s
-
-# target to generate assembly for a file
-lib/Gfx/TUM_Event.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Event.c.s
-.PHONY : lib/Gfx/TUM_Event.c.s
-
-lib/Gfx/TUM_Font.o: lib/Gfx/TUM_Font.c.o
-
-.PHONY : lib/Gfx/TUM_Font.o
-
-# target to build an object file
-lib/Gfx/TUM_Font.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Font.c.o
-.PHONY : lib/Gfx/TUM_Font.c.o
-
-lib/Gfx/TUM_Font.i: lib/Gfx/TUM_Font.c.i
-
-.PHONY : lib/Gfx/TUM_Font.i
-
-# target to preprocess a source file
-lib/Gfx/TUM_Font.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Font.c.i
-.PHONY : lib/Gfx/TUM_Font.c.i
-
-lib/Gfx/TUM_Font.s: lib/Gfx/TUM_Font.c.s
-
-.PHONY : lib/Gfx/TUM_Font.s
-
-# target to generate assembly for a file
-lib/Gfx/TUM_Font.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Font.c.s
-.PHONY : lib/Gfx/TUM_Font.c.s
-
-lib/Gfx/TUM_Sound.o: lib/Gfx/TUM_Sound.c.o
-
-.PHONY : lib/Gfx/TUM_Sound.o
-
-# target to build an object file
-lib/Gfx/TUM_Sound.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Sound.c.o
-.PHONY : lib/Gfx/TUM_Sound.c.o
-
-lib/Gfx/TUM_Sound.i: lib/Gfx/TUM_Sound.c.i
-
-.PHONY : lib/Gfx/TUM_Sound.i
-
-# target to preprocess a source file
-lib/Gfx/TUM_Sound.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Sound.c.i
-.PHONY : lib/Gfx/TUM_Sound.c.i
-
-lib/Gfx/TUM_Sound.s: lib/Gfx/TUM_Sound.c.s
-
-.PHONY : lib/Gfx/TUM_Sound.s
-
-# target to generate assembly for a file
-lib/Gfx/TUM_Sound.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Sound.c.s
-.PHONY : lib/Gfx/TUM_Sound.c.s
-
-lib/Gfx/TUM_Utils.o: lib/Gfx/TUM_Utils.c.o
-
-.PHONY : lib/Gfx/TUM_Utils.o
-
-# target to build an object file
-lib/Gfx/TUM_Utils.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Utils.c.o
-.PHONY : lib/Gfx/TUM_Utils.c.o
-
-lib/Gfx/TUM_Utils.i: lib/Gfx/TUM_Utils.c.i
-
-.PHONY : lib/Gfx/TUM_Utils.i
-
-# target to preprocess a source file
-lib/Gfx/TUM_Utils.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Utils.c.i
-.PHONY : lib/Gfx/TUM_Utils.c.i
-
-lib/Gfx/TUM_Utils.s: lib/Gfx/TUM_Utils.c.s
-
-.PHONY : lib/Gfx/TUM_Utils.s
-
-# target to generate assembly for a file
-lib/Gfx/TUM_Utils.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/lib/Gfx/TUM_Utils.c.s
-.PHONY : lib/Gfx/TUM_Utils.c.s
-
-src/main.o: src/main.c.o
-
-.PHONY : src/main.o
-
-# target to build an object file
-src/main.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/src/main.c.o
-.PHONY : src/main.c.o
-
-src/main.i: src/main.c.i
-
-.PHONY : src/main.i
-
-# target to preprocess a source file
-src/main.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/src/main.c.i
-.PHONY : src/main.c.i
-
-src/main.s: src/main.c.s
-
-.PHONY : src/main.s
-
-# target to generate assembly for a file
-src/main.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/FreeRTOS_Emulator.dir/build.make CMakeFiles/FreeRTOS_Emulator.dir/src/main.c.s
-.PHONY : src/main.c.s
+async/fast:
+	$(MAKE) $(MAKESILENT) -f lib/CMakeFiles/async.dir/build.make lib/CMakeFiles/async.dir/build
+.PHONY : async/fast
+
+#=============================================================================
+# Target rules for targets named gfx
+
+# Build rule for target.
+gfx: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gfx
+.PHONY : gfx
+
+# fast build rule for target.
+gfx/fast:
+	$(MAKE) $(MAKESILENT) -f lib/CMakeFiles/gfx.dir/build.make lib/CMakeFiles/gfx.dir/build
+.PHONY : gfx/fast
+
+#=============================================================================
+# Target rules for targets named freertos
+
+# Build rule for target.
+freertos: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 freertos
+.PHONY : freertos
+
+# fast build rule for target.
+freertos/fast:
+	$(MAKE) $(MAKESILENT) -f lib/CMakeFiles/freertos.dir/build.make lib/CMakeFiles/freertos.dir/build
+.PHONY : freertos/fast
+
+#=============================================================================
+# Target rules for targets named RTOS_TD
+
+# Build rule for target.
+RTOS_TD: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 RTOS_TD
+.PHONY : RTOS_TD
+
+# fast build rule for target.
+RTOS_TD/fast:
+	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/RTOS_TD.dir/build.make src/CMakeFiles/RTOS_TD.dir/build
+.PHONY : RTOS_TD/fast
 
 # Help Target
 help:
@@ -570,52 +204,10 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... commit"
-	@echo "... FreeRTOS_Emulator"
-	@echo "... lib/AsyncIO/AsyncIO.o"
-	@echo "... lib/AsyncIO/AsyncIO.i"
-	@echo "... lib/AsyncIO/AsyncIO.s"
-	@echo "... lib/FreeRTOS_Kernel/croutine.o"
-	@echo "... lib/FreeRTOS_Kernel/croutine.i"
-	@echo "... lib/FreeRTOS_Kernel/croutine.s"
-	@echo "... lib/FreeRTOS_Kernel/list.o"
-	@echo "... lib/FreeRTOS_Kernel/list.i"
-	@echo "... lib/FreeRTOS_Kernel/list.s"
-	@echo "... lib/FreeRTOS_Kernel/portable/GCC/Posix/port.o"
-	@echo "... lib/FreeRTOS_Kernel/portable/GCC/Posix/port.i"
-	@echo "... lib/FreeRTOS_Kernel/portable/GCC/Posix/port.s"
-	@echo "... lib/FreeRTOS_Kernel/portable/MemMang/heap_3.o"
-	@echo "... lib/FreeRTOS_Kernel/portable/MemMang/heap_3.i"
-	@echo "... lib/FreeRTOS_Kernel/portable/MemMang/heap_3.s"
-	@echo "... lib/FreeRTOS_Kernel/queue.o"
-	@echo "... lib/FreeRTOS_Kernel/queue.i"
-	@echo "... lib/FreeRTOS_Kernel/queue.s"
-	@echo "... lib/FreeRTOS_Kernel/tasks.o"
-	@echo "... lib/FreeRTOS_Kernel/tasks.i"
-	@echo "... lib/FreeRTOS_Kernel/tasks.s"
-	@echo "... lib/FreeRTOS_Kernel/timers.o"
-	@echo "... lib/FreeRTOS_Kernel/timers.i"
-	@echo "... lib/FreeRTOS_Kernel/timers.s"
-	@echo "... lib/Gfx/TUM_Ball.o"
-	@echo "... lib/Gfx/TUM_Ball.i"
-	@echo "... lib/Gfx/TUM_Ball.s"
-	@echo "... lib/Gfx/TUM_Draw.o"
-	@echo "... lib/Gfx/TUM_Draw.i"
-	@echo "... lib/Gfx/TUM_Draw.s"
-	@echo "... lib/Gfx/TUM_Event.o"
-	@echo "... lib/Gfx/TUM_Event.i"
-	@echo "... lib/Gfx/TUM_Event.s"
-	@echo "... lib/Gfx/TUM_Font.o"
-	@echo "... lib/Gfx/TUM_Font.i"
-	@echo "... lib/Gfx/TUM_Font.s"
-	@echo "... lib/Gfx/TUM_Sound.o"
-	@echo "... lib/Gfx/TUM_Sound.i"
-	@echo "... lib/Gfx/TUM_Sound.s"
-	@echo "... lib/Gfx/TUM_Utils.o"
-	@echo "... lib/Gfx/TUM_Utils.i"
-	@echo "... lib/Gfx/TUM_Utils.s"
-	@echo "... src/main.o"
-	@echo "... src/main.i"
-	@echo "... src/main.s"
+	@echo "... RTOS_TD"
+	@echo "... async"
+	@echo "... freertos"
+	@echo "... gfx"
 .PHONY : help
 
 

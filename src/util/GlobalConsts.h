@@ -3,6 +3,8 @@
 #include <entity/registry.hpp>
 #include <TUM_Draw.h>
 
+inline const std::string RESOURCE_DIR = "../resources/";
+
 inline const unsigned int TARGET_FPS = 144;
 inline const unsigned int FRAME_TIME_MS = 1000 / TARGET_FPS;
 
