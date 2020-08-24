@@ -17,7 +17,7 @@ void State::suspendTasks() {
 
 State::~State() {
     deleteAll(this->tasks);
-    std::cout << "State deconstructed" << std::endl;
+
 }
 
 void State::addTask(TaskFunction_t task, const char *const pcName, uint16_t stackSize, UBaseType_t priority) {
