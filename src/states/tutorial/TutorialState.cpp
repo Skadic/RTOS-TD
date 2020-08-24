@@ -6,6 +6,8 @@
 #include "TutorialState.h"
 #include "../../util/GlobalConsts.h"
 #include "../../Game.h"
+#include "../../util/Log.h"
+
 extern "C" {
 #include <FreeRTOS.h>
 #include <TUM_Sound.h>
@@ -37,8 +39,9 @@ void TutorialState::render() {
             while(getline(tutorialIn, line)) {
                 tutorialText.push_back(line);
             }
+            debug("Tutorial read successfully");
         } else {
-            std::cout << "Unable to open" << std::endl;
+            warn("Unable to open");
         }
         tutorialIn.close();
     }

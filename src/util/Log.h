@@ -17,10 +17,6 @@ enum LogLevel {
  */
 inline const LogLevel LOG_LEVEL = INFO;
 
-/**
- * Logs the name of the task which this function is called in
- */
-void logCurrentTaskName();
 
 /**
  * Logs a message at debug logging level

@@ -6,6 +6,7 @@
 
 #include "State.h"
 #include "../Game.h"
+#include "../util/Log.h"
 #include <iostream>
 
 StateMachine::StateMachine() : stateStack{std::stack<std::unique_ptr<State>>(), xSemaphoreCreateMutex()} {}
@@ -19,15 +20,18 @@ void StateMachine::popStack2X() {
     if (auto stackOpt = stateStack.lock(portMAX_DELAY)) {
         auto &stack = *stackOpt;
 
-        if (stack->size() != 2) {
+        if (stack->size() >= 2) {
             stack->top()->suspendTasks();
             stack->pop();
             stack->pop();
-            stack->top()->resumeTasks();
-            std::cout << "Stack popped" << std::endl;
-        } else if (stack->size() == 2){
-            stack->pop();
-            std::cout << "Last stack element popped" << std::endl;
+            debug("2 states popped off stack");
+            if (!stack->empty()) {
+                stack->top()->resumeTasks();
+            } else {
+                debug("Last stack element popped");
+            }
+        } else {
+            warn("2X pop not executed because stack has less than 2 elements");
         }
     }
 }
@@ -38,14 +42,17 @@ void StateMachine::popStack() {
         auto &stack = *stackOpt;
 
         // only remove state, if the stack would not be empty after pop
-        if (stack->size() > 1) {
+        if (!stack->empty()) {
             stack->top()->suspendTasks();
             stack->pop();
-            stack->top()->resumeTasks();
-            std::cout << "Stack popped" << std::endl;
-        } else if (stack->size() == 1){
-            stack->pop();
-            std::cout << "Last stack element popped" << std::endl;
+            debug("State popped off stack");
+            if (!stack->empty()) {
+                stack->top()->resumeTasks();
+            } else {
+                debug("Last stack element popped");
+            }
+        } else {
+            warn("Pop not executed because stack is empty");
         }
     }
 }

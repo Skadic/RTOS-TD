@@ -4,6 +4,7 @@
 #include <entity/registry.hpp>
 #include "../util/sync/LockGuard.h"
 #include "../util/Renderer.h"
+#include "../util/Log.h"
 
 extern "C" {
 #include <FreeRTOS.h>
@@ -36,7 +37,7 @@ protected:
     /**
      * Constructs a state with a normal mutex to protect the registry
      */
-    State() : registry{entt::registry(), xSemaphoreCreateMutex()}, tasks{std::vector<TaskHandle_t>()} {}
+    State();
 
 public:
 
