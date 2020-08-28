@@ -1,0 +1,36 @@
+\begin{thebibliography}{1}
+
+\bibitem{Abramowski:1991}
+S.~Abramowski and H.~M{\"u}ller.
+\newblock {\em Geometrisches Modellieren}.
+\newblock Reihe Informatik. B.I. Wissenschaftsverlag, Mannheim, 1991.
+
+\bibitem{Khronos:2012}
+K.~Group.
+\newblock {OpenCL API 1.2 Reference Card}.
+
+\bibitem{Muller:2011}
+H.~M{\"u}ller and F.~Weichert.
+\newblock {\em Vorkurs Informatik: Der Einstieg ins Informatikstudium}.
+\newblock Vieweg+Teubner Verlag | Springer Fachmedien Wiesbaden GmbH, 2.
+  auflage edition, 2011.
+
+\bibitem{Nachname-Bachelor:2012}
+V.~Nachname.
+\newblock Titel der bachelorarbeit.
+\newblock Bachelorarbeit, Technische Universit{\"a}t Dortmund, Lehrstuhl
+  f{\"u}r Graphische Systeme, 2012.
+
+\bibitem{Nachname-Diplom:2012}
+V.~Nachname.
+\newblock Titel der diplomarbeit.
+\newblock Diplomarbeit, Technische Universit{\"a}t Dortmund, Lehrstuhl f{\"u}r
+  Graphische Systeme, 2012.
+
+\bibitem{Nachname-Master:2012}
+V.~Nachname.
+\newblock Titel der masterarbeit.
+\newblock Masterarbeit, Technische Universit{\"a}t Dortmund, Lehrstuhl f{\"u}r
+  Graphische Systeme, 2012.
+
+\end{thebibliography}

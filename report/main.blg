@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2020/Arch Linux)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: main.aux
+A level-1 auxiliary file: chapter/titlepage.aux
+A level-1 auxiliary file: chapter/notation.aux
+A level-1 auxiliary file: chapter/introduction.aux
+A level-1 auxiliary file: chapter/chapter1.aux
+A level-1 auxiliary file: chapter/chapter2.aux
+A level-1 auxiliary file: chapter/appendix.aux
+The style file: abbrv.bst
+Database file #1: literatur.bib
+You've used 6 entries,
+            2118 wiz_defined-function locations,
+            537 strings with 4537 characters,
+and the built_in function-call counts, 1324 in all, are:
+= -- 130
+> -- 54
+< -- 0
++ -- 22
+- -- 16
+* -- 56
+:= -- 253
+add.period$ -- 18
+call.type$ -- 6
+change.case$ -- 28
+chr.to.int$ -- 0
+cite$ -- 6
+duplicate$ -- 55
+empty$ -- 109
+format.name$ -- 16
+if$ -- 270
+int.to.chr$ -- 0
+int.to.str$ -- 6
+missing$ -- 4
+newline$ -- 32
+num.names$ -- 12
+pop$ -- 34
+preamble$ -- 1
+purify$ -- 20
+quote$ -- 0
+skip$ -- 39
+stack$ -- 0
+substring$ -- 30
+swap$ -- 3
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 20
+warning$ -- 0
+while$ -- 12
+width$ -- 7
+write$ -- 65
