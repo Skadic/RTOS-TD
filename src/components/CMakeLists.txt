@@ -3,6 +3,7 @@ set(COMPONENTS_SOURCES
         Position.cpp
         Sprites.cpp
         Velocity.cpp
+        Upgrade.cpp
         )
 
 add_subdirectory(AI)

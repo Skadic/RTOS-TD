@@ -12,6 +12,7 @@
 #include "../../util/RenderUtils.h"
 #include "GameState.h"
 #include "../../Game.h"
+#include "../../components/Upgrade.h"
 
 void GameTasks::renderEntities(Renderer &renderer, entt::registry &registry) {
     // Get all entities with a Position and a Sprite
@@ -32,6 +33,14 @@ void GameTasks::renderMap(Renderer &renderer, entt::registry &registry, Map &map
         TilePosition &pos = tileView.get<TilePosition>(entity);
         SpriteComponent &sprite = tileView.get<SpriteComponent>(entity);
         renderer.drawSprite(*sprite.getSprite(), pos.x * TILE_SIZE, pos.y * TILE_SIZE);
+    }
+
+    // Get all the upgradeable tiles
+    auto upgradeView = registry.view<TilePosition, Upgrade>();
+    for(auto &entity : upgradeView) {
+        TilePosition &pos = upgradeView.get<TilePosition>(entity);
+        Upgrade &upgrade = upgradeView.get<Upgrade>(entity);
+        renderer.drawText(const_cast<char*>(std::to_string(upgrade.level).c_str()), pos.x * TILE_SIZE, pos.y * TILE_SIZE, 0xFFFFFF);
     }
 
     // Draw the map border

@@ -58,3 +58,20 @@ bool isSolid(TileType type);
  */
 bool isSpecial(TileType type);
 
+
+/**
+ * Returns the cost to upgrade the given tower type from level "level - 1" to "level"
+ * @param type The tower type to upgrade
+ * @param level The level for the tower to reach
+ * @return The cost
+ */
+int levelUpCost(TileType type, int level);
+
+/**
+ * Returns the total cost of building a tower of the given type with the given level
+ * @param type The type of tower to build
+ * @param level The desired level of the tower
+ * @return The cost
+ */
+int costAtLevel(TileType type, int level);
+

@@ -3,6 +3,10 @@
 
 #include "../GlobalConsts.h"
 #include "../../components/Sprites.h"
+#include "../../components/Upgrade.h"
+
+
+const inline auto COST_SCALING_PER_LEVEL = 1.5;
 
 std::map<TileType, std::shared_ptr<Sprite>> initTileSprites() {
     std::map<TileType, std::shared_ptr<Sprite>> map;
@@ -74,4 +78,18 @@ const std::map<SDL_Scancode, TileType> &getScancodeMap() {
 
 char* &getName(TileType type) {
     return NAME_MAP[type];
+}
+
+int costAtLevel(TileType type, int level) {
+    int baseCost = getCostForType(type);
+    int upgradeCost = 0;
+    for(int upgradeLevel = 1; upgradeLevel <= level; upgradeLevel++) {
+        upgradeCost += levelUpCost(type, upgradeLevel);
+    }
+    return baseCost + upgradeCost;
+}
+
+int levelUpCost(TileType type, int level) {
+    int baseCost = getCostForType(type);
+    return level * (COST_SCALING_PER_LEVEL - 1) * baseCost;
 }

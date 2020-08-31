@@ -20,6 +20,7 @@
 #include "../../components/AI/tower/ProjectileTowerAI.h"
 #include "../../components/tags/Nexus.h"
 #include "../Log.h"
+#include "../../components/Upgrade.h"
 #include <map>
 
 inline const auto MAP_DIR = RESOURCE_DIR + "maps/";
@@ -170,6 +171,7 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
             registry.emplace_or_replace<Range>(tile, PROJECTILE_TOWER_RANGE);
             registry.emplace_or_replace<Tower>(tile);
             registry.emplace_or_replace<Damage>(tile, PROJECTILE_TOWER_DAMAGE);
+            registry.emplace_or_replace<Upgrade>(tile, PROJECTILE_TOWER_DAMAGE_SCALING);
             registry.emplace_or_replace<AIComponent>(tile, new ProjectileTowerAI(tile, DEFAULT_PROJECTILE_SPEED, PROJECTILE_FIRE_INTERVAL));
             break;
         }
@@ -177,6 +179,7 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
             registry.emplace_or_replace<Range>(tile, LASER_TOWER_RANGE);
             registry.emplace_or_replace<Tower>(tile);
             registry.emplace_or_replace<Damage>(tile, LASER_TOWER_DAMAGE);
+            registry.emplace_or_replace<Upgrade>(tile, LASER_TOWER_DAMAGE_SCALING);
             registry.emplace_or_replace<AIComponent>(tile, new LaserTowerAI(tile));
             break;
         }
@@ -184,15 +187,13 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
             registry.emplace_or_replace<Range>(tile, AOE_TOWER_RANGE);
             registry.emplace_or_replace<Tower>(tile);
             registry.emplace_or_replace<Damage>(tile, AOE_TOWER_DAMAGE);
+            registry.emplace_or_replace<Upgrade>(tile, AOE_TOWER_DAMAGE_SCALING);
             registry.emplace_or_replace<AIComponent>(tile, new AreaOfEffectTowerAI(tile, AOE_FIRE_INTERVAL));
             break;
         }
         // If the type to be placed is not a tower, remove the unneeded components
         default: {
-            registry.remove_if_exists<Range>(tile);
-            registry.remove_if_exists<Tower>(tile);
-            registry.remove_if_exists<Damage>(tile);
-            registry.remove_if_exists<AIComponent>(tile);
+            registry.remove_if_exists<Range, Tower, Damage, AIComponent, Upgrade>(tile);
         }
     }
 }

@@ -21,6 +21,7 @@
 #include "../../components/tags/Delete.h"
 #include "../../components/tags/Nexus.h"
 #include "../gameoverstate/GameOverState.h"
+#include "../../components/Upgrade.h"
 
 extern "C" {
     #include <TUM_Sound.h>
@@ -310,7 +311,30 @@ namespace GameTasks {
                             TileType tileType = map.getTileType(*tileOpt, *registry);
                             TileType typeToPlace = state.getTileTypeToPlace();
 
-                            // Calculate the cost of placing down the specific tile
+                            // If the tile has a Damage and Upgrade component (which only towers have both)
+                            if(registry->has<Damage, Upgrade>(*tileOpt)) {
+                                Upgrade &upgrade = registry->get<Upgrade>(*tileOpt);
+                                auto cost = levelUpCost(tileType, upgrade.level + 1);
+                                // If the player can afford the cost, upgrade the tower and scale the damage accordingly
+                                if(cost <= state.getCoins()) {
+                                    Damage &damage = registry->get<Damage>(*tileOpt);
+                                    upgrade.levelUp();
+                                    upgrade.scaleDamage(damage);
+                                    state.removeCoins(cost);
+                                }
+                            } else  {
+                                // Calculate the cost of placing down the specific tile
+                                int totalCost = getCostForType(typeToPlace) - getCostForType(tileType);
+                                if (tileType == EMPTY && state.getWave().isFinished() && typeToPlace != EMPTY && state.getCoins() >= totalCost && !isSpecial(tileType)) {
+                                    map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, typeToPlace, renderer);
+                                    // Pay the cost for the operation
+                                    state.removeCoins(totalCost);
+                                    tumSoundPlaySample(place);
+                                    // If the tile was empty before, we need to update the enemy path, as it might have to change
+                                    if (tileType == EMPTY) state.getMap().updateEnemyPath(*registry);
+                                }
+                            }
+                            /*// Calculate the cost of placing down the specific tile
                             int totalCost = getCostForType(typeToPlace) - getCostForType(tileType);
                             // You can only place tiles on empty space while a wave isn't active. Also you have to have enough coins
                             // In addition, you cannot build on special tiles like the nexus or the enemy spawn
@@ -321,7 +345,9 @@ namespace GameTasks {
                                 tumSoundPlaySample(place);
                                 // If the tile was empty before, we need to update the enemy path, as it might have to change
                                 if (tileType == EMPTY) state.getMap().updateEnemyPath(*registry);
-                            }
+                            }*/
+
+
                         }
 
                     // Check if a right click has happened and there is no wave active
@@ -333,10 +359,19 @@ namespace GameTasks {
 
                             // You can't remove special tiles (spawn and nexus) and trying to remove empty tiles is redundant
                             if(!isSpecial(tileType) && tileType != EMPTY) {
+                                // Refund the cost of the removed tile
+                                if(registry->has<Upgrade>(*tileOpt)){
+                                    // If the tile is upgradable get the cost of the upgraded tower
+                                    Upgrade &upgrade = registry->get<Upgrade>(*tileOpt);
+                                    state.addCoins(costAtLevel(tileType, upgrade.level));
+                                } else {
+                                    // If not, just refund the cost of the actual tile type
+                                    state.addCoins(getCostForType(tileType));
+                                }
+
                                 // Remove the tile
                                 map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, EMPTY,renderer);
-                                // Refund the cost of the removed tile
-                                state.addCoins(getCostForType(tileType));
+
                                 // Removing a tile might change the enemies' path, so it must be recalculated
                                 state.getMap().updateEnemyPath(*registry);
                                 tumSoundPlaySample(remove_tile);
