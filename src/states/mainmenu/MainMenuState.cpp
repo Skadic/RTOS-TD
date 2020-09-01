@@ -25,7 +25,7 @@ MainMenuState::MainMenuState() : AbstractMenuState() {
     Button start = Button{"Start", SCREEN_WIDTH / 2 - MENU_BUTTON_WIDTH / 2, yOffset, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT,
                           [] () {
                               tumSoundPlaySample(click);
-        Game::get().enqueueStatePush(new GameState("testmap.json"));
+        Game::get().enqueueStatePush(new GameState("labyrinth.json"));
     }};
 
     // A button that takes you to the tutorial screen

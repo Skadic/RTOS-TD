@@ -21,6 +21,7 @@
 #include "../../components/tags/Nexus.h"
 #include "../Log.h"
 #include "../../components/Upgrade.h"
+#include "../../components/tags/Barrier.h"
 #include <map>
 
 inline const auto MAP_DIR = RESOURCE_DIR + "maps/";
@@ -99,13 +100,21 @@ Map::Map(entt::registry &registry, std::string path) {
             registry.emplace<SpriteComponent>(entity, getSpriteForType(type));
 
             // Any tile that is not empty has a hitbox
-            if(type != EMPTY) registry.emplace<Hitbox>(entity, TILE_SIZE, TILE_SIZE);
+            if(type != EMPTY && type != NON_BUILDABLE) {
+                registry.emplace<Hitbox>(entity, TILE_SIZE, TILE_SIZE);
+            }
 
             // If the tile at this position is the nexus, give it health and the nexus tag component
             if(type == NEXUS) {
                 nexus = tilePos;
                 registry.emplace<Health>(entity, NEXUS_HEALTH, NEXUS_HEALTH);
                 registry.emplace<Nexus>(entity);
+            }
+
+            // If the tile is supposed to be solid, it should have the Barrier component
+            if(type == BUILDABLE_SOLID || type == NON_BUILDABLE_SOLID) {
+                registry.emplace<Barrier>(entity);
+                registry.emplace_or_replace<Hitbox>(entity, TILE_SIZE, TILE_SIZE, true);
             }
 
             // Add the spawn position
@@ -192,8 +201,13 @@ void updateTile(entt::entity tile, entt::registry &registry, TileType type) {
             break;
         }
         // If the type to be placed is not a tower, remove the unneeded components
-        default: {
+        case EMPTY: {
             registry.remove_if_exists<Range, Tower, Damage, AIComponent, Upgrade>(tile);
+            if(registry.has<Barrier>(tile)) {
+                registry.emplace_or_replace<Hitbox>(tile, TILE_SIZE, TILE_SIZE, true);
+                registry.emplace_or_replace<TileTypeComponent>(tile, BUILDABLE_SOLID);
+                registry.emplace_or_replace<SpriteComponent>(tile, getSpriteForType(BUILDABLE_SOLID));
+            }
         }
     }
 }

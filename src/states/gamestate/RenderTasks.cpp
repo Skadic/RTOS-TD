@@ -26,6 +26,10 @@ void GameTasks::renderEntities(Renderer &renderer, entt::registry &registry) {
 }
 
 void GameTasks::renderMap(Renderer &renderer, entt::registry &registry, Map &map) {
+
+    // Draw the map background
+    renderer.drawBox(0, 0, map.getWidth() * TILE_SIZE, map.getHeight() * TILE_SIZE, INGAME_BG_COLOR, true);
+
     // Get all entities with a tile position and a sprite (= all tiles basically)
     auto tileView = registry.view<TilePosition, SpriteComponent>();
     // Draw each of them
@@ -44,7 +48,7 @@ void GameTasks::renderMap(Renderer &renderer, entt::registry &registry, Map &map
     }
 
     // Draw the map border
-    renderer.drawBox(0, 0, map.getWidth() * TILE_SIZE, map.getHeight() * TILE_SIZE, 0x0000FF, false);
+    renderer.drawBox(0, 0, map.getWidth() * TILE_SIZE, map.getHeight() * TILE_SIZE, 0xFF0000, false);
 }
 
 void GameTasks::renderTowerTargetConnections(Renderer &renderer, entt::registry &registry) {

@@ -73,14 +73,16 @@ namespace GameTasks {
                 }
 
                 // Clear the screen, setting everything to the background color
-                tumDrawClear(INGAME_BG_COLOR);
+                tumDrawClear(0x000000);
+
+
+                renderMap(renderer, *registry, map);
 
                 // Render the path the enemies will take, but only if there is no wave currently active
                 if (state.getWave().isFinished()) {
                     renderPath(renderer, map.getPath());
                 }
 
-                renderMap(renderer, *registry, map);
                 renderEntities(renderer, *registry);
                 renderHoveredRanges(renderer, *registry, map);
                 renderHealth(renderer, *registry);
@@ -325,7 +327,7 @@ namespace GameTasks {
                             } else  {
                                 // Calculate the cost of placing down the specific tile
                                 int totalCost = getCostForType(typeToPlace) - getCostForType(tileType);
-                                if (tileType == EMPTY && state.getWave().isFinished() && typeToPlace != EMPTY && state.getCoins() >= totalCost && !isSpecial(tileType)) {
+                                if (state.getWave().isFinished() && typeToPlace != EMPTY && state.getCoins() >= totalCost && !isSpecial(tileType)) {
                                     map.updateTileAtScreenPos(input->getMouseX(), input->getMouseY(), *registry, typeToPlace, renderer);
                                     // Pay the cost for the operation
                                     state.removeCoins(totalCost);

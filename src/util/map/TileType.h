@@ -5,17 +5,20 @@
 #include <SDL_scancode.h>
 
 /**
- * All the types of tiles that a tile can hold
+ * All the types of tiles that a tile can hold. The values of these enum constants are which are used in the json
  */
 enum TileType {
-    EMPTY,
-    WALL,
-    NEXUS,
-    ENEMY_SPAWN,
-    TOWER_PROJECTILE,
-    TOWER_LASER,
-    TOWER_AOE,
-    LAST_TILE_TYPE // Constant, only used to initialize Arrays etc. Not to be used. Add new enum constants only BEFORE this one
+    EMPTY = 0,
+    NON_BUILDABLE = 1,
+    BUILDABLE_SOLID = 2,
+    NON_BUILDABLE_SOLID = 3,
+    NEXUS = 4,
+    ENEMY_SPAWN = 5,
+    WALL = 6,
+    TOWER_PROJECTILE = 7,
+    TOWER_LASER = 8,
+    TOWER_AOE = 9,
+    LAST_TILE_TYPE = 10 // Constant, only used to initialize Arrays etc. Not to be used. Add new enum constants only BEFORE this one
 };
 
 
@@ -54,7 +57,7 @@ bool isSolid(TileType type);
 
 /**
  * @param type The type to check
- * @return if this tile type is special (Goal or Enemy Spawn)
+ * @return if this tile type is special (Goal, Enemy Spawn, non-buildable tile etc.)
  */
 bool isSpecial(TileType type);
 
