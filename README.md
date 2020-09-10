@@ -1,7 +1,6 @@
 # Antibody
 
-A tower defense game, based on the FreeRTOS emulator.
-Our game is a new interpretation of the classic tower defense genre.
+Our game is a new interpretation of the classic tower defense genre, based on the FreeRTOS emulator.
 Tower defense is a subgenre of real time strategy game. The goal of a regular tower defense game is to defend an objective by preventing the enemies to get there. This can be achieved by building various types of defense system on the map. In most games these defense systems are some kind of tower, which gives this genre its iconic name.
 The main threats are the recurring waves of enemies. These waves appear on a specific location on the map and can vary in size. Additional to the increasing size of the wave, the individual enemies are also getting stronger. Nevertheless in most games the enemies are not able to damage or destroy the players defense systems. 
 The game is over when a specific amount of enemies have reached the objective.
