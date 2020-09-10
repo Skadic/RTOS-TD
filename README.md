@@ -1,6 +1,15 @@
 # Antibody
 
 A tower defense game, based on the FreeRTOS emulator.
+Our game is a new interpretation of the classic tower defense genre.
+Tower defense is a subgenre of real time strategy game. The goal of a regular tower defense game is to defend an objective by preventing the enemies to get there. This can be achieved by building various types of defense system on the map. In most games these defense systems are some kind of tower, which gives this genre its iconic name.
+The main threats are the recurring waves of enemies. These waves appear on a specific location on the map and can vary in size. Additional to the increasing size of the wave, the individual enemies are also getting stronger. Nevertheless in most games the enemies are not able to damage or destroy the players defense systems. 
+The game is over when a specific amount of enemies have reached the objective.
+Therefore the player has to arm himself against the increasing dangers. His arsenal of various types of defense system makes this possible. Each defense system costs a specific amount of ingame-currency and has unique attributes (e.g. range, damage, area of effect). The strategical placement of these systems is the crucial part to win the game. Even tho winning the game is not always possible as it most tower defense games have an infinite amount of waves. 
+
+In our version of this game, we adopted the critical parts of the tower defense genre to keep its identity. But at the same time we tried to mix things up by tearing down some boundaries. Instead of being a godlike creature which looks down from above, we decided to visualise the player in the middle of the screen. This player can move though the map, the same way as enemies can do. He is also the one in charge to build the defense systems. 
+We tried to open up the harsh restrictions of a static map by making the map completely interactive and way more dynamic. Normally the player would have to place his defense systems along the enemies path. In our game we designed the enemies path to be dynamic. This way the player can create the enemies path by himself. To do so we provided walls and towers to create obstacles for the enemies. Because of that we rather made our game feel like a sandbox than an actual tower defense game. 
+
 
 ## Dependencies
 
