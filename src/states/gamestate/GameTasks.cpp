@@ -272,7 +272,7 @@ namespace GameTasks {
                         }
 
                         if(input->keyPressed(SDL_SCANCODE_KP_MINUS)) {
-                            renderer.setScale(std::max(renderer.getScale() / 1.01, 0.5));
+                            renderer.setScale(std::max(renderer.getScale() / 1.01, 1.2));
                         }
 
                         // Center the camera on the player

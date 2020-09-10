@@ -33,16 +33,16 @@ inline const auto NEXUS_HEALTH = 20;
 
 inline const auto LASER_TOWER_RANGE = 2 * TILE_SIZE;
 inline const auto LASER_TOWER_DAMAGE = 20;
-inline const auto LASER_TOWER_DAMAGE_SCALING = 1.3;
+inline const auto LASER_TOWER_DAMAGE_SCALING = 1.1;
 
 inline const auto PROJECTILE_TOWER_RANGE = 5 * TILE_SIZE;
 inline const auto PROJECTILE_TOWER_DAMAGE = 500;
-inline const auto PROJECTILE_TOWER_DAMAGE_SCALING = 1.4;
+inline const auto PROJECTILE_TOWER_DAMAGE_SCALING = 1.15;
 inline const auto PROJECTILE_FIRE_INTERVAL = 400;
 
 inline const auto AOE_TOWER_RANGE = 3 * TILE_SIZE;
 inline const auto AOE_TOWER_DAMAGE = 750;
-inline const auto AOE_TOWER_DAMAGE_SCALING = 1.15;
+inline const auto AOE_TOWER_DAMAGE_SCALING = 1.05;
 inline const auto AOE_FIRE_INTERVAL = 750;
 
 inline const auto INITIAL_COINS = 25;

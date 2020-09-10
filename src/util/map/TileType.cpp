@@ -6,7 +6,7 @@
 #include "../../components/Upgrade.h"
 
 
-const inline auto COST_SCALING_PER_LEVEL = 1.5;
+const inline auto COST_SCALING_PER_LEVEL = 2;
 
 std::map<TileType, std::shared_ptr<Sprite>> initTileSprites() {
     std::map<TileType, std::shared_ptr<Sprite>> map;
@@ -15,7 +15,7 @@ std::map<TileType, std::shared_ptr<Sprite>> initTileSprites() {
     map[TOWER_PROJECTILE] = std::make_shared<Texture2ColorSprite>("tower.png", 0x00CCCC, 0x006666);
     map[TOWER_LASER] = std::make_shared<Texture2ColorSprite>("tower.png", 0x4000FF, 0x200088);
     map[TOWER_AOE] = std::make_shared<Texture2ColorSprite>("tower.png", 0xFF9000, 0x884000);
-    map[NEXUS] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x00FF00, true);
+    map[NEXUS] = std::make_shared<TextureSprite>("nexus.png");
     map[ENEMY_SPAWN] = std::make_shared<TextureSprite>("enemy_spawn.png");
     map[BUILDABLE_SOLID] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x888888, true);
     map[NON_BUILDABLE_SOLID] = std::make_shared<RectangleSprite>(TILE_SIZE, TILE_SIZE, 0x444444, true);
