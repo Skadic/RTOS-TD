@@ -30,11 +30,12 @@ namespace GameTasks {
 
     /**
      * Renders all entities with a tile position and a sprite (which is basically the contents of the map)
+     * @param state The game state that is executing the task
      * @param renderer The renderer of the state
      * @param registry The registry of the state
      * @param map The map to render
      */
-    void renderMap(Renderer &renderer, entt::registry &registry, Map &map);
+    void renderMap(GameState &state, Renderer &renderer, entt::registry &registry, Map &map);
 
     /**
      * Renders all entities with a position and a sprite

@@ -13,6 +13,7 @@
 #include "GameState.h"
 #include "../../Game.h"
 #include "../../components/Upgrade.h"
+#include "../../components/tilecomponents/TileTypeComponent.h"
 
 void GameTasks::renderEntities(Renderer &renderer, entt::registry &registry) {
     // Get all entities with a Position and a Sprite
@@ -25,7 +26,7 @@ void GameTasks::renderEntities(Renderer &renderer, entt::registry &registry) {
     }
 }
 
-void GameTasks::renderMap(Renderer &renderer, entt::registry &registry, Map &map) {
+void GameTasks::renderMap(GameState &state, Renderer &renderer, entt::registry &registry, Map &map) {
 
     // Draw the map background
     renderer.drawBox(0, 0, map.getWidth() * TILE_SIZE, map.getHeight() * TILE_SIZE, INGAME_BG_COLOR, true);
@@ -40,11 +41,17 @@ void GameTasks::renderMap(Renderer &renderer, entt::registry &registry, Map &map
     }
 
     // Get all the upgradeable tiles
-    auto upgradeView = registry.view<TilePosition, Upgrade>();
+    auto upgradeView = registry.view<TilePosition, Upgrade, TileTypeComponent>();
     for(auto &entity : upgradeView) {
         TilePosition &pos = upgradeView.get<TilePosition>(entity);
         Upgrade &upgrade = upgradeView.get<Upgrade>(entity);
-        renderer.drawText(const_cast<char*>(std::to_string(upgrade.level).c_str()), pos.x * TILE_SIZE, pos.y * TILE_SIZE, 0xFFFFFF);
+        TileType &type = upgradeView.get<TileTypeComponent>(entity).type;
+        renderer.drawText(const_cast<char*>(std::to_string(upgrade.level).c_str()), pos.x * TILE_SIZE+2, pos.y * TILE_SIZE, 0xFFFFFF);
+        if (levelUpCost(type, upgrade.level+1) <= state.getCoins()){
+            renderer.drawText(const_cast<char*>(std::to_string(levelUpCost(type, upgrade.level+1)).c_str()), pos.x * TILE_SIZE+2, pos.y * TILE_SIZE+TILE_SIZE-10, 0x4FFF4F);
+        }else{
+            renderer.drawText(const_cast<char*>(std::to_string(levelUpCost(type, upgrade.level+1)).c_str()), pos.x * TILE_SIZE+2, pos.y * TILE_SIZE+TILE_SIZE-10, 0xFF4242);
+        }
     }
 
     // Draw the map border
@@ -141,6 +148,17 @@ void GameTasks::renderHUD(GameState &state, entt::registry &registry) {
 
     drawInfo("Nexus Health: ", nexusHealth.value, SCREEN_WIDTH-125, 5);
     drawInfo("Coins: ", state.getCoins(), 5, 5);
+
+    std::string upperlistOfBlocks("1: ");
+    upperlistOfBlocks.append("WALL  |   ");
+    upperlistOfBlocks.append("2: ");
+    upperlistOfBlocks.append("PROJECTILE TOWER");
+    tumDrawText(const_cast<char*>(upperlistOfBlocks.c_str()), (SCREEN_WIDTH/2)-125, SCREEN_HEIGHT - 46, 0xFFFFFF);
+    std::string lowerlistOfBlocks("3: ");
+    lowerlistOfBlocks.append("LASER TOWER  |  ");
+    lowerlistOfBlocks.append("4: ");
+    lowerlistOfBlocks.append("AOE TOWER");
+    tumDrawText(const_cast<char*>(lowerlistOfBlocks.c_str()), (SCREEN_WIDTH/2)-125, SCREEN_HEIGHT - 25, 0xFFFFFF);
 
     // Build the string that holds the information about which block is selected and draw it to the screen
     std::string selectedBlock("Selected Block: ");

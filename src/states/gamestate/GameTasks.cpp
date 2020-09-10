@@ -76,7 +76,7 @@ namespace GameTasks {
                 tumDrawClear(0x000000);
 
 
-                renderMap(renderer, *registry, map);
+                renderMap(state, renderer, *registry, map);
 
                 // Render the path the enemies will take, but only if there is no wave currently active
                 if (state.getWave().isFinished()) {
